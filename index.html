@@ -1086,6 +1086,8 @@ const DEFAULT_POSTS = {
 const FIREBASE_URL='https://moya-social-default-rtdb.firebaseio.com';
 
 const STORAGE_KEY='moya_posts_v1';
+const TS_KEY='moya_posts_ts'; // timestamp of last save
+
 function serializePosts(posts){
   const out={};
   for(const brand in posts){
@@ -1095,52 +1097,67 @@ function serializePosts(posts){
 }
 function deserializePosts(json){
   const raw=JSON.parse(json);
+  // strip meta keys before processing brands
   for(const brand in raw){
+    if(!Array.isArray(raw[brand]))continue;
     raw[brand]=raw[brand].map(p=>({...p,date:new Date(p.date),media:p.media||[]}));
   }
   return raw;
 }
 
-// ── localStorage (always used as fallback / cache) ──
-function saveLocal(){try{localStorage.setItem(STORAGE_KEY,serializePosts(POSTS));}catch(e){}}
+// ── localStorage ──
+function saveLocal(){
+  try{
+    localStorage.setItem(STORAGE_KEY,serializePosts(POSTS));
+    localStorage.setItem(TS_KEY,Date.now().toString());
+  }catch(e){}
+}
 function loadLocal(){
   try{
     const s=localStorage.getItem(STORAGE_KEY);
-    if(s){const p=deserializePosts(s);for(const b in p)if(POSTS[b])POSTS[b]=p[b];return true;}
+    if(s){const p=deserializePosts(s);for(const b in p)if(POSTS[b]&&Array.isArray(p[b]))POSTS[b]=p[b];return true;}
   }catch(e){}
   return false;
 }
 
-// ── Firebase (cloud, all devices) ──
-let _saveTimer=null;
+// ── Firebase (cloud sync) ──
 function savePosts(){
-  saveLocal();
+  saveLocal(); // always save locally first — instant & reliable
   if(!FIREBASE_URL)return;
-  clearTimeout(_saveTimer);
-  _saveTimer=setTimeout(async()=>{
-    try{
-      await fetch(`${FIREBASE_URL}/posts.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:serializePosts(POSTS)});
-    }catch(e){console.warn('Firebase save failed:',e);}
-  },1000); // debounce 1s
+  // Save to Firebase immediately (no debounce — prevents race on fast refresh)
+  const payload=serializePosts(POSTS);
+  const ts=localStorage.getItem(TS_KEY)||'0';
+  fetch(`${FIREBASE_URL}/posts.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:payload})
+    .then(()=>fetch(`${FIREBASE_URL}/meta.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({savedAt:parseInt(ts)})}))
+    .catch(e=>console.warn('Firebase save failed:',e));
 }
 async function loadFromCloud(){
-  if(!FIREBASE_URL){loadLocal();return;}
+  if(!FIREBASE_URL){return;} // already loaded local above
   try{
+    // Check cloud timestamp vs local timestamp
+    const metaRes=await fetch(`${FIREBASE_URL}/meta.json`);
+    const meta=await metaRes.json();
+    const cloudTs=meta&&meta.savedAt?meta.savedAt:0;
+    const localTs=parseInt(localStorage.getItem(TS_KEY)||'0');
+    if(cloudTs<=localTs){
+      // Local is newer or same — push local to cloud to sync other devices
+      if(cloudTs>0) savePosts();
+      return;
+    }
+    // Cloud is newer — load it
     const res=await fetch(`${FIREBASE_URL}/posts.json`);
     const json=await res.text();
     if(json&&json!=='null'){
       const p=deserializePosts(json);
       let total=0;
-      for(const b in p){if(POSTS[b]){POSTS[b]=p[b];total+=p[b].length;}}
-      saveLocal(); // cache locally
+      for(const b in p){if(POSTS[b]&&Array.isArray(p[b])){POSTS[b]=p[b];total+=p[b].length;}}
+      saveLocal();
       showToast(`☁️ Synced ${total} posts`,'var(--green)');
-      // Refresh the active view
       const av=document.querySelector('.view.active');
       if(av){const n=av.id.replace('view-','');if(n==='dashboard')renderDashboard();else if(n==='calendar')renderCalendar();else if(n==='queue')renderQueue('all');}
     }
   }catch(e){
     console.warn('Firebase load failed, using local:',e);
-    loadLocal();
   }
 }
 
