@@ -211,6 +211,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 
 /* ── COMPOSE ── */
 .composer-wrap{display:grid;grid-template-columns:1fr 310px;gap:22px}
+/* Media upload */
+.media-upload-zone{border:2px dashed var(--border);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;margin-top:14px;background:var(--surface2)}
+.media-upload-zone:hover,.media-upload-zone.drag-over{border-color:var(--brand);background:var(--brand-dim,rgba(201,168,76,.08))}
+.media-upload-zone .upload-icon{font-size:1.6rem;margin-bottom:4px}
+.media-upload-zone .upload-label{font-size:.8rem;color:var(--text-muted)}
+.media-upload-zone .upload-label strong{color:var(--brand)}
+.media-preview-strip{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.media-thumb{position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid var(--border);flex-shrink:0}
+.media-thumb img,.media-thumb video{width:100%;height:100%;object-fit:cover}
+.media-thumb .remove-media{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.media-thumb .media-type-badge{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,.6);color:#fff;font-size:.55rem;padding:1px 5px;border-radius:10px}
 .platform-select{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
 .plat-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:500;color:var(--text-muted);transition:all .15s}
 .plat-btn.active.ig{background:var(--pink-dim);color:var(--pink);border-color:var(--pink)}
@@ -629,6 +640,16 @@ select.form-input option{background:var(--surface)}
             <button class="btn btn-ghost btn-sm" onclick="insertEmoji('🎉')">🎉</button>
             <button class="btn btn-ghost btn-sm" onclick="insertEmoji('🏡')" id="brandEmoji1">🏡</button>
             <span class="char-count" id="charCount">0 / 2,200</span>
+          </div>
+          <!-- Media Upload -->
+          <div style="margin-top:14px">
+            <div style="font-size:.82rem;font-weight:600;margin-bottom:8px">📎 Media</div>
+            <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple style="display:none" onchange="handleMediaFiles(this.files)"/>
+            <div class="media-upload-zone" id="mediaUploadZone" onclick="document.getElementById('mediaFileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');handleMediaFiles(event.dataTransfer.files)">
+              <div class="upload-icon">🖼️</div>
+              <div class="upload-label"><strong>Click to upload</strong> or drag &amp; drop<br>Images &amp; videos · Max 10 files</div>
+            </div>
+            <div class="media-preview-strip" id="mediaPreviewStrip"></div>
           </div>
           <div style="margin-top:14px">
             <div style="font-size:.82rem;font-weight:600;margin-bottom:0">Hashtags</div>
@@ -1276,7 +1297,7 @@ function renderCalendar(){
     html+=`<div class="cal-day${c.other?' other-month':''}${isToday?' today':''}${dayHolidays.length?' holiday-day':''}${isFriday?' friday-day':''}" onclick="${c.other?'':('calDayClick('+c.day+')')}">
       <div class="day-num">${c.day}</div>
       ${dayHolidays.map(h=>`<div class="holiday-chip" style="background:${h.color}18;color:${h.color};border-left-color:${h.color}" title="${h.name}">${h.emoji} ${h.name}</div>`).join('')}
-      ${dayPosts.slice(0,2).map(p=>{const col=p.status==='draft'?colors.draft:(colors[p.platforms[0]]||'var(--brand)');const dots=p.platforms.map(pl=>`<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${colors[pl]||'var(--brand)'}"></span>`).join('');return`<div class="cal-post-chip" style="background:${col}22;color:${col}" onclick="event.stopPropagation();showPostModal(${p.id})">${p.emoji} ${p.text.slice(0,14)}… <span style="display:inline-flex;gap:2px;vertical-align:middle;margin-left:2px">${dots}</span></div>`}).join('')}
+      ${dayPosts.slice(0,2).map(p=>{const col=p.status==='draft'?colors.draft:(colors[p.platforms[0]]||'var(--brand)');const dots=p.platforms.map(pl=>`<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${colors[pl]||'var(--brand)'}"></span>`).join('');return`<div class="cal-post-chip" style="background:${col}22;color:${col}" onclick="event.stopPropagation();showPostModal(${p.id})">${p.emoji} ${p.text.slice(0,14)}… <span style="display:inline-flex;gap:2px;vertical-align:middle;margin-left:2px">${dots}</span>${p.media&&p.media.length?'<span style="margin-left:2px;opacity:.8">📎</span>':''}</div>`}).join('')}
       ${dayPosts.length>2?`<div style="font-size:.6rem;color:var(--text-muted)">+${dayPosts.length-2} more</div>`:''}
     </div>`;
   });
@@ -1550,6 +1571,35 @@ function generateSuggestions(){
   showToast('✨ Captions generated!','var(--brand)');
 }
 function useSuggestion(el){const a=document.getElementById('composeArea');a.value=el.textContent;updateCharCount(a);showToast('Caption applied!','var(--green)');}
+
+// ── MEDIA ──
+let composeMedia=[];
+function handleMediaFiles(files){
+  const strip=document.getElementById('mediaPreviewStrip');
+  Array.from(files).slice(0,10-composeMedia.length).forEach(file=>{
+    if(!file.type.startsWith('image/')&&!file.type.startsWith('video/'))return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const id=Date.now()+Math.random();
+      const isVideo=file.type.startsWith('video/');
+      composeMedia.push({id,dataUrl:e.target.result,type:isVideo?'video':'image',name:file.name});
+      const thumb=document.createElement('div');
+      thumb.className='media-thumb';thumb.dataset.id=id;
+      thumb.innerHTML=`${isVideo?`<video src="${e.target.result}" muted></video>`:`<img src="${e.target.result}" alt="${file.name}"/>`}<button class="remove-media" onclick="removeMedia(${id})" title="Remove">✕</button><span class="media-type-badge">${isVideo?'📹 VID':'🖼️ IMG'}</span>`;
+      strip.appendChild(thumb);
+      if(composeMedia.length>=10)document.getElementById('mediaUploadZone').style.opacity='.4';
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function removeMedia(id){
+  composeMedia=composeMedia.filter(m=>m.id!==id);
+  const thumb=document.querySelector(`.media-thumb[data-id="${id}"]`);
+  if(thumb)thumb.remove();
+  document.getElementById('mediaUploadZone').style.opacity='';
+}
+function clearMedia(){composeMedia=[];document.getElementById('mediaPreviewStrip').innerHTML='';document.getElementById('mediaFileInput').value='';document.getElementById('mediaUploadZone').style.opacity='';}
+
 function schedulePost(){
   const text=document.getElementById('composeArea').value.trim();
   if(!text){showToast('⚠️ Please write a caption','var(--orange)');return;}
@@ -1559,10 +1609,10 @@ function schedulePost(){
   const postDate=dv?new Date(`${dv}T${tv||'09:00'}`):new Date();
   const st=status==='Post Now'?'published':status==='Save as Draft'?'draft':'scheduled';
   const b=BRANDS[currentBrand];
-  POSTS[currentBrand].push({id:Date.now(),text,platforms:[...activePlatforms],date:postDate,status:st,emoji:b.brandEmoji});
+  POSTS[currentBrand].push({id:Date.now(),text,platforms:[...activePlatforms],date:postDate,status:st,emoji:b.brandEmoji,media:[...composeMedia]});
   if(st==='scheduled'){b.stats.scheduled++;document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;}
   showToast(st==='published'?'🚀 Posted!':st==='draft'?'💾 Draft saved!':'✅ Scheduled!','var(--green)');
-  document.getElementById('composeArea').value='';hashtags=[];renderHashtags();updateCharCount(document.getElementById('composeArea'));
+  document.getElementById('composeArea').value='';hashtags=[];renderHashtags();updateCharCount(document.getElementById('composeArea'));clearMedia();
 }
 function saveDraft(){document.getElementById('schedStatus').value='Save as Draft';schedulePost();}
 
@@ -1588,8 +1638,13 @@ function renderQueueList(list){
       </div>
       <div class="queue-body">
         ${seriesInfo?`<div class="queue-series-badge" style="background:${seriesInfo.color}15;color:${seriesInfo.color};border-color:${seriesInfo.color}33">${seriesInfo.icon} ${seriesInfo.name}${isStory?' · Story':''}</div>`:''}
-        <div class="queue-post-text">${p.emoji} ${p.text.replace(/\n/g,' ')}</div>
-        <div class="queue-meta">${p.platforms.map(pl=>platChip(pl)).join('')}<span class="queue-status ${p.status}">${p.status.charAt(0).toUpperCase()+p.status.slice(1)}</span>${isStory?'<span style="font-size:.65rem;color:var(--text-muted);background:var(--surface2);padding:2px 7px;border-radius:20px">📱 Story</span>':''}</div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          ${p.media&&p.media.length?`<div style="flex-shrink:0;width:54px;height:54px;border-radius:7px;overflow:hidden;border:1px solid var(--border);position:relative">${p.media[0].type==='video'?`<video src="${p.media[0].dataUrl}" style="width:100%;height:100%;object-fit:cover"></video>`:`<img src="${p.media[0].dataUrl}" style="width:100%;height:100%;object-fit:cover"/>`}${p.media.length>1?`<span style="position:absolute;bottom:2px;right:2px;background:rgba(0,0,0,.65);color:#fff;font-size:.5rem;padding:1px 4px;border-radius:8px">+${p.media.length-1}</span>`:''}</div>`:''}
+          <div style="flex:1;min-width:0">
+            <div class="queue-post-text">${p.emoji} ${p.text.replace(/\n/g,' ')}</div>
+            <div class="queue-meta">${p.platforms.map(pl=>platChip(pl)).join('')}<span class="queue-status ${p.status}">${p.status.charAt(0).toUpperCase()+p.status.slice(1)}</span>${isStory?'<span style="font-size:.65rem;color:var(--text-muted);background:var(--surface2);padding:2px 7px;border-radius:20px">📱 Story</span>':''}</div>
+          </div>
+        </div>
       </div>
       <div class="queue-actions">
         <button class="action-btn" onclick="openExportModal(${p.id})" title="Export to Metricool" style="font-size:.7rem;padding:4px 8px;color:var(--brand)">📤</button>
