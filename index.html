@@ -1050,6 +1050,7 @@ let currentSeries = null;
 let currentPillar = null;
 let currentContentType = null;
 let currentPostType = 'post';
+let editingPostId = null; // tracks post being edited (null = new post)
 
 // ── PER-BRAND POST DATA ──
 const DEFAULT_POSTS = {
@@ -1268,6 +1269,7 @@ function switchBrand(id){
 //  NAVIGATION
 // ═══════════════════════════════════════════
 function showView(name,btn){
+  if(name!=='compose')editingPostId=null; // clear edit mode when navigating away
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
@@ -1674,10 +1676,21 @@ function schedulePost(){
   const postDate=dv?new Date(`${dv}T${tv||'09:00'}`):new Date();
   const st=status==='Post Now'?'published':status==='Save as Draft'?'draft':'scheduled';
   const b=BRANDS[currentBrand];
-  POSTS[currentBrand].push({id:Date.now(),text,platforms:[...activePlatforms],date:postDate,status:st,emoji:b.brandEmoji,media:[...composeMedia]});
-  if(st==='scheduled'){b.stats.scheduled++;document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;}
+  if(editingPostId){
+    // Update existing post
+    const idx=POSTS[currentBrand].findIndex(p=>p.id===editingPostId);
+    if(idx>-1){
+      POSTS[currentBrand][idx]={...POSTS[currentBrand][idx],text,platforms:[...activePlatforms],date:postDate,status:st,media:[...composeMedia]};
+    }
+    editingPostId=null;
+    showToast('✅ Post updated!','var(--green)');
+  } else {
+    // New post
+    POSTS[currentBrand].push({id:Date.now(),text,platforms:[...activePlatforms],date:postDate,status:st,emoji:b.brandEmoji,media:[...composeMedia]});
+    showToast(st==='published'?'🚀 Posted!':st==='draft'?'💾 Draft saved!':'✅ Scheduled!','var(--green)');
+  }
+  document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;
   savePosts();
-  showToast(st==='published'?'🚀 Posted!':st==='draft'?'💾 Draft saved!':'✅ Scheduled!','var(--green)');
   document.getElementById('composeArea').value='';hashtags=[];renderHashtags();updateCharCount(document.getElementById('composeArea'));clearMedia();
 }
 function saveDraft(){document.getElementById('schedStatus').value='Save as Draft';schedulePost();}
@@ -1721,7 +1734,44 @@ function renderQueueList(list){
 }
 function filterQueue(f,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderQueue(f);}
 function deletePost(id){const idx=POSTS[currentBrand].findIndex(p=>p.id===id);if(idx>-1)POSTS[currentBrand].splice(idx,1);savePosts();renderQueue('all');document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;showToast('🗑️ Post deleted','var(--pink)');}
-function editPost(id){const p=POSTS[currentBrand].find(p=>p.id===id);if(!p)return;showView('compose',document.querySelector('[onclick*=compose]'));document.getElementById('composeArea').value=p.text;updateCharCount(document.getElementById('composeArea'));showToast('✏️ Loaded for editing','var(--blue)');}
+function editPost(id){
+  const p=POSTS[currentBrand].find(x=>x.id===id);
+  if(!p)return;
+  editingPostId=id;
+  showView('compose',document.querySelector('[onclick*=compose]'));
+  // Caption
+  document.getElementById('composeArea').value=p.text;
+  updateCharCount(document.getElementById('composeArea'));
+  // Platforms
+  activePlatforms=[...p.platforms];
+  document.querySelectorAll('.plat-btn').forEach(btn=>{
+    const pl=btn.classList[1];
+    btn.classList.toggle('active',activePlatforms.includes(pl));
+  });
+  // Date & time
+  if(p.date){
+    document.getElementById('schedDate').value=p.date.toISOString().split('T')[0];
+    const h=p.date.getHours().toString().padStart(2,'0');
+    const m=p.date.getMinutes().toString().padStart(2,'0');
+    document.getElementById('schedTime').value=`${h}:${m}`;
+  }
+  // Status
+  const statusMap={'scheduled':'Schedule','draft':'Save as Draft','published':'Post Now'};
+  document.getElementById('schedStatus').value=statusMap[p.status]||'Schedule';
+  // Media
+  clearMedia();
+  if(p.media&&p.media.length){
+    composeMedia=[...p.media];
+    const strip=document.getElementById('mediaPreviewStrip');
+    p.media.forEach(m=>{
+      const thumb=document.createElement('div');
+      thumb.className='media-thumb';thumb.dataset.id=m.id;
+      thumb.innerHTML=`${m.type==='video'?`<video src="${m.dataUrl}" muted></video>`:`<img src="${m.dataUrl}"/>`}<button class="remove-media" onclick="removeMedia(${m.id})">✕</button><span class="media-type-badge">${m.type==='video'?'📹 VID':'🖼️ IMG'}</span>`;
+      strip.appendChild(thumb);
+    });
+  }
+  showToast('✏️ Editing post — make changes and hit Schedule','var(--blue)');
+}
 
 // ═══════════════════════════════════════════
 //  ANALYTICS
