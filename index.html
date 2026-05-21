@@ -1274,7 +1274,7 @@ function renderCalendar(){
     html+=`<div class="cal-day${c.other?' other-month':''}${isToday?' today':''}${dayHolidays.length?' holiday-day':''}${isFriday?' friday-day':''}" onclick="${c.other?'':('calDayClick('+c.day+')')}">
       <div class="day-num">${c.day}</div>
       ${dayHolidays.map(h=>`<div class="holiday-chip" style="background:${h.color}18;color:${h.color};border-left-color:${h.color}" title="${h.name}">${h.emoji} ${h.name}</div>`).join('')}
-      ${dayPosts.slice(0,2).map(p=>{const col=p.status==='draft'?colors.draft:(colors[p.platforms[0]]||'var(--brand)');return`<div class="cal-post-chip" style="background:${col}22;color:${col}" onclick="event.stopPropagation();showPostModal(${p.id})">${p.emoji} ${p.text.slice(0,18)}…</div>`}).join('')}
+      ${dayPosts.slice(0,2).map(p=>{const col=p.status==='draft'?colors.draft:(colors[p.platforms[0]]||'var(--brand)');const dots=p.platforms.map(pl=>`<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${colors[pl]||'var(--brand)'}"></span>`).join('');return`<div class="cal-post-chip" style="background:${col}22;color:${col}" onclick="event.stopPropagation();showPostModal(${p.id})">${p.emoji} ${p.text.slice(0,14)}… <span style="display:inline-flex;gap:2px;vertical-align:middle;margin-left:2px">${dots}</span></div>`}).join('')}
       ${dayPosts.length>2?`<div style="font-size:.6rem;color:var(--text-muted)">+${dayPosts.length-2} more</div>`:''}
     </div>`;
   });
