@@ -1081,46 +1081,72 @@ const DEFAULT_POSTS = {
   ]
 };
 
-// ── Persistence helpers ──
+// ── Persistence ──
+// Set your Firebase Realtime Database URL below (leave empty to use localStorage only)
+const FIREBASE_URL=''; // e.g. https://your-project-default-rtdb.firebaseio.com
+
 const STORAGE_KEY='moya_posts_v1';
 function serializePosts(posts){
   const out={};
   for(const brand in posts){
-    out[brand]=posts[brand].map(p=>({...p,date:p.date instanceof Date?p.date.toISOString():p.date}));
+    out[brand]=posts[brand].map(p=>({...p,date:p.date instanceof Date?p.date.toISOString():p.date,media:p.media||[]}));
   }
   return JSON.stringify(out);
 }
 function deserializePosts(json){
   const raw=JSON.parse(json);
   for(const brand in raw){
-    raw[brand]=raw[brand].map(p=>({...p,date:new Date(p.date)}));
+    raw[brand]=raw[brand].map(p=>({...p,date:new Date(p.date),media:p.media||[]}));
   }
   return raw;
 }
-function savePosts(){
-  try{localStorage.setItem(STORAGE_KEY,serializePosts(POSTS));}catch(e){console.warn('Could not save posts:',e);}
-}
-function loadSavedPosts(){
+
+// ── localStorage (always used as fallback / cache) ──
+function saveLocal(){try{localStorage.setItem(STORAGE_KEY,serializePosts(POSTS));}catch(e){}}
+function loadLocal(){
   try{
-    const saved=localStorage.getItem(STORAGE_KEY);
-    if(saved){
-      const p=deserializePosts(saved);
+    const s=localStorage.getItem(STORAGE_KEY);
+    if(s){const p=deserializePosts(s);for(const b in p)if(POSTS[b])POSTS[b]=p[b];return true;}
+  }catch(e){}
+  return false;
+}
+
+// ── Firebase (cloud, all devices) ──
+let _saveTimer=null;
+function savePosts(){
+  saveLocal();
+  if(!FIREBASE_URL)return;
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(async()=>{
+    try{
+      await fetch(`${FIREBASE_URL}/posts.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:serializePosts(POSTS)});
+    }catch(e){console.warn('Firebase save failed:',e);}
+  },1000); // debounce 1s
+}
+async function loadFromCloud(){
+  if(!FIREBASE_URL){loadLocal();return;}
+  try{
+    const res=await fetch(`${FIREBASE_URL}/posts.json`);
+    const json=await res.text();
+    if(json&&json!=='null'){
+      const p=deserializePosts(json);
       let total=0;
       for(const b in p){if(POSTS[b]){POSTS[b]=p[b];total+=p[b].length;}}
-      // Show confirmation after page renders
-      setTimeout(()=>showToast(`📂 Loaded ${total} saved posts`,'var(--green)'),800);
+      saveLocal(); // cache locally
+      showToast(`☁️ Synced ${total} posts`,'var(--green)');
+      // Refresh the active view
+      const av=document.querySelector('.view.active');
+      if(av){const n=av.id.replace('view-','');if(n==='dashboard')renderDashboard();else if(n==='calendar')renderCalendar();else if(n==='queue')renderQueue('all');}
     }
   }catch(e){
-    console.warn('Could not load saved posts:',e);
-    setTimeout(()=>showToast('⚠️ Could not load saved posts: '+e.message,'var(--orange)'),800);
+    console.warn('Firebase load failed, using local:',e);
+    loadLocal();
   }
 }
 
-// Build POSTS from defaults then overlay localStorage
+// Build POSTS — local first (instant), then cloud overlay
 const POSTS={sbf:[...DEFAULT_POSTS.sbf],gm:[...DEFAULT_POSTS.gm]};
-loadSavedPosts();
-// Ensure anything in memory (defaults or loaded) is written to storage immediately
-savePosts();
+loadLocal(); // instant: no flash of empty content
 
 // ═══════════════════════════════════════════
 //  ISRAELI HOLIDAYS (Gregorian dates)
@@ -1967,6 +1993,8 @@ renderToneChips();
 renderPlatformButtons();
 renderDashboard();
 renderCalendar();
+// Load from cloud after initial render (updates UI when ready)
+loadFromCloud();
 </script>
 
 <!-- ── EXPORT MODAL ── -->
