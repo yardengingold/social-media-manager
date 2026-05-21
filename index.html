@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SocialFlow — Multi-Brand Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f47;
+  --border:#2e3350;--border2:#3d4468;
+  --brand:#c9a84c;--brand-dim:rgba(201,168,76,.15);--brand-rgb:201,168,76;
+  --green:#22c55e;--green-dim:rgba(34,197,94,.15);
+  --pink:#ec4899;--pink-dim:rgba(236,72,153,.15);
+  --orange:#f97316;--orange-dim:rgba(249,115,22,.15);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,.15);
+  --yellow:#eab308;--yellow-dim:rgba(234,179,8,.15);
+  --text:#e2e8f0;--text-muted:#7c85a8;--text-dim:#4a5182;
+  --radius:10px;--radius-lg:16px;--sidebar:252px;
+}
+/* Brand themes */
+body.brand-sbf{--brand:#c9a84c;--brand-dim:rgba(201,168,76,.15);--brand-rgb:201,168,76;}
+body.brand-gm {--brand:#4a9eff;--brand-dim:rgba(74,158,255,.15);--brand-rgb:74,158,255;}
+
+html{height:100%}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100%;display:flex;overflow:hidden;font-size:14px}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow:hidden;transition:background .25s}
+.brand-switcher{padding:14px 14px 12px;border-bottom:1px solid var(--border);position:relative}
+.brand-btn{width:100%;display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;font-family:inherit;color:var(--text);transition:all .15s}
+.brand-btn:hover{border-color:var(--brand)}
+.brand-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;transition:background .25s}
+.brand-icon.sbf{background:rgba(201,168,76,.2)}
+.brand-icon.gm{background:rgba(74,158,255,.2)}
+.brand-info{flex:1;text-align:left;min-width:0}
+.brand-name{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-sub{font-size:.67rem;color:var(--text-muted);margin-top:1px}
+.brand-caret{color:var(--text-muted);font-size:.7rem;flex-shrink:0;transition:transform .2s}
+.brand-caret.open{transform:rotate(180deg)}
+.brand-dropdown{position:absolute;left:14px;right:14px;top:calc(100% - 2px);background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:all .18s}
+.brand-dropdown.open{opacity:1;transform:translateY(0);pointer-events:all}
+.brand-option{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;transition:background .12s;border:none;background:none;width:100%;font-family:inherit;color:var(--text)}
+.brand-option:hover{background:var(--surface3)}
+.brand-option.active{background:var(--brand-dim)}
+.brand-option-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.brand-option.sbf-opt .brand-option-icon{background:rgba(201,168,76,.2)}
+.brand-option.gm-opt  .brand-option-icon{background:rgba(74,158,255,.2)}
+.brand-option-name{font-size:.82rem;font-weight:600;text-align:left}
+.brand-option-type{font-size:.68rem;color:var(--text-muted);text-align:left}
+.brand-active-dot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:auto;flex-shrink:0}
+
+.sidebar-nav{padding:10px 10px;flex:1;overflow-y:auto}
+.nav-section{margin-bottom:6px}
+.nav-label{font-size:.67rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);padding:6px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--text-muted);font-weight:500;font-size:.83rem;transition:all .15s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--brand-dim);color:var(--brand)}
+.nav-item .icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--brand);color:#000;font-size:.63rem;font-weight:700;padding:2px 6px;border-radius:20px}
+
+.sidebar-footer{padding:12px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--surface2)}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#ec4899);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#111;flex-shrink:0}
+.user-name{font-size:.82rem;font-weight:600}.user-role{font-size:.7rem;color:var(--text-muted)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{padding:0 26px;height:60px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface)}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-brand-badge{display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;font-size:.73rem;font-weight:600;transition:all .25s}
+.topbar-brand-badge.sbf{background:rgba(201,168,76,.12);color:#c9a84c;border:1px solid rgba(201,168,76,.25)}
+.topbar-brand-badge.gm {background:rgba(74,158,255,.12);color:#4a9eff;border:1px solid rgba(74,158,255,.25)}
+.topbar-title{font-size:1rem;font-weight:600}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--brand);color:#111}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--surface2);color:var(--text)}
+.btn-sm{padding:6px 12px;font-size:.75rem}
+.content{flex:1;overflow-y:auto;padding:26px}
+.view{display:none}.view.active{display:block}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:var(--brand);opacity:.07}
+.stat-label{font-size:.72rem;font-weight:500;color:var(--text-muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em}
+.stat-value{font-size:1.85rem;font-weight:700;line-height:1}
+.stat-change{font-size:.72rem;margin-top:5px}.stat-change.up{color:var(--green)}.stat-change.down{color:var(--pink)}
+
+/* ── DASH GRID ── */
+.dash-grid{display:grid;grid-template-columns:1fr 330px;gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+.card-title{font-size:.88rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.card-title span{color:var(--text-muted);font-weight:400;font-size:.78rem}
+.chart-wrap{height:160px;display:flex;align-items:flex-end;gap:5px;padding-top:8px}
+.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bars{display:flex;align-items:flex-end;gap:2px;height:130px}
+.bar{flex:1;border-radius:4px 4px 0 0;transition:opacity .2s;cursor:pointer;min-width:7px}
+.bar:hover{opacity:.75}
+.bar-label{font-size:.63rem;color:var(--text-dim)}
+.chart-legend{display:flex;gap:14px;margin-top:10px;font-size:.72rem;color:var(--text-muted)}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+
+/* ── UPCOMING ── */
+.upcoming-post{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.upcoming-post:last-child{border-bottom:none;padding-bottom:0}
+.post-time{font-size:.7rem;color:var(--text-muted);width:56px;flex-shrink:0;padding-top:2px}
+.post-text{font-size:.81rem;line-height:1.4;margin-bottom:4px}
+.post-platforms{display:flex;gap:4px;flex-wrap:wrap}
+.platform-chip{font-size:.63rem;font-weight:600;padding:2px 7px;border-radius:20px}
+.ig{background:var(--pink-dim);color:var(--pink)}
+.tw{background:var(--blue-dim);color:var(--blue)}
+.li{background:rgba(10,102,194,.15);color:#6aa3d5}
+.fb{background:rgba(24,119,242,.15);color:#6fa8dc}
+.wa{background:rgba(37,211,102,.15);color:#25d366}
+.fbp{background:rgba(24,119,242,.08);color:#a0c4f8;border:1px dashed rgba(24,119,242,.35)}
+.fbg{background:rgba(24,119,242,.12);color:#6fa8dc;border:1px solid rgba(24,119,242,.4);border-radius:20px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+/* ── CONTENT PILLARS ── */
+.pillar-picker{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.pillar-row{border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .15s}
+.pillar-row.active{border-color:var(--pillar-color,var(--brand))}
+.pillar-header{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;background:var(--surface2)}
+.pillar-header:hover{background:var(--surface3)}
+.pillar-day-badge{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--pillar-color,var(--brand));color:#000;opacity:.9}
+.pillar-label{font-size:.85rem;font-weight:700;flex:1}
+.pillar-desc{font-size:.7rem;color:var(--text-muted)}
+.pillar-chevron{font-size:.7rem;color:var(--text-muted);transition:transform .2s}
+.pillar-row.open .pillar-chevron{transform:rotate(180deg)}
+.pillar-types{display:none;padding:10px 14px;background:var(--surface);gap:7px;flex-wrap:wrap}
+.pillar-row.open .pillar-types{display:flex}
+.pillar-type-btn{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:500;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:inherit}
+.pillar-type-btn:hover{border-color:var(--pillar-color,var(--brand));color:var(--text)}
+.pillar-type-btn.selected{background:var(--pillar-color,var(--brand));border-color:var(--pillar-color,var(--brand));color:#000;font-weight:600}
+/* Dashboard pillar cards */
+.pillars-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:900px){.pillars-card-grid{grid-template-columns:1fr}}
+/* GM story cadence card */
+.gm-cadence-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;direction:rtl}
+@media(max-width:900px){.gm-cadence-grid{grid-template-columns:repeat(2,1fr)}}
+.gm-cadence-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.gm-cadence-card:hover{border-color:var(--brand)}
+.gm-cadence-header{padding:13px 14px 10px;text-align:right}
+.gm-cadence-day{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:20px;color:#000;display:inline-block;margin-bottom:7px}
+.gm-cadence-icon{font-size:1.5rem;display:block;margin-bottom:6px}
+.gm-cadence-label{font-size:.82rem;font-weight:700;margin-bottom:3px;direction:rtl}
+.gm-cadence-caption{font-size:.78rem;color:var(--text-muted);line-height:1.4;direction:rtl;font-style:italic}
+.gm-cadence-slot{font-size:.65rem;color:var(--text-dim);margin-top:8px;padding:4px 10px;background:var(--surface2);border-radius:0 0 12px 12px;text-align:center;letter-spacing:.04em}
+.pillar-card{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.pillar-card-header{padding:13px 16px;display:flex;align-items:center;gap:10px}
+.pillar-card-icon{font-size:1.3rem}
+.pillar-card-day{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;color:#000}
+.pillar-card-label{font-size:.95rem;font-weight:700;margin-left:2px}
+.pillar-card-desc{font-size:.72rem;color:var(--text-muted);margin-top:2px}
+.pillar-card-types{padding:0 16px 14px;display:flex;flex-direction:column;gap:5px}
+.pillar-card-type{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--text-muted);padding:5px 8px;border-radius:7px;cursor:pointer;transition:all .12s;border:1px solid transparent}
+.pillar-card-type:hover{background:var(--surface2);border-color:var(--border);color:var(--text)}
+.pillar-card-type-icon{font-size:.9rem;width:18px;text-align:center}
+.sdot-scheduled{background:var(--green)}.sdot-draft{background:var(--yellow)}.sdot-published{background:var(--brand)}
+
+/* ── EXPORT MODAL ── */
+.export-modal{max-width:520px;width:100%}
+.export-modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.export-section{margin-bottom:14px}
+.export-label{font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.export-textbox{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:.82rem;line-height:1.55;color:var(--text);max-height:120px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.export-copy-btn{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:.76rem;font-weight:600;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:inherit}
+.export-copy-btn:hover{border-color:var(--brand);color:var(--brand)}
+.export-copy-btn.copied{border-color:var(--green);color:var(--green)}
+.export-schedule{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 13px}
+.export-platforms{display:flex;flex-direction:column;gap:6px}
+.export-plat-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;border:1px solid var(--border)}
+.export-plat-row.supported{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.25)}
+.export-plat-row.manual{background:rgba(249,115,22,.05);border-color:rgba(249,115,22,.2)}
+.export-plat-icon{font-size:1rem;width:22px;text-align:center}
+.export-plat-name{flex:1;font-size:.82rem;font-weight:600}
+.export-plat-badge{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:20px}
+.badge-metricool{background:rgba(34,197,94,.15);color:#22c55e}
+.badge-manual{background:rgba(249,115,22,.12);color:#f97316}
+.export-steps{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 15px;margin-top:14px}
+.export-steps-title{font-size:.78rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+.export-steps ol{padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.export-steps li{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+.export-steps li strong{color:var(--text)}
+.export-steps li .hl{color:var(--brand);font-weight:600}
+.export-metricool-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;background:var(--brand);color:#000;font-weight:700;font-size:.88rem;border-radius:9px;text-decoration:none;transition:opacity .15s;border:none;cursor:pointer;font-family:inherit}
+.export-metricool-btn:hover{opacity:.88}
+
+/* ── CALENDAR ── */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.cal-nav{display:flex;align-items:center;gap:10px}
+.cal-month{font-size:1.05rem;font-weight:700}
+.icon-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .15s}
+.icon-btn:hover{background:var(--surface3);color:var(--text)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius)}
+.cal-day-head{background:var(--surface);text-align:center;padding:8px 0;font-size:.68rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.cal-day{background:var(--surface);min-height:88px;padding:7px;cursor:pointer;transition:background .12s;position:relative}
+.cal-day:hover{background:var(--surface2)}
+.cal-day.other-month .day-num{color:var(--text-dim)}
+.cal-day.today{background:var(--brand-dim)}
+.cal-day.today .day-num{background:var(--brand);color:#111;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.day-num{font-size:.75rem;font-weight:600;margin-bottom:3px;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.cal-post-chip{font-size:.6rem;font-weight:500;padding:2px 5px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:opacity .12s}
+.cal-post-chip:hover{opacity:.75}
+
+/* ── COMPOSE ── */
+.composer-wrap{display:grid;grid-template-columns:1fr 310px;gap:22px}
+.platform-select{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.plat-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:500;color:var(--text-muted);transition:all .15s}
+.plat-btn.active.ig{background:var(--pink-dim);color:var(--pink);border-color:var(--pink)}
+.plat-btn.active.tw{background:var(--blue-dim);color:var(--blue);border-color:var(--blue)}
+.plat-btn.active.li{background:rgba(10,102,194,.15);color:#6aa3d5;border-color:#6aa3d5}
+.plat-btn.active.fb{background:rgba(24,119,242,.15);color:#6fa8dc;border-color:#6fa8dc}
+.plat-btn.active.wa{background:rgba(37,211,102,.15);color:#25d366;border-color:#25d366}
+.compose-area{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;min-height:180px;outline:none;font-family:inherit;font-size:.88rem;color:var(--text);line-height:1.6;resize:none;width:100%;transition:border-color .15s}
+.compose-area:focus{border-color:var(--brand)}
+.compose-toolbar{display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap}
+.char-count{margin-left:auto;font-size:.73rem;color:var(--text-muted)}
+.char-count.warn{color:var(--orange)}.char-count.over{color:var(--pink)}
+.hashtag-input-row{display:flex;gap:8px;margin:12px 0 9px}
+.hashtag-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:.82rem;color:var(--text);outline:none;transition:border-color .15s}
+.hashtag-input:focus{border-color:var(--brand)}
+.hashtag-list{display:flex;flex-wrap:wrap;gap:5px}
+.hashtag-tag{background:var(--brand-dim);color:var(--brand);padding:3px 9px;border-radius:20px;font-size:.73rem;font-weight:500;display:flex;align-items:center;gap:4px;cursor:pointer}
+.schedule-row{display:flex;gap:10px;align-items:flex-end;margin-top:14px;flex-wrap:wrap}
+.form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+.form-label{font-size:.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.form-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:.82rem;color:var(--text);outline:none;transition:border-color .15s}
+.form-input:focus{border-color:var(--brand)}
+select.form-input option{background:var(--surface)}
+.ai-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.ai-panel h3{font-size:.86rem;font-weight:600;margin-bottom:3px}
+.ai-panel p{font-size:.75rem;color:var(--text-muted);margin-bottom:12px;line-height:1.5}
+.ai-suggestion{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px;margin-bottom:7px;cursor:pointer;transition:all .15s;font-size:.78rem;line-height:1.55}
+.ai-suggestion:hover{border-color:var(--brand);background:var(--brand-dim)}
+.tone-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.tone-chip{padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);transition:all .15s;font-family:inherit}
+.tone-chip.active{background:var(--brand-dim);color:var(--brand);border-color:var(--brand)}
+.preview-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px;margin-top:12px}
+.preview-header{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.preview-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#ec4899);flex-shrink:0}
+.preview-username{font-size:.8rem;font-weight:600}
+.preview-handle{font-size:.7rem;color:var(--text-muted)}
+.preview-text{font-size:.8rem;line-height:1.6}
+.preview-hashtags{color:var(--brand);font-size:.77rem;margin-top:3px}
+
+/* ── ANALYTICS ── */
+.analytics-top{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.metric-platform{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.metric-val{font-size:1.5rem;font-weight:700;margin-bottom:3px}
+.metric-sub{font-size:.7rem;color:var(--text-muted)}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:22px;padding:8px}
+.donut-legend{display:flex;flex-direction:column;gap:9px}
+.donut-leg-item{display:flex;align-items:center;gap:7px;font-size:.76rem}
+.donut-leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.donut-leg-val{margin-left:auto;font-weight:600;font-size:.78rem;padding-left:12px}
+.top-post-row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border)}
+.top-post-row:last-child{border-bottom:none}
+.top-post-thumb{width:38px;height:38px;border-radius:6px;background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.top-post-text{font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.top-post-meta{font-size:.68rem;color:var(--text-muted)}
+.top-post-eng{font-size:.8rem;font-weight:700;color:var(--green)}
+
+/* ── QUEUE ── */
+.queue-filters{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:.74rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text-muted);font-family:inherit;transition:all .15s}
+.filter-btn.active{background:var(--brand-dim);color:var(--brand);border-color:var(--brand)}
+.queue-post{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;transition:border-color .12s}
+.queue-post:hover{border-color:var(--border2)}
+.queue-date{width:52px;flex-shrink:0;text-align:center;background:var(--surface2);border-radius:7px;padding:7px 4px}
+.qd-month{font-size:.62rem;font-weight:600;color:var(--brand);text-transform:uppercase;letter-spacing:.05em}
+.qd-day{font-size:1.3rem;font-weight:700;line-height:1.1}
+.qd-time{font-size:.62rem;color:var(--text-muted)}
+.queue-body{flex:1;min-width:0}
+.queue-post-text{font-size:.83rem;line-height:1.5;margin-bottom:7px}
+.queue-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.queue-status{padding:2px 8px;border-radius:20px;font-size:.67rem;font-weight:600}
+.queue-status.scheduled{background:var(--green-dim);color:var(--green)}
+.queue-status.draft{background:var(--yellow-dim);color:var(--yellow)}
+.queue-status.published{background:var(--brand-dim);color:var(--brand)}
+.queue-actions{display:flex;gap:5px;margin-left:auto;flex-shrink:0}
+.action-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem;transition:all .15s}
+.action-btn:hover{background:var(--surface3);color:var(--text)}
+
+/* ── ACCOUNTS ── */
+.accounts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px}
+.account-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;display:flex;align-items:center;gap:12px}
+.account-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.account-info{flex:1;min-width:0}
+.account-name{font-size:.85rem;font-weight:600}
+.account-handle{font-size:.72rem;color:var(--text-muted);margin-top:1px}
+.account-followers{font-size:.72rem;color:var(--brand);font-weight:600;margin-top:3px}
+.connected-badge{font-size:.65rem;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--green-dim);color:var(--green);flex-shrink:0}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;width:480px;max-width:94vw;transform:translateY(18px);transition:transform .2s}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-title{font-size:.95rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem;padding:2px}
+.modal-close:hover{color:var(--text)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:10px;padding:11px 16px;font-size:.81rem;font-weight:500;z-index:200;transform:translateY(60px);opacity:0;transition:all .32s cubic-bezier(.34,1.56,.64,1);pointer-events:none;max-width:290px}
+.toast.show{transform:translateY(0);opacity:1}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 20px;color:var(--text-muted);text-align:center;gap:10px}
+.empty-state .empty-icon{font-size:2.6rem;opacity:.4}
+.empty-state p{font-size:.83rem;max-width:260px;line-height:1.6}
+
+/* ── WEEKLY PLANNER ── */
+.planner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.planner-day{}
+.planner-day-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:2px}
+.planner-slot{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:var(--surface2);border:1px solid;cursor:pointer;transition:all .15s;margin-bottom:6px}
+.planner-slot:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.planner-story{border-style:dashed!important}
+.planner-slot-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.planner-slot-name{font-size:.8rem;font-weight:600}
+.planner-slot-desc{font-size:.68rem;color:var(--text-muted);margin-top:1px}
+.planner-story-badge{font-size:.6rem;font-weight:700;background:rgba(245,158,11,.15);color:#f59e0b;padding:2px 7px;border-radius:20px;flex-shrink:0;border:1px solid rgba(245,158,11,.3)}
+
+/* ── SERIES ── */
+.series-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:20px;font-size:.72rem;font-weight:600;cursor:pointer;border:1px solid;transition:all .15s}
+.series-chip:hover{filter:brightness(1.15)}
+.series-chip-count{padding:1px 6px;border-radius:10px;font-size:.65rem;font-weight:700}
+.series-select-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;font-size:.78rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;transition:all .15s}
+.series-select-btn:hover{border-color:var(--brand);color:var(--text)}
+.series-select-btn.active{font-weight:600}
+.series-day-tag{font-size:.62rem;font-weight:600;background:var(--surface3);color:var(--text-dim);padding:2px 6px;border-radius:10px;margin-left:2px}
+.queue-series-badge{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:600;padding:2px 9px;border-radius:20px;border:1px solid;margin-bottom:5px}
+
+/* ── STORY COMPOSER ── */
+.story-composer-wrap{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
+.story-phone{width:200px;background:linear-gradient(160deg,#0d1b2a 0%,#1a2e45 100%);border-radius:24px;padding:20px 16px;border:2px solid rgba(201,168,76,.25);flex-shrink:0;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.story-header{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.story-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#e8c97a);flex-shrink:0}
+.story-brand{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.9)}
+.story-series-tag{font-size:.58rem;color:#c9a84c;font-weight:600;margin-top:1px}
+.story-body{text-align:center;padding:8px 0}
+.story-stars{font-size:1rem;color:#f59e0b;margin-bottom:10px;letter-spacing:2px}
+.story-quote{font-size:.72rem;font-style:italic;color:rgba(255,255,255,.85);line-height:1.6;margin-bottom:12px;min-height:60px}
+.story-client-name{font-size:.65rem;font-weight:600;color:#c9a84c;margin-bottom:16px}
+.story-footer-brand{font-size:.58rem;font-weight:800;letter-spacing:.2em;color:rgba(201,168,76,.5);text-transform:uppercase;border-top:1px solid rgba(201,168,76,.15);padding-top:10px;margin-top:4px}
+@media(max-width:600px){.story-composer-wrap{grid-template-columns:1fr}.story-phone{width:100%}.planner-grid{grid-template-columns:1fr}}
+
+/* ── STORIES PLANNER ── */
+.stories-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.stories-progress{display:flex;align-items:center;gap:10px;font-size:.8rem;color:var(--text-muted)}
+.stories-progress-bar{width:120px;height:6px;background:var(--surface2);border-radius:10px;overflow:hidden}
+.stories-progress-fill{height:100%;background:var(--brand);border-radius:10px;transition:width .4s}
+.week-nav{display:flex;align-items:center;gap:10px}
+.week-label{font-size:.88rem;font-weight:600;min-width:160px;text-align:center}
+.stories-grid{display:grid;grid-template-columns:64px repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.sg-head{background:var(--surface);padding:10px 6px;text-align:center}
+.sg-head-day{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.sg-head-date{font-size:.95rem;font-weight:700;margin-top:2px}
+.sg-head.today{background:var(--brand-dim)}
+.sg-head.today .sg-head-date{color:var(--brand)}
+.sg-slot-label{background:var(--surface);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;padding:8px 4px}
+.sg-slot-label .slot-time{font-size:.62rem;font-weight:700;color:var(--text-muted);letter-spacing:.06em}
+.sg-slot-label .slot-icon{font-size:.9rem}
+.sg-cell{background:var(--surface);padding:6px;min-height:72px;cursor:pointer;transition:background .12s;position:relative;display:flex;align-items:stretch}
+.sg-cell:hover{background:var(--surface2)}
+.sg-cell.filled{background:var(--surface)}
+.sg-cell-inner{width:100%;border-radius:7px;padding:7px 8px;display:flex;flex-direction:column;gap:3px;border:1px solid;position:relative}
+.sg-cell-inner .sc-icon{font-size:1rem;margin-bottom:1px}
+.sg-cell-inner .sc-name{font-size:.65rem;font-weight:600;line-height:1.3}
+.sg-cell-inner .sc-plats{display:flex;gap:2px;flex-wrap:wrap;margin-top:2px}
+.sc-plat-dot{width:6px;height:6px;border-radius:50%}
+.sg-empty{width:100%;border-radius:7px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:1.2rem;transition:all .15s}
+.sg-empty:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-dim)}
+.sg-cell-inner .sc-remove{position:absolute;top:3px;right:4px;font-size:.65rem;color:var(--text-dim);opacity:0;transition:opacity .15s;background:none;border:none;cursor:pointer;padding:0}
+.sg-cell-inner:hover .sc-remove{opacity:1}
+.stories-sidebar{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start}
+.template-library{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;position:sticky;top:0}
+.template-library h3{font-size:.84rem;font-weight:600;margin-bottom:14px}
+.template-card{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;margin-bottom:7px;transition:all .15s;font-family:inherit;width:100%;text-align:left;color:var(--text)}
+.template-card:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.template-card .tc-icon{font-size:1.1rem;width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.template-card .tc-name{font-size:.8rem;font-weight:600}
+.template-card .tc-desc{font-size:.68rem;color:var(--text-muted);margin-top:1px}
+.template-card .tc-slot{font-size:.62rem;font-weight:600;margin-left:auto;padding:2px 7px;border-radius:10px;flex-shrink:0}
+.fill-week-btn{width:100%;padding:10px;border-radius:8px;background:var(--brand-dim);color:var(--brand);border:1px solid var(--brand);font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer;margin-top:4px;transition:all .15s}
+.fill-week-btn:hover{background:var(--brand);color:#111}
+.week-fill-progress{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.week-fill-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:.72rem;color:var(--text-muted)}
+.stories-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted)}
+
+/* ── HOLIDAY STYLES ── */
+.holiday-chip{font-size:.6rem;font-weight:600;padding:2px 5px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid currentColor;opacity:.92}
+.holiday-banner{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;margin-bottom:10px;font-size:.8rem;font-weight:600;border:1px solid rgba(255,255,255,.06)}
+.holidays-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px}
+.holidays-panel h3{font-size:.84rem;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:7px;direction:rtl}
+.holiday-quick-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;font-family:inherit;color:var(--text);width:100%;margin-bottom:7px;transition:all .15s;text-align:right;direction:rtl}
+.holiday-quick-btn:hover{border-color:var(--brand);background:var(--brand-dim)}
+.holiday-quick-btn:last-child{margin-bottom:0}
+.holiday-quick-icon{font-size:1.2rem;flex-shrink:0}
+.holiday-quick-info{flex:1;min-width:0}
+.holiday-quick-name{font-size:.82rem;font-weight:600}
+.holiday-quick-date{font-size:.7rem;color:var(--text-muted);margin-top:1px}
+.holiday-quick-use{font-size:.68rem;color:var(--brand);font-weight:600;flex-shrink:0}
+/* RTL text in compose for Givat Morgan */
+.rtl-caption{direction:rtl;text-align:right;font-size:.88rem}
+.rtl-label{direction:rtl;text-align:right}
+/* Shabbat + holiday day tints */
+.cal-day.friday-day{background:rgba(74,158,255,.04)}
+.cal-day.friday-day .day-num{color:#4a9eff}
+.cal-day.holiday-day{background:rgba(251,191,36,.04)}
+
+/* ── BRAND DIVIDER ── */
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.section-brand-pill{display:flex;align-items:center;gap:6px;padding:4px 11px;border-radius:20px;font-size:.72rem;font-weight:600}
+.section-brand-pill.sbf{background:rgba(201,168,76,.12);color:#c9a84c;border:1px solid rgba(201,168,76,.2)}
+.section-brand-pill.gm {background:rgba(74,158,255,.12);color:#4a9eff;border:1px solid rgba(74,158,255,.2)}
+
+@media(max-width:900px){
+  .sidebar{width:62px}.brand-name,.brand-sub,.brand-caret,.nav-item span:not(.icon),.nav-badge,.nav-label,.user-name,.user-role{display:none}
+  .nav-item{justify-content:center;padding:10px}.brand-btn{padding:8px;justify-content:center}.brand-info{display:none}
+  .stats-row,.analytics-top{grid-template-columns:1fr 1fr}
+  .dash-grid,.composer-wrap,.analytics-grid{grid-template-columns:1fr}
+  .content{padding:14px}.accounts-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body class="brand-sbf">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <!-- Brand Switcher -->
+  <div class="brand-switcher">
+    <button class="brand-btn" onclick="toggleBrandDropdown()">
+      <div class="brand-icon sbf" id="sidebarBrandIcon">🏡</div>
+      <div class="brand-info">
+        <div class="brand-name" id="sidebarBrandName">Sold By Fogel</div>
+        <div class="brand-sub" id="sidebarBrandSub">Real Estate · Morgan Hill</div>
+      </div>
+      <div class="brand-caret" id="brandCaret">▼</div>
+    </button>
+    <div class="brand-dropdown" id="brandDropdown">
+      <button class="brand-option sbf-opt active" id="opt-sbf" onclick="switchBrand('sbf')">
+        <div class="brand-option-icon">🏡</div>
+        <div>
+          <div class="brand-option-name">Sold By Fogel</div>
+          <div class="brand-option-type">Real Estate</div>
+        </div>
+        <div class="brand-active-dot" id="dot-sbf"></div>
+      </button>
+      <button class="brand-option gm-opt" id="opt-gm" onclick="switchBrand('gm')">
+        <div class="brand-option-icon">✡️</div>
+        <div>
+          <div class="brand-option-name">Givat Morgan</div>
+          <div class="brand-option-type">Israeli Community</div>
+        </div>
+        <div class="brand-active-dot" id="dot-gm" style="display:none"></div>
+      </button>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <button class="nav-item active" onclick="showView('dashboard',this)"><span class="icon">📊</span><span>Dashboard</span></button>
+      <button class="nav-item" onclick="showView('calendar',this)"><span class="icon">📅</span><span>Calendar</span></button>
+      <button class="nav-item" onclick="showView('compose',this)"><span class="icon">✏️</span><span>Compose</span></button>
+      <button class="nav-item" onclick="showView('queue',this)"><span class="icon">📋</span><span>Queue</span><span class="nav-badge" id="queueBadge">3</span></button>
+      <button class="nav-item" onclick="showView('stories',this)"><span class="icon">📱</span><span>Stories</span></button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Insights</div>
+      <button class="nav-item" onclick="showView('analytics',this)"><span class="icon">📈</span><span>Analytics</span></button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Settings</div>
+      <button class="nav-item" onclick="showView('accounts',this)"><span class="icon">🔗</span><span>Accounts</span></button>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">YF</div>
+      <div><div class="user-name">Yarden Fogel</div><div class="user-role">2 Brands · Pro</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-brand-badge sbf" id="topbarBrandBadge">🏡 Sold By Fogel</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost btn-sm" onclick="showView('compose',document.querySelector('[onclick*=compose]'))">+ New Post</button>
+      <button class="btn btn-primary btn-sm" onclick="showToast('🔔 All caught up!','var(--brand)')">🔔</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD ── -->
+    <div id="view-dashboard" class="view active">
+      <div class="stats-row" id="dashStats"></div>
+
+      <!-- Weekly Content Pillars (SBF only) -->
+      <div id="weeklyPlannerCard" style="display:none;margin-bottom:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div style="font-size:.95rem;font-weight:700">📅 Weekly Content Strategy</div>
+            <div style="font-size:.74rem;color:var(--text-muted);margin-top:2px">Three-pillar framework — post with purpose every week</div>
+          </div>
+          <a href="#" onclick="showView('compose',document.querySelector('[onclick*=compose]'));return false;" class="btn btn-ghost btn-sm">+ New Post</a>
+        </div>
+        <div class="pillars-card-grid" id="pillarsCardGrid"></div>
+      </div>
+
+      <!-- Weekly Story Cadence (GM only) -->
+      <div id="gmCadenceCard" style="display:none;margin-bottom:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;direction:rtl">
+          <div>
+            <div style="font-size:.95rem;font-weight:700">📱 סדר שבועי של סטוריז</div>
+            <div style="font-size:.74rem;color:var(--text-muted);margin-top:2px">4 סטוריז קבועים בשבוע — לחצו כדי לפתוח את מתזמן הסטוריז</div>
+          </div>
+          <a href="#" onclick="showView('stories',document.querySelector('[onclick*=stories]'));return false;" class="btn btn-ghost btn-sm">📅 תזמן סטוריז</a>
+        </div>
+        <div class="gm-cadence-grid" id="gmCadenceGrid"></div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-title">Engagement This Week <span id="engChartSub"></span></div>
+          <div class="chart-wrap" id="engChart"></div>
+          <div class="chart-legend" id="engLegend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Upcoming Posts <span><a href="#" onclick="showView('calendar',document.querySelector('[onclick*=calendar]'));return false;" style="color:var(--brand);text-decoration:none">View all →</a></span></div>
+          <div id="upcomingPosts"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CALENDAR ── -->
+    <div id="view-calendar" class="view">
+      <div class="cal-header">
+        <div class="cal-nav">
+          <button class="icon-btn" onclick="changeMonth(-1)">‹</button>
+          <div class="cal-month" id="calMonthLabel"></div>
+          <button class="icon-btn" onclick="changeMonth(1)">›</button>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showView('compose',document.querySelector('[onclick*=compose]'))">+ Schedule Post</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <!-- ── COMPOSE ── -->
+    <div id="view-compose" class="view">
+      <div class="composer-wrap">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+            <div style="font-size:.82rem;color:var(--text-muted)">Posting as: <strong id="composingAs" style="color:var(--brand)">Sold By Fogel</strong></div>
+            <!-- Post / Story toggle (SBF only) -->
+            <div id="postTypeToggle" style="display:none;border:1px solid var(--border);border-radius:8px;overflow:hidden;display:flex">
+              <button class="cal-view-btn active" id="btnTypePost"  onclick="setPostType('post')" >📝 Post</button>
+              <button class="cal-view-btn"        id="btnTypeStory" onclick="setPostType('story')">📱 Story</button>
+            </div>
+          </div>
+          <!-- Pillar picker (SBF only) -->
+          <div id="seriesSelector" style="display:none;margin-bottom:16px">
+            <div style="font-size:.82rem;font-weight:600;margin-bottom:9px">Content Pillar &amp; Type</div>
+            <div class="pillar-picker" id="pillarPicker"></div>
+          </div>
+          <!-- Story Composer (SBF only, hidden by default) -->
+          <div id="storyComposer" style="display:none">
+            <div class="story-composer-wrap">
+              <div class="story-phone">
+                <div class="story-header">
+                  <div class="story-avatar"></div>
+                  <div>
+                    <div class="story-brand">@soldbyfogel</div>
+                    <div class="story-series-tag" id="storySeriesTag">⭐️ Client Love</div>
+                  </div>
+                </div>
+                <div class="story-body">
+                  <div class="story-stars" id="storyStarsPreview">★★★★★</div>
+                  <div class="story-quote" id="storyQuotePreview">"Your client quote will appear here..."</div>
+                  <div class="story-client-name" id="storyNamePreview">— Client Name, City</div>
+                  <div class="story-footer-brand">SOLD BY FOGEL</div>
+                </div>
+              </div>
+              <div class="story-fields">
+                <div class="form-group"><label class="form-label">Client Name & City</label><input class="form-input" id="storyClientName" placeholder="e.g. Sarah & Mark T., Morgan Hill" oninput="updateStoryPreview()"/></div>
+                <div class="form-group"><label class="form-label">Star Rating</label>
+                  <div style="display:flex;gap:8px">
+                    ${[5,4,3].map(n=>`<label style="display:flex;align-items:center;gap:5px;font-size:.82rem;cursor:pointer"><input type="radio" name="storyStars" value="${n}" ${n===5?'checked':''} onchange="updateStoryPreview()" style="accent-color:var(--brand)"/> ${'★'.repeat(n)}</label>`).join('')}
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label">Testimonial Quote</label><textarea class="form-input" id="storyQuote" rows="4" placeholder='"Moshe was incredible — we closed in 21 days and 8% over asking!"' oninput="updateStoryPreview()" style="resize:vertical"></textarea></div>
+                <div class="form-group"><label class="form-label">Schedule Date</label><input type="date" class="form-input" id="storyDate"/></div>
+                <div style="display:flex;gap:8px;margin-top:4px">
+                  <button class="btn btn-primary" style="flex:1" onclick="scheduleStory()">🚀 Schedule Story</button>
+                  <button class="btn btn-ghost" onclick="saveStoryDraft()">💾 Draft</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Regular caption composer -->
+          <div id="captionComposer">
+          <div style="font-size:.82rem;font-weight:600;margin-bottom:10px">Platforms</div>
+          <div class="platform-select" id="platformSelect"></div>
+          <div style="font-size:.82rem;font-weight:600;margin-bottom:10px">Caption</div>
+          <textarea class="compose-area" id="composeArea" placeholder="Write your caption… or use AI Suggestions →" oninput="updateCharCount(this)" rows="6"></textarea>
+          <div class="compose-toolbar">
+            <button class="btn btn-ghost btn-sm" onclick="insertEmoji('😊')">😊</button>
+            <button class="btn btn-ghost btn-sm" onclick="insertEmoji('🔥')">🔥</button>
+            <button class="btn btn-ghost btn-sm" onclick="insertEmoji('✨')">✨</button>
+            <button class="btn btn-ghost btn-sm" onclick="insertEmoji('💪')">💪</button>
+            <button class="btn btn-ghost btn-sm" onclick="insertEmoji('🎉')">🎉</button>
+            <button class="btn btn-ghost btn-sm" onclick="insertEmoji('🏡')" id="brandEmoji1">🏡</button>
+            <span class="char-count" id="charCount">0 / 2,200</span>
+          </div>
+          <div style="margin-top:14px">
+            <div style="font-size:.82rem;font-weight:600;margin-bottom:0">Hashtags</div>
+            <div class="hashtag-input-row">
+              <input class="hashtag-input" id="hashtagInput" placeholder="Add hashtag (without #)" onkeydown="if(event.key==='Enter'){event.preventDefault();addHashtag()}"/>
+              <button class="btn btn-ghost btn-sm" onclick="addHashtag()">Add</button>
+              <button class="btn btn-ghost btn-sm" onclick="suggestHashtags()">✨ Suggest</button>
+            </div>
+            <div class="hashtag-list" id="hashtagList"></div>
+          </div>
+          <div class="schedule-row">
+            <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="schedDate"/></div>
+            <div class="form-group"><label class="form-label">Time</label><input type="time" class="form-input" id="schedTime" value="09:00"/></div>
+            <div class="form-group"><label class="form-label">Action</label>
+              <select class="form-input" id="schedStatus">
+                <option>Schedule</option><option>Save as Draft</option><option>Post Now</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:9px;margin-top:14px">
+            <button class="btn btn-primary" onclick="schedulePost()" style="flex:1">🚀 Publish / Schedule</button>
+            <button class="btn btn-ghost" onclick="saveDraft()">💾 Draft</button>
+            <button class="btn btn-ghost" onclick="openExportModal('compose')" title="Export to Metricool" style="color:var(--brand);border-color:var(--brand)">📤 Export</button>
+          </div>
+          </div><!-- /captionComposer -->
+        </div>
+        <!-- AI Panel -->
+        <div>
+          <div class="holidays-panel" id="holidaysPanel" style="display:none">
+            <h3>🗓️ חגים קרובים</h3>
+            <div id="holidayQuickList"></div>
+          </div>
+          <div class="ai-panel">
+            <h3>🤖 AI Assistant</h3>
+            <p id="aiPanelDesc">Generate captions tailored for Sold By Fogel.</p>
+            <div class="tone-chips" id="toneChips"></div>
+            <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="generateSuggestions()">✨ Generate Captions</button>
+            <div id="aiSuggestions"></div>
+          </div>
+          <div class="preview-card">
+            <div class="card-title" style="font-size:.8rem;margin-bottom:10px">Live Preview</div>
+            <div class="preview-header">
+              <div class="preview-avatar"></div>
+              <div><div class="preview-username" id="previewUsername">Sold By Fogel</div><div class="preview-handle" id="previewHandle">@soldbyfogel</div></div>
+            </div>
+            <div class="preview-text" id="previewText" style="color:var(--text-muted);font-size:.8rem">Caption will appear here…</div>
+            <div class="preview-hashtags" id="previewHashtags"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── QUEUE ── -->
+    <div id="view-queue" class="view">
+      <div class="queue-filters">
+        <button class="filter-btn active" onclick="filterQueue('all',this)">All Posts</button>
+        <button class="filter-btn" onclick="filterQueue('scheduled',this)">Scheduled</button>
+        <button class="filter-btn" onclick="filterQueue('draft',this)">Drafts</button>
+        <button class="filter-btn" onclick="filterQueue('published',this)">Published</button>
+      </div>
+      <div id="queueList"></div>
+    </div>
+
+    <!-- ── STORIES ── -->
+    <div id="view-stories" class="view">
+      <div class="stories-topbar">
+        <div>
+          <div style="font-size:1rem;font-weight:700;margin-bottom:3px">Story Planner <span id="storiesBrandLabel" style="font-size:.75rem;font-weight:500;color:var(--brand)"></span></div>
+          <div style="font-size:.78rem;color:var(--text-muted)">Schedule at least 2 stories per day · AM (9am) + PM (6pm)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div class="stories-progress">
+            <div class="stories-progress-bar"><div class="stories-progress-fill" id="storiesProgressFill" style="width:0%"></div></div>
+            <span id="storiesProgressLabel">0/14 slots</span>
+          </div>
+          <div class="week-nav">
+            <button class="icon-btn" onclick="changeStoryWeek(-1)">‹</button>
+            <div class="week-label" id="storyWeekLabel"></div>
+            <button class="icon-btn" onclick="changeStoryWeek(1)">›</button>
+          </div>
+        </div>
+      </div>
+      <div class="stories-sidebar">
+        <div>
+          <div class="stories-legend" id="storiesLegend"></div>
+          <div class="stories-grid" id="storiesGrid"></div>
+        </div>
+        <div class="template-library">
+          <h3>📚 Story Templates</h3>
+          <div id="templateLibrary"></div>
+          <button class="fill-week-btn" onclick="autoFillWeek()">✨ Auto-fill This Week</button>
+          <div class="week-fill-progress">
+            <div class="week-fill-bar"><span>Week completion</span><span id="weekFillPct">0%</span></div>
+            <div style="height:6px;background:var(--surface2);border-radius:10px;overflow:hidden"><div id="weekFillBar" style="height:100%;background:var(--brand);border-radius:10px;width:0%;transition:width .4s"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ANALYTICS ── -->
+    <div id="view-analytics" class="view">
+      <div class="analytics-top" id="analyticsPlatforms"></div>
+      <div class="analytics-grid">
+        <div class="card">
+          <div class="card-title">Audience by Platform</div>
+          <div class="donut-wrap"><svg width="130" height="130" viewBox="0 0 130 130" id="donutSvg"></svg><div class="donut-legend" id="donutLegend"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Top Posts <span>By engagement</span></div>
+          <div id="topPostsList"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Weekly Reach <span>Impressions by platform</span></div>
+        <div class="chart-wrap" id="reachChart"></div>
+      </div>
+    </div>
+
+    <!-- ── ACCOUNTS ── -->
+    <div id="view-accounts" class="view">
+      <div style="margin-bottom:20px">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:4px" id="accountsTitle">Sold By Fogel — Connected Accounts</div>
+        <div style="font-size:.78rem;color:var(--text-muted)">Manage social profiles linked to this brand</div>
+      </div>
+      <div class="accounts-grid" id="accountsList"></div>
+      <button class="btn btn-primary" style="margin-top:18px" onclick="showToast('🔗 Connect account flow coming soon','var(--brand)')">+ Connect New Account</button>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title"><span id="modalTitle">Post Detail</span><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  BRAND CONFIG
+// ═══════════════════════════════════════════
+const BRANDS = {
+  sbf: {
+    id:'sbf', name:'Sold By Fogel', sub:'Real Estate · Morgan Hill',
+    icon:'🏡', brandEmoji:'🏡', handle:'@soldbyfogel',
+    class:'brand-sbf', badgeClass:'sbf', color:'#c9a84c',
+    platforms:['ig','fb','fbp','li'],
+    defaultHashtags:['soldbyfogel','bayarearealestate','morganhill','siliconvalleyhomes','realestate','homesales','luxuryhomes','realestateagent'],
+    weeklySchedule:[
+      {day:'Mon', label:'Market Insight',      icon:'📊', series:'market-insight',    type:'post',  color:'#3b82f6', desc:'Educational tip or market update'},
+      {day:'Wed', label:'Local / Listing',      icon:'🏡', series:'mh-local-love',     type:'post',  color:'#22c55e', desc:'Morgan Hill content or listing spotlight'},
+      {day:'Wed', label:'Client Love ⭐️',       icon:'⭐️', series:'client-love',       type:'story', color:'#f59e0b', desc:'Weekly recurring story feature'},
+      {day:'Fri', label:'Behind the Scenes',    icon:'🎬', series:'behind-the-deal',   type:'post',  color:'#c9a84c', desc:'Personal moment or behind-the-deal'},
+    ],
+    series:[
+      {id:'market-insight',  name:'Market Insight',       icon:'📊', color:'#3b82f6', day:'Mon', desc:'Monday market education & tips'},
+      {id:'mh-local-love',   name:'Morgan Hill Local Love',icon:'💚', color:'#22c55e', day:'Wed', desc:'Local content & listing spotlights'},
+      {id:'behind-the-deal', name:'Behind the Deal',       icon:'🔑', color:'#c9a84c', day:'Fri', desc:'The story behind every transaction'},
+      {id:'client-love',     name:'Client Love ⭐️',        icon:'⭐️', color:'#f59e0b', day:'Wed', desc:'Weekly story — client testimonials', isStory:true},
+    ],
+    pillars:[
+      {day:'Mon', dayFull:'Monday', label:'Useful', icon:'💡', color:'#3b82f6', desc:'Educational content that builds expert authority',
+        types:[
+          {id:'market-insight',     label:'Market Insight',        icon:'📊'},
+          {id:'buyer-seller-tip',   label:'Buyer / Seller Tip',    icon:'💡'},
+          {id:'mortgage-breakdown', label:'Mortgage Breakdown',    icon:'🏦'},
+          {id:'re-myth',            label:'Real Estate Myth',      icon:'❌'},
+          {id:'investment-explainer',label:'Investment Explainer', icon:'📈'},
+        ]
+      },
+      {day:'Wed', dayFull:'Wednesday', label:'Trust', icon:'🤝', color:'#22c55e', desc:'Personal content that builds credibility',
+        types:[
+          {id:'client-review',      label:'Client Review',         icon:'⭐️'},
+          {id:'behind-the-scenes',  label:'Behind the Scenes',     icon:'🎬'},
+          {id:'family-community',   label:'Family / Community',    icon:'👨‍👩‍👧'},
+          {id:'day-in-the-life',    label:'Day in the Life',       icon:'☀️'},
+          {id:'transaction-win',    label:'Transaction Win',       icon:'🏆'},
+        ]
+      },
+      {day:'Fri/Sat', dayFull:'Friday / Saturday', label:'Reach', icon:'🚀', color:'#c9a84c', desc:'Discovery content to grow your audience',
+        types:[
+          {id:'reel',               label:'Reel',                  icon:'🎥'},
+          {id:'mh-hidden-gem',      label:'MH Hidden Gem',         icon:'💎'},
+          {id:'local-business',     label:'Local Business',        icon:'🏪'},
+          {id:'property-walkthrough',label:'Property Walkthrough', icon:'🏠'},
+          {id:'drone-footage',      label:'Neighborhood Drone',    icon:'🚁'},
+        ]
+      },
+    ],
+    pillarSuggestions:{
+      'market-insight':["📊 Monday Market Insight\nBay Area inventory is down 18% — Morgan Hill remains the most accessible entry point in Santa Clara County. Median days on market: 14. List-to-sale: 103%.\nThe data is clear. DM me to talk strategy. 📲","📊 Market Update\nMortgage rates dipped this week and buyer activity is picking up. If you've been waiting for the right moment — this might be it.\nLet's talk before inventory gets tighter. 💬","📊 Quick market stat that could save you $50,000:\nHomes priced right sell 97% closer to list price.\nHomes that sit get low-balled.\nPricing strategy = money in your pocket. DM me for a free pricing consultation."],
+      'buyer-seller-tip':["💡 Buyer Tip of the Week:\nDon't skip the pre-approval letter before touring homes.\nIn Morgan Hill's market, the best homes go in 48-72 hours. Without pre-approval, you're watching from the sidelines.\nReady? Let's get you in the game. 🏡","💡 Seller Tip:\nThe first 7 days on market are EVERYTHING.\nThat's when you have the most leverage, the most eyes, and the best chance at multiple offers.\nPricing right from day one isn't strategy — it's the only strategy. 🎯","💡 Did you know?\nAs a buyer, you can negotiate more than just price.\n• Closing costs\n• Repair credits\n• Closing timeline\n• Appliances included\nLet me show you how to structure an offer that wins. 📲"],
+      'mortgage-breakdown':["🏦 Mortgage Monday:\nWhat does $700K actually cost per month?\nAt today's rates (~6.8%), a 20% down payment = ~$3,650/mo\nProperty tax: ~$730/mo\nInsurance: ~$120/mo\nTotal: ~$4,500/mo\n\nNot as scary when you break it down. Questions? DM me.","🏦 ARM vs Fixed Rate:\nA 30-year fixed = stability. Same payment for 30 years.\nA 5/1 ARM = lower rate for 5 years, then adjusts.\n\nWho wins with an ARM? Buyers who plan to move or refinance within 5 years.\nWho wins with fixed? Everyone who wants predictability.\n\nWhich one is right for you depends on YOUR plan. Let's talk. 💬","🏦 First-time buyers: your down payment doesn't have to be 20%.\n• FHA loan: 3.5% down\n• Conventional: as low as 3%\n• VA/USDA: 0% down (if you qualify)\n\nDon't let the down payment myth keep you out of the market.\nDM me and let's find the right program for you. 🏡"],
+      're-myth':["❌ Real Estate Myth:\n\"You have to wait for rates to drop before buying.\"\n\n✅ Reality: If rates drop, prices go UP (more competition). If you buy now, you can refinance later.\n\"Date the rate, marry the house.\"\n\nDon't time the market. Time your life. 📲","❌ Myth: \"Spring is the only good time to buy.\"\n✅ Reality: Winter and fall buyers often get BETTER deals — less competition, more motivated sellers.\nThe best time to buy is when YOU are ready.\nLet's make a plan. 🏡","❌ Myth: \"FSBO saves money.\"\n✅ Reality: NAR data shows FSBO homes sell for 26% LESS than agent-listed homes.\nThat 3% commission you \"saved\" cost you $50,000.\nCall me before you go it alone. 📞"],
+      'investment-explainer':["📈 What is a 1031 Exchange and why should every Bay Area investor know about it?\nYou can defer capital gains taxes by rolling profits into a new property.\nInstead of paying the IRS, you keep your money working.\nDM me — I specialize in helping investors structure these correctly. 💰","📈 Cap Rate 101:\nCap Rate = Net Operating Income ÷ Property Value\nA 5% cap rate on a $800K property = $40K/year net.\nMorgan Hill has some of the best cap rates in Santa Clara County right now.\nWant a list of investment properties? DM me. 📊","📈 Why Morgan Hill for investment?\n✅ Strong rental demand (Apple/Google commuters)\n✅ Lower price point than San Jose / Sunnyvale\n✅ Consistent appreciation — 6.2% avg over 10 years\n✅ New Gilroy premium outlets bringing retail growth\n\nLet's find your next property. 📲"],
+      'client-review':["⭐️⭐️⭐️⭐️⭐️\n\"Moshe was incredible from start to finish. We were first-time buyers and he made the whole process feel easy. He negotiated us a price we didn't think was possible and we closed in 21 days.\"\n— Sarah & Mark T., Morgan Hill\n\nThis is why I do what I do. 🙏🏡","⭐️ Client Love Wednesday:\n\"After 4 failed offers with another agent, we switched to Moshe. First offer we wrote together — we won. 7% over asking, no contingencies waived.\"\n— The Ramirez Family, Gilroy\n\nStrategy matters. 💪","⭐️⭐️⭐️⭐️⭐️\n\"Moshe sold our home in 9 days. 8% over asking. His construction background gave him insights that genuinely helped buyers see the value.\"\n— Linda K., Sunnyvale\n\nIf you're thinking of selling, let's talk. 📲"],
+      'behind-the-scenes':["🎬 Behind the Deal:\nMy clients were outbid 3 times in a row. We regrouped, reworked the offer strategy — and on the very next one, we won. 8% over asking.\n\nWe stopped competing on price and started competing on terms. That's the game. 💪","🎬 A day in escrow:\n✅ 7am — pre-approval confirmed\n✅ 10am — offer submitted\n✅ 2pm — counter received\n✅ 5pm — counter accepted\n✅ 6pm — clients popping champagne 🥂\n\nThis is what I do every day. Ready for your day? 📲","🎬 Nobody talks about the deals that almost fell apart.\nInspection came back rough. $40K in repairs.\nI got a $28K credit AND kept the deal alive.\nClosing is a skill. Let's get yours done right."],
+      'family-community':["👨‍👩‍👧 Took my kids to Uvas Creek trail this morning before school.\nThe kind of morning that reminds you why you chose this place to build a life.\nMorgan Hill doesn't just have great real estate — it has a great life. 🌿☀️","👨‍👩‍👧 Proud to call Morgan Hill home for 12 years.\nMy kids go to school here. My clients become neighbors. My neighbors become clients.\nThis is more than a job — it's my community. 🏡💚","This is why I show up every day. 🙏\n[Share a personal moment or family photo with a short caption about what drives you in your work and community]"],
+      'day-in-the-life':["☀️ 6am: Coffee + market reports\n9am: Showing in Morgan Hill\n11am: Offer strategy session with buyers\n1pm: Listing appt in Gilroy\n4pm: Client call — we got the house 🏡\n6pm: Family dinner\n\nNo two days are the same. I love this job. 💛","☀️ What does a real estate day actually look like?\n→ 23 texts before 9am\n→ 2 showings, 1 inspection\n→ 4 offers reviewed\n→ 1 happy family with keys\n\nThis is why I wake up early. 🗝️","☀️ Today's schedule:\n→ Pre-market listing walkthrough in Coyote Valley\n→ Meet with first-time buyers (they're nervous, I love it)\n→ Negotiating a repair credit on an active escrow\n\nDM me if you want to be on that schedule next week. 📲"],
+      'transaction-win':["🏆 Just closed!\n4 Bed · 3 Bath · Morgan Hill\nList price: $1,175,000\nSold for: $1,241,000\n15 days on market · 3 offers\n\nMy sellers walked away with $66K over asking. That's strategy. 💪","🏆 This week's win:\nBuyers had been searching for 8 months before they called me.\n3 weeks later — keys in hand, $14K under asking.\nTiming + strategy = results.\n\nReady to stop searching and start living? DM me. 🏡","🏆 Numbers don't lie:\n• 97.3% list-to-sale ratio\n• 18 avg days on market\n• 100% client satisfaction\n\nIf you're interviewing agents, I'd love to earn your business. Let's talk. 📲"],
+      'reel':["🎥 Ideas for this Reel:\n• '3 things I wish buyers knew before making an offer in Morgan Hill'\n• Speed walkthrough of a new listing\n• Before & after of a staged home\n• 'Day in the life' of a closing day\n\nPick one and let's film it! 🎬","🎥 Reel hook ideas that perform:\n→ 'Stop doing this if you're house hunting in Morgan Hill'\n→ 'The offer that won in a bidding war (what we did differently)'\n→ 'Morgan Hill in 60 seconds — why people keep moving here'\n\nShort, punchy, valuable. That's the formula. 🏆","🎥 Real estate reels that get saved:\n• Neighborhood tours\n• Market stat breakdowns\n• Myth-busting videos\n• 'Real talk' moments from the field\n\nGive people something worth sharing."],
+      'mh-hidden-gem':["💎 Morgan Hill Hidden Gem:\nLas Animas Park — most people drive past it and never stop.\nWalking trails, open fields, a creek path. Honestly one of the best Saturday morning spots in South County.\nDrop your favorite MH hidden gem below ⬇️","💎 Hidden gem alert:\nEl Toro Coffee Roasters on Monterey Rd.\nLocal, family-owned, best latte in South County (don't @ me).\nThis is the kind of local spot that makes Morgan Hill feel like a small town inside a big opportunity. ☕🏡","💎 Not many people know about the Uvas Canyon County Park trails — 45 minutes of redwoods and waterfalls, 5 minutes from downtown MH.\nThis is why people move here and never leave. 🌲"],
+      'local-business':["🏪 Shoutout to a Morgan Hill local business this week!\n[Tag the business, share what you love about them, why supporting local matters]\n\nThis community thrives when we shop local. 💚🏡","🏪 Supporting local is supporting community.\n[Feature a restaurant, shop, or service that makes Morgan Hill special. Include a photo and tag them.]\n\nThese are the places that make this town home. ❤️","🏪 MH Local Love:\nEvery home I sell, I send my clients a guide to the best local spots — restaurants, parks, hidden gems.\nBecause finding the right home is just the beginning. The life you build here is the real prize. 🌟"],
+      'property-walkthrough':["🏠 Property Walkthrough:\n[Walking through a listing — chef's kitchen, indoor/outdoor flow, vineyard views]\nThis one won't last. DM me for details or a private tour. 📲","🏠 New to market — Morgan Hill:\n[Share listing details: beds/baths, standout features, lifestyle]\nOpen house this weekend or DM for a private showing. 🗝️","🏠 Just listed — here's what makes this one special:\n[3 specific features that make the property unique]\nPriced at $[X]. Link in bio for full details + photos. 🏡"],
+      'drone-footage':["🚁 Neighborhood Drone:\nMorgan Hill from above — vineyard hills, open space, that South Bay glow.\nThis is the backdrop my clients get to call home. 🌅","🚁 Every listing tells a story from the air.\n[Aerial shot of the property / neighborhood]\nLocation + lifestyle. That's what you're really buying. 🏡📍","🚁 Why Morgan Hill?\nZoom out and you'll see it — 45 min to San Jose, surrounded by hills and open space, one of the last truly livable Bay Area communities.\nSee it from above. Imagine living here. 🌄"],
+    },
+    tones:['Market Insight 📊','Local Love 💚','Behind the Deal 🔑','Listing Spotlight 🏠','Personal 🎬'],
+    aiSuggestions:{
+      'Market Insight 📊':[
+        "📊 Monday Market Insight\nBay Area inventory is down 18% this quarter — but Morgan Hill remains one of the most accessible entry points in Santa Clara County.\nIf you've been waiting for the \"right time,\" here's what the data says: ➡️ Median days on market: 14. List-to-sale ratio: 103%. Now is the time. DM me to talk strategy.",
+        "💡 Tip Tuesday → Monday Edition:\nDid you know that homes priced within 2% of market value sell 3x faster AND closer to asking price?\nOverpricing is the #1 mistake sellers make. Here's how I price every home I list:\n1️⃣ Hyper-local comps\n2️⃣ Condition-adjusted analysis\n3️⃣ Demand pulse check\nSave this. Your future self will thank you. 📌 #MarketInsight",
+        "📌 What is a 1031 Exchange — and why should every Bay Area investor know about it?\nIt lets you defer capital gains taxes when you sell a property and reinvest into a like-kind property within 180 days.\nTranslate: you keep more money working for you.\nWant to know if it fits your situation? DM me. 📲 #SoldByFogel #MarketInsight"
+      ],
+      'Local Love 💚':[
+        "💚 Morgan Hill Local Love\nFavorite spot this week: the Saturday farmers market on East Main. Local honey, fresh flowers, and the best tamales in Santa Clara County. 🌸🍯\nThis is the lifestyle Morgan Hill offers — and it's one of the reasons I'm proud to call it home.\nWhere's your favorite local spot? Drop it below ⬇️ #MorganHillLocalLove #SoldByFogel",
+        "🏡 Listing Spotlight\nJust listed: a stunning 4BD/3BA in the heart of Morgan Hill. Vineyard views, open floor plan, and a backyard built for California living. 🍷☀️\nSwipe to see every detail ➡️\nDM me or call (408) 687-4880 for a private showing. These don't last. 🔑 #MorganHillLocalLove",
+        "📍 Why Morgan Hill?\nGreat schools. Safe streets. Vineyard views. And a community that actually knows your name.\nI've lived here, raised my family here, and sold 100+ homes here — and I'm still convinced it's one of the most underrated places to live in all of Silicon Valley.\nThinking about making a move to Morgan Hill? Let's talk. 💬 #MorganHillLocalLove #SoldByFogel"
+      ],
+      'Behind the Deal 🔑':[
+        "🔑 Behind the Deal — This week's story:\nMy clients were outbid 3 times before they came to me. We sat down, reworked their strategy, and on the very next offer — we won. 8% over asking, no contingencies waived.\nWhat changed? We stopped competing on price alone and started competing on terms.\nThis is the game. And this is why I love what I do. 💪 #BehindTheDeal #SoldByFogel",
+        "🎬 Friday Behind the Scenes\nWhat does a showing day actually look like?\n6am → review comparable sales\n8am → walk the property before clients arrive\n10am → showing #1\n1pm → showings #2 & #3\n4pm → debrief calls\n7pm → offer prep\nEvery hour is intentional. Your biggest investment deserves nothing less. 🏡 #BehindTheDeal",
+        "Here's something nobody tells you about the offer process: 📋\nThe strongest offer isn't always the highest number.\nI've won deals for clients at asking price — because the letter was personal, the terms were clean, and the timeline matched the seller's needs perfectly.\nNegotiation is an art. I've been studying it for years. 🖊️ #BehindTheDeal #SoldByFogel"
+      ],
+      'Listing Spotlight 🏠':[
+        "🚨 JUST LISTED — Morgan Hill\n4 Bed · 3 Bath · 2,450 sqft · Vineyard Views\nThis is the one you've been waiting for. Open floor plan, chef's kitchen, and a backyard that makes you never want to leave California. 🍷☀️\nOpen house this Sunday 1–4PM. Link in bio for full details. 🔑 DM for private tour. #SoldByFogel",
+        "🔥 JUST SOLD — and here's why it moved fast:\n✅ Priced strategically (not greedily)\n✅ Professional photos + staging consult\n✅ Launched on a Thursday for weekend traffic\n✅ 11 showings in 3 days\n✅ Multiple offers. Sold for 106% of asking.\nWant these results for your home? Let's talk. 📞 (408) 687-4880 #SoldByFogel",
+        "📸 Property of the Week\nNestled in one of Morgan Hill's most sought-after neighborhoods — this 3BD/2BA has the natural light, the layout, and the location that buyers are actively searching for.\nSwipe for the full tour ➡️\nDM me to schedule your private showing before the weekend. 🏡 #SoldByFogel #MorganHillLocalLove"
+      ],
+      'Personal 🎬':[
+        "🎬 Friday Personal\nTook my kids to the Uvas Creek trail this morning before school. The kind of morning that reminds you why you chose this place to build a life.\nMorgan Hill doesn't just have great real estate — it has a great life. That's what I'm really selling. 🌿☀️ #SoldByFogel",
+        "Grateful this Friday. 🙏\nThis week I handed over keys to three families. Three different budgets, three different timelines — but the same look on every face when the door opens for the first time as homeowners.\nThat look is why I do this. Every single day. 🏡💛 #SoldByFogel",
+        "Real talk on a Friday: ☕\nI get asked all the time — 'Is now a good time to buy?'\nMy honest answer: the best time to buy is when YOU are ready — financially stable, clear on your goals, and working with someone who puts your interests first.\nI've never told a client to rush. And I never will. Let's chat when the time is right. 📲 #SoldByFogel"
+      ]
+    },
+    storyTemplates:[
+      {id:'client-love',  name:'Client Love ⭐️',       icon:'⭐️', color:'#f59e0b', platforms:['ig','fb','fbp'], slot:'pm',  desc:'Wednesday recurring — client testimonial'},
+      {id:'market-tip',   name:'Market Tip',            icon:'📊', color:'#3b82f6', platforms:['ig','li'],       slot:'am',  desc:'Quick market insight or stat'},
+      {id:'listing',      name:'Listing Preview',       icon:'🏠', color:'#c9a84c', platforms:['ig','fb','fbp'], slot:'am',  desc:'Swipe-up listing or open house'},
+      {id:'bts',          name:'Behind the Deal',       icon:'🎬', color:'#a78bfa', platforms:['ig','fbp'],      slot:'pm',  desc:'Personal moment or deal story'},
+      {id:'mh-moment',    name:'MH Local Moment',       icon:'🌿', color:'#22c55e', platforms:['ig','fb','fbp'], slot:'pm',  desc:'Morgan Hill life & community'},
+      {id:'poll',         name:'Poll / Q&A',            icon:'💬', color:'#fb7185', platforms:['ig'],            slot:'am',  desc:'Engage your audience'},
+      {id:'tip-tuesday',  name:'Buyer/Seller Tip',      icon:'💡', color:'#fbbf24', platforms:['ig','li','fbp'], slot:'am',  desc:'Educational tip for buyers or sellers'},
+      {id:'motivation',   name:'Quote / Motivation',   icon:'✨', color:'#60a5fa', platforms:['ig','fbp'],      slot:'am',  desc:'Inspirational quote for the morning'},
+    ],
+    defaultStoryWeek:[
+      {dow:1,slot:'am',template:'market-tip'},   {dow:1,slot:'pm',template:'bts'},
+      {dow:2,slot:'am',template:'listing'},       {dow:2,slot:'pm',template:'mh-moment'},
+      {dow:3,slot:'am',template:'tip-tuesday'},   {dow:3,slot:'pm',template:'client-love'},
+      {dow:4,slot:'am',template:'market-tip'},    {dow:4,slot:'pm',template:'poll'},
+      {dow:5,slot:'am',template:'listing'},       {dow:5,slot:'pm',template:'bts'},
+      {dow:6,slot:'am',template:'mh-moment'},     {dow:6,slot:'pm',template:'client-love'},
+      {dow:0,slot:'am',template:'motivation'},    {dow:0,slot:'pm',template:'tip-tuesday'},
+    ],
+    stats:{followers:'18.4K',engagement:'7.2%',posts:18,scheduled:3},
+    platforms_data:[
+      {name:'Instagram',icon:'📷',color:'var(--pink)',followers:'8.2K',growth:'+5.4%',eng:'8.1%',posts:10},
+      {name:'Facebook',icon:'📘',color:'#6fa8dc',followers:'6.1K',growth:'+2.2%',eng:'4.9%',posts:5},
+      {name:'LinkedIn',icon:'💼',color:'#6aa3d5',followers:'4.1K',growth:'+11.2%',eng:'9.8%',posts:3},
+    ],
+    topPosts:[
+      {text:'JUST SOLD — 8% over asking in Morgan Hill 🔑',eng:'9.2%',icon:'🔑',plat:'IG + FB'},
+      {text:'SB9: Is your lot eligible to split? 📐',eng:'8.1%',icon:'📐',plat:'LI + FB'},
+      {text:'Morgan Hill market update Q1 2025 📊',eng:'7.4%',icon:'📊',plat:'LI'},
+      {text:'5 things every Bay Area seller should know 🏡',eng:'6.8%',icon:'🏡',plat:'IG + FB + LI'},
+    ],
+    donut:[
+      {label:'Instagram',val:8200,color:'var(--pink)'},
+      {label:'Facebook',val:6100,color:'#6fa8dc'},
+      {label:'LinkedIn',val:4100,color:'#6aa3d5'},
+    ],
+    engData:{ig:[30,55,42,70,88,72,95],fb:[22,30,28,45,50,40,58],li:[15,20,18,32,28,35,42]},
+    reachData:[[900,1300,1100,1800,2200,1700,2400],[600,750,680,1100,1200,900,1400],[300,420,380,600,580,680,750]],
+  },
+  gm: {
+    id:'gm', name:'Givat Morgan', sub:'קהילה ישראלית · מורגן היל',
+    icon:'✡️', brandEmoji:'🇮🇱', handle:'@givat_morgan',
+    class:'brand-gm', badgeClass:'gm', color:'#4a9eff',
+    platforms:['ig','fbg','wa'],
+    rtl:true,
+    defaultHashtags:['גבעתמורגן','קהילהישראלית','מורגןהיל','ישראלים_בקליפורניה','שבתשלום','חגשמח','עםישראלחי','ישראליםבבייאריאה'],
+    tones:['חם ❤️','קהילה 🤝','חגיגי 🎉','עדכונים 📋','שבת 🕯️'],
+    aiSuggestions:{
+      'חם ❤️':[
+        "שבת שלום לכל משפחות גבעת מורגן! 🕯️✨\nיהי רצון שתהיה השבת הזאת מלאה בשלום, אהבה ונחת. שולחן ערוך, משפחה מסביב, וניחוח של בית. שבת שלום ומבורך לכולם 💙🤍",
+        "אין כמו להיות בקהילה שמרגישה כמו בית 🏠❤️\nתודה לכולם שבאתם לאירוע של אתמול. הרגשנו ממש שאנחנו בישראל — רק עם שמש קליפורנית 😄☀️\nגבעת מורגן — הבית שלנו כאן. 💙",
+        "מהמורגן היל לגבעות ירושלים — הלב תמיד מחובר 🇮🇱💙\nגאים להיות ישראלים בלב עמק הסיליקון. כי לא משנה כמה רחוק אנחנו — עם ישראל חי, גם כאן בקליפורניה. ✡️"
+      ],
+      'קהילה 🤝':[
+        "📣 עדכון קהילתי!\nסעודת שבת חודשית — השבת, יום שישי בשעה 19:00 🕯️\nכולם מוזמנים — משפחות, רווקים, חדשים בסביבה.\nתביאו מנה לשיתוף, תביאו את המשפחה, תבואו כמות שאתם 🙏\nהרשמה בלינק בביו!",
+        "חדשים בבאי אריאה מישראל? 🇮🇱\nגבעת מורגן כאן בשבילכם! 🤝\nאנחנו קהילה של יותר מ-200 משפחות ישראליות במורגן היל וסביבה.\nאירועים, חגים, ילדים, תמיכה — כל מה שצריך כדי להרגיש בבית.\nשלחו לנו הודעה ונשמח לחבר אתכם! 💙",
+        "💙🤍 קהילה זה הכל.\nבין אם זה ראש השנה, יום העצמאות, או סתם ברביקיו של יום שלישי —\nאנחנו תמיד שם אחד לשני. זה הדרך של גבעת מורגן 🙌\nתייגו מישהו שחלק מהקהילה שלנו! ⬇️"
+      ],
+      'חגיגי 🎉':[
+        "🎉 חג שמח מגבעת מורגן לכל הקהילה!\nשנה של בריאות, שמחה, ואהבה לכל המשפחות שלנו 🥂✨\nמי מוכן לחגוג? תגיבו עם האמוג'י האהוב עליכם מהחג! ⬇️",
+        "🇮🇱 יום העצמאות שמח!\nשבעים ושמונה שנה למדינת ישראל — ואנחנו חוגגים יחד כאן בגבעת מורגן! 🎆💙🤍\nריקודים, אוכל, גאווה ישראלית — הפרטים בביו. תבואו! 🕺💃\nעם ישראל חי! 🇮🇱✡️",
+        "פורים שמח לכל הקהילה! 🎭🍩\nמי כבר הכין תחפושת? 👀😄\nנשמח לראות את כל התחפושות שלכם — שתפו בתגובות! 🎪🌟\nמשלוח מנות, אוזני המן, ורעשנים — זה חג שלנו! חג שמח! 🎉"
+      ],
+      'עדכונים 📋':[
+        "📅 אירועי גבעת מורגן — מאי 2025:\n• 2 מאי — סעודת שבת משותפת, שעה 19:00\n• 9 מאי — יום כיף לילדים (דוברי עברית מוזמנים!)\n• 14 מאי — ברביקיו יום העצמאות 🇮🇱🎉\n• 23 מאי — ערב קולנוע ישראלי 🎬\nשמרו את התאריכים! 🗓️",
+        "📋 חדשים במורגן היל מישראל?\nכל מה שצריך לדעת:\n✅ בתי ספר מעולים (מהטובים במדינה)\n✅ קהילה ישראלית פעילה — זה אנחנו! 🙌\n✅ 45 דקות מרכז הייטק של סן חוזה\n✅ מחירי דיור נמוכים יחסית לבאי אריאה\nשלחו לנו הודעה — ישמח לעזור! 💙",
+        "🌍 ידעתם?\nיש מעל 200 משפחות ישראליות באזור מורגן היל וגילרוי.\nגבעת מורגן הוקמה כדי לאחד אותנו — לחגים, לתמיכה, לחברויות, ולשמירה על תרבות ישראלית רחוק מהבית.\nהצטרפו אלינו! 💙🤍"
+      ],
+      'שבת 🕯️':[
+        "שבת שלום! 🕯️🕯️\nהנרות דולקים, השולחן ערוך, והמשפחה מסביב.\nמאחלים לכל קהילת גבעת מורגן שבת של מנוחה, שלום ואהבה.\nשבת שלום ומבורך! 💙🤍✨",
+        "ערב שבת מגיע 🕯️\nזמן להאט, לנשום, ולהיות עם האנשים שאנחנו אוהבים.\nיהי רצון שתהיה שבת שלווה ומחזקת לכל אחד ואחת מאיתנו.\nשבת שלום מגבעת מורגן! ✡️💙",
+        "שבת שלום לכל בית ישראל! 🇮🇱✨\nבין אם אתם מדליקים נרות עם המשפחה, מארחים חברים, או נחים לבד —\nאנחנו מאחלים לכולם שבת של שלום, בריאות ושמחה.\nשבת שלום! 🕯️🕯️💙🤍"
+      ]
+    },
+    storyTemplates:[
+      // ── Recurring weekly story cadence ──
+      {id:'community-question', name:'שאלת שבוע 💬',     icon:'💬', color:'#4a9eff', platforms:['ig','fbg','wa'], slot:'am', desc:'שני — מה התוכניות שלכם לשבוע?'},
+      {id:'local-poll',         name:'סקר מקומי ☕',      icon:'☕', color:'#f59e0b', platforms:['ig','fbg'],      slot:'am', desc:'רביעי — איפה הקפה הכי טוב באזור?'},
+      {id:'shabbat-question',   name:'שאלת שבת 🕯️',      icon:'🕯️', color:'#a78bfa', platforms:['ig','fbg','wa'], slot:'pm', desc:'שישי — מה עושים השבת?'},
+      {id:'lifestyle',          name:'תמונות חיים 📸',    icon:'📸', color:'#22c55e', platforms:['ig','fbg'],      slot:'am', desc:'ראשון — עיר / משפחה / פארק'},
+      // ── Additional templates ──
+      {id:'shabbat',    name:'שבת שלום 🕯️',        icon:'🕯️', color:'#4a9eff', platforms:['ig','fbg','wa'], slot:'pm',  desc:'סטורי שבת — יום שישי בערב'},
+      {id:'event',      name:'אירוע קרוב 📅',       icon:'📅', color:'#22c55e', platforms:['ig','fbg','wa'], slot:'am',  desc:'תזכורת לאירוע קהילתי'},
+      {id:'holiday',    name:'חג ישראלי ✡️',        icon:'✡️', color:'#f59e0b', platforms:['ig','fbg'],      slot:'am',  desc:'ברכות לחג'},
+      {id:'community',  name:'עדכון קהילתי 💙',     icon:'💙', color:'#60a5fa', platforms:['ig','fbg','wa'], slot:'pm',  desc:'עדכון שוטף לקהילה'},
+      {id:'recap',      name:'סיכום אירוע 🎉',      icon:'🎉', color:'#fb7185', platforms:['ig','fbg'],      slot:'pm',  desc:'תמונות וסיכום מהאירוע האחרון'},
+      {id:'inspiration',name:'השראה 🌟',            icon:'🌟', color:'#a78bfa', platforms:['ig','wa'],       slot:'am',  desc:'ציטוט בעברית לבוקר'},
+      {id:'reminder',   name:'תזכורת 📢',           icon:'📢', color:'#f97316', platforms:['ig','fbg','wa'], slot:'am',  desc:'תזכורת לאירוע / שבת / חג'},
+      {id:'kids',       name:'פינת הילדים 👦',      icon:'👦', color:'#34d399', platforms:['ig','fbg'],      slot:'pm',  desc:'תוכן לילדים ומשפחות'},
+    ],
+    storyCadence:[
+      {dow:1, dayHeb:'שני',    icon:'💬', color:'#4a9eff', template:'community-question', label:'שאלת שבוע',  caption:'מה התוכניות שלכם לשבוע? 🗓️',    slot:'am', desc:'שאלה מעוררת שיחה לתחילת השבוע'},
+      {dow:3, dayHeb:'רביעי', icon:'☕', color:'#f59e0b', template:'local-poll',         label:'סקר מקומי',  caption:'איפה הקפה הכי טוב באזור? ☕',     slot:'am', desc:'סקר קהילתי על ספוטים מקומיים'},
+      {dow:5, dayHeb:'שישי',  icon:'🕯️', color:'#a78bfa', template:'shabbat-question',  label:'שאלת שבת',   caption:'מה עושים השבת? 🕯️',              slot:'pm', desc:'שאלת שבת — קצת לפני כניסת החג'},
+      {dow:0, dayHeb:'ראשון', icon:'📸', color:'#22c55e', template:'lifestyle',          label:'תמונות חיים', caption:'עיר · משפחה · פארק 🌿',           slot:'am', desc:'תמונות רגועות שמראות את החיים כאן'},
+    ],
+    defaultStoryWeek:[
+      {dow:1,slot:'am',template:'community-question'}, {dow:1,slot:'pm',template:'community'},
+      {dow:2,slot:'am',template:'inspiration'},         {dow:2,slot:'pm',template:'reminder'},
+      {dow:3,slot:'am',template:'local-poll'},          {dow:3,slot:'pm',template:'community'},
+      {dow:4,slot:'am',template:'inspiration'},         {dow:4,slot:'pm',template:'kids'},
+      {dow:5,slot:'am',template:'reminder'},            {dow:5,slot:'pm',template:'shabbat-question'},
+      {dow:6,slot:'am',template:'recap'},               {dow:6,slot:'pm',template:'community'},
+      {dow:0,slot:'am',template:'lifestyle'},           {dow:0,slot:'pm',template:'event'},
+    ],
+    stats:{followers:'9.8K',engagement:'11.4%',posts:22,scheduled:4},
+    platforms_data:[
+      {name:'Instagram',icon:'📷',color:'var(--pink)',followers:'4.8K',growth:'+18.2%',eng:'12.4%',posts:14},
+      {name:'Facebook Group',icon:'👥',color:'#6fa8dc',followers:'3.6K',growth:'+8.1%',eng:'9.2%',posts:6},
+      {name:'WhatsApp',icon:'💬',color:'#25d366',followers:'1.4K',growth:'+22.0%',eng:'14.1%',posts:2},
+    ],
+    topPosts:[
+      {text:'ברביקיו יום העצמאות — תמונות מהאירוע 🎉🇮🇱',eng:'14.2%',icon:'🎉',plat:'IG + קבוצת FB'},
+      {text:'שבת שלום מגבעת מורגן 🕯️💙',eng:'12.8%',icon:'🕯️',plat:'IG + קבוצת FB + WA'},
+      {text:'חדשים בבאי אריאה מישראל? קראו כאן 🇮🇱',eng:'11.1%',icon:'🇮🇱',plat:'קבוצת FB'},
+      {text:'אירועי מאי — שמרו תאריכים! 📅',eng:'10.4%',icon:'📅',plat:'IG + קבוצת FB'},
+    ],
+    donut:[
+      {label:'Instagram',val:4800,color:'var(--pink)'},
+      {label:'Facebook Group',val:3600,color:'#6fa8dc'},
+      {label:'WhatsApp',val:1400,color:'#25d366'},
+    ],
+    engData:{ig:[88,120,105,150,175,145,190],fbg:[60,80,72,110,130,95,145],wa:[40,55,48,70,85,78,100]},
+    reachData:[[1100,1600,1400,2000,2500,2100,2800],[750,1000,900,1400,1600,1200,1800],[300,450,390,550,650,600,780]],
+    accounts:[
+      {platform:'Instagram',icon:'📷',iconBg:'rgba(236,72,153,.2)',name:'Givat Morgan',handle:'@givat_morgan',followers:'4.8K'},
+      {platform:'Facebook Group',icon:'👥',iconBg:'rgba(24,119,242,.15)',name:'גבעת מורגן',handle:'קבוצת פייסבוק · גבעת מורגן',followers:'3.6K'},
+      {platform:'WhatsApp',icon:'💬',iconBg:'rgba(37,211,102,.15)',name:'קבוצת גבעת מורגן',handle:'קבוצת קהילה',followers:'1.4K'},
+    ]
+  }
+};
+
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const today = new Date();
+let currentBrand = 'sbf';
+let currentYear = today.getFullYear();
+let currentMonth = today.getMonth();
+let currentTone = 'Professional';
+let hashtags = [];
+let activePlatforms = ['ig'];
+let currentSeries = null;
+let currentPillar = null;
+let currentContentType = null;
+let currentPostType = 'post';
+
+// ── PER-BRAND POST DATA ──
+const POSTS = {
+  sbf:[
+    // MON — Market Insight
+    {id:101,text:'📊 Monday Market Insight\nBay Area inventory is down 18% this quarter — Morgan Hill remains the most accessible entry point in Santa Clara County.\nMedian days on market: 14. List-to-sale: 103%. The data is clear. DM me to talk strategy.',platforms:['ig','li'],date:nextWeekday(1,9,0),status:'scheduled',emoji:'📊',series:'market-insight',type:'post'},
+    // WED — Local Love post
+    {id:102,text:'💚 Morgan Hill Local Love\nSaturday at the farmers market: local honey, fresh flowers, best tamales in Santa Clara County. This is the lifestyle Morgan Hill offers — and why I\'m proud to call it home. 🌸🍯\nWhere\'s your favorite local spot? ⬇️',platforms:['ig','fb'],date:nextWeekday(3,11,0),status:'scheduled',emoji:'💚',series:'mh-local-love',type:'post'},
+    // WED — Client Love STORY
+    {id:103,text:'⭐️ Client Love\n"Moshe was incredible from start to finish. We were first-time buyers and he made the whole process feel easy. Closed in 21 days!\"\n— Sarah & Mark T., Morgan Hill',platforms:['ig'],date:nextWeekday(3,15,0),status:'scheduled',emoji:'⭐️',series:'client-love',type:'story'},
+    // FRI — Behind the Deal
+    {id:104,text:'🔑 Behind the Deal\nMy clients were outbid 3 times. We reworked their strategy — and on the very next offer we won. 8% over asking, no contingencies waived.\nWe stopped competing on price and started competing on terms. This is the game. 💪',platforms:['ig','fb'],date:nextWeekday(5,9,0),status:'scheduled',emoji:'🔑',series:'behind-the-deal',type:'post'},
+    // Next MON — Market Insight
+    {id:105,text:'📌 What is a 1031 Exchange and why should every Bay Area investor know about it?\nDefer capital gains taxes. Keep more money working for you.\nWant to know if it fits your situation? DM me. 📲',platforms:['li','ig'],date:nextWeekday(1,9,0,1),status:'scheduled',emoji:'📌',series:'market-insight',type:'post'},
+    // Draft — Listing
+    {id:106,text:'🚨 JUST LISTED — Morgan Hill\n4 Bed · 3 Bath · Vineyard Views\nChef\'s kitchen, backyard built for California living. Open house Sunday 1–4PM. DM for private tour.',platforms:['ig','fb'],date:nextWeekday(3,11,0,1),status:'draft',emoji:'🏠',series:'mh-local-love',type:'post'},
+    // Published — Personal
+    {id:107,text:'Took my kids to Uvas Creek trail this morning before school. The kind of morning that reminds you why you chose this place to build a life. Morgan Hill doesn\'t just have great real estate — it has a great life. 🌿☀️',platforms:['ig'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()-3,9,0),status:'published',emoji:'🎬',series:'behind-the-deal',type:'post'},
+    // Published — Client Love story
+    {id:108,text:'⭐️ Client Love\n"Moshe sold our Sunnyvale home in under two weeks — 8% over asking. His construction background gave him insights that truly resonated with buyers."\n— Linda K., Sunnyvale',platforms:['ig'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()-7,15,0),status:'published',emoji:'⭐️',series:'client-love',type:'story'},
+  ],
+  gm:[
+    {id:201,text:'שבת שלום לכל משפחות גבעת מורגן! 🕯️✨\nיהי רצון שתהיה השבת הזאת מלאה בשלום, אהבה ונחת. שבת שלום ומבורך לכולם 💙🤍',platforms:['ig','fbg','wa'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()+1,16,0),status:'scheduled',emoji:'🕯️'},
+    {id:202,text:'📣 סעודת שבת משותפת — יום שישי הקרוב, שעה 19:00!\nכולם מוזמנים — משפחות, רווקים, חדשים בסביבה. תביאו מנה לשיתוף ותבואו כמות שאתם 🙏\nהרשמה בלינק בביו!',platforms:['ig','fbg'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()+2,10,0),status:'scheduled',emoji:'📣'},
+    {id:203,text:'🇮🇱 ברביקיו יום העצמאות היה מדהים!\nתודה לכולם שבאו — איזה קהילה יפה יש לנו. גאים להיות ישראלים בלב קליפורניה! 💙🤍 עם ישראל חי!',platforms:['ig','fbg'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()-1,18,0),status:'published',emoji:'🇮🇱'},
+    {id:204,text:'טיוטה: חדשים בבאי אריאה מישראל? 🌍\nכל מה שצריך לדעת על מורגן היל והקהילה הישראלית כאן — נשמח לעזור ולחבר!',platforms:['fbg','wa'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()+3,12,0),status:'draft',emoji:'🌍'},
+    {id:205,text:'📅 אירועי גבעת מורגן — מאי 2025:\n• 2 מאי — סעודת שבת, 19:00\n• 9 מאי — יום כיף לילדים\n• 14 מאי — ברביקיו יום העצמאות 🇮🇱\n• 23 מאי — ערב קולנוע ישראלי 🎬\nשמרו תאריכים! 🗓️',platforms:['ig','fbg','wa'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()+5,9,0),status:'scheduled',emoji:'📅'},
+    {id:206,text:'חג פסח כשר ושמח לכל משפחות גבעת מורגן! 🍷🌿\nמאחלים לכולם ליל סדר מרגש, שולחן ערוך עם אהובים, וחג של חירות ושמחה. חג שמח! 🕍',platforms:['ig','fbg'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()+7,8,0),status:'scheduled',emoji:'🍷'},
+  ]
+};
+
+// ═══════════════════════════════════════════
+//  ISRAELI HOLIDAYS (Gregorian dates)
+// ═══════════════════════════════════════════
+const ISRAELI_HOLIDAYS = [
+  // ── 2025 ──
+  {name:'ראש השנה',      emoji:'🍎', color:'#f59e0b', dates:[[2025,8,22],[2025,8,23]]},
+  {name:'יום כיפור',     emoji:'🕊️', color:'#a78bfa', dates:[[2025,9,1],[2025,9,2]]},
+  {name:'סוכות',         emoji:'🌿', color:'#34d399', dates:[[2025,9,6],[2025,9,7]]},
+  {name:'הושענא רבה',    emoji:'🌿', color:'#34d399', dates:[[2025,9,12]]},
+  {name:'שמחת תורה',     emoji:'📖', color:'#60a5fa', dates:[[2025,9,13],[2025,9,14]]},
+  {name:'חנוכה',         emoji:'🕎', color:'#fbbf24', dates:[[2025,11,14],[2025,11,15],[2025,11,16],[2025,11,17],[2025,11,18],[2025,11,19],[2025,11,20],[2025,11,21]]},
+  // ── 2026 ──
+  {name:'ט"ו בשבט',     emoji:'🌳', color:'#4ade80', dates:[[2026,1,1]]},
+  {name:'פורים',         emoji:'🎭', color:'#fb7185', dates:[[2026,2,13]]},
+  {name:'פסח',           emoji:'🍷', color:'#c084fc', dates:[[2026,3,1],[2026,3,2],[2026,3,3],[2026,3,4],[2026,3,5],[2026,3,6],[2026,3,7],[2026,3,8]]},
+  {name:'יום השואה',     emoji:'🕯️', color:'#94a3b8', dates:[[2026,3,19]]},
+  {name:'יום הזיכרון',   emoji:'💙', color:'#60a5fa', dates:[[2026,3,29]]},
+  {name:'יום העצמאות',   emoji:'🇮🇱', color:'#4a9eff', dates:[[2026,3,30]]},
+  {name:'ל"ג בעומר',    emoji:'🔥', color:'#fb923c', dates:[[2026,4,14]]},
+  {name:'שבועות',        emoji:'🌸', color:'#f472b6', dates:[[2026,4,21],[2026,4,22]]},
+];
+
+// Build fast lookup: "YYYY-M-D" → holiday
+const HOLIDAY_MAP = {};
+ISRAELI_HOLIDAYS.forEach(h=>{
+  h.dates.forEach(([yr,mo,dy])=>{
+    const key=`${yr}-${mo}-${dy}`;
+    if(!HOLIDAY_MAP[key]) HOLIDAY_MAP[key]=[];
+    HOLIDAY_MAP[key].push(h);
+  });
+});
+
+// Pre-made Hebrew holiday captions for quick-post
+const HOLIDAY_CAPTIONS = {
+  'ראש השנה':   'שנה טובה ומתוקה מכל קהילת גבעת מורגן! 🍎🍯\nיהי רצון שתהיה השנה הזאת שנה של בריאות, אהבה, שמחה והצלחה לכל משפחותינו.\nתכתבו ותחתמו לאלתר לחיים טובים! שנה טובה! ✨💙🤍',
+  'יום כיפור':   'גמר חתימה טובה לכל קהילת גבעת מורגן 🕊️\nביום הכי קדוש בשנה, אנחנו מאחלים לכולם צום קל ומשמעותי.\nיהי רצון שנצא מהיום הזה מחודשים ומחוזקים, כתובים וחתומים בספר החיים. 💙',
+  'סוכות':       'חג סוכות שמח מגבעת מורגן! 🌿🍋\nמי כבר בנה סוכה? 🏠✨ מאחלים לכולם חג שמח, ארבעת המינים נאים, והרבה שמחה בסוכה!\nחג שמח! 💙🤍',
+  'שמחת תורה':  'שמחת תורה שמחה! 📖💃🕺\nהורים סובבים עם ספרי תורה, ילדים רוקדים ושרים — זה אחד הרגעים היפים ביותר בשנה!\nמאחלים לכולם שמחה אמיתית. חג שמח מגבעת מורגן! 🎉💙',
+  'חנוכה':       'חנוכה שמח מגבעת מורגן! 🕎✨\nחג האורות מגיע ואנחנו מדליקים נרות יחד!\nמי מוכן לסופגניות וסביבונים? 🍩🪆\nחנוכה שמח לכל הקהילה! 💙🤍🕎',
+  'ט"ו בשבט':  'ט"ו בשבט שמח! 🌳🌱\nראש השנה לאילנות — יום לזכור שהאדמה היא הבית שלנו.\nנשמח אם תשתפו — איזה פרי ישראלי אתם הכי מתגעגעים אליו? 🍊🍇🥭\nחג שמח! 💙',
+  'פורים':       'פורים שמח לכל הקהילה! 🎭🍩\nמי כבר בתחפושת? 👀😄 שלחו לנו את התמונות שלכם!\nמשלוח מנות, אוזני המן, ורעשנים — זה החג שלנו! 🎪\nפורים שמח מגבעת מורגן! 🎉💙🤍',
+  'פסח':         'חג פסח כשר ושמח מגבעת מורגן! 🍷🌿\nמאחלים לכולם ליל סדר מרגש, שולחן ערוך עם אהובים, וחג של חירות ושמחה.\nחג פסח כשר ושמח! 🕍✨💙🤍',
+  'יום השואה':   'זכור. לעולם לא עוד. 🕯️\nביום הזיכרון לשואה ולגבורה, אנחנו מכופים ראש לזכרם של שישה מיליון קדושים.\nיזכר זכרם לעולם ועד. 💙🤍✡️',
+  'יום הזיכרון': 'יום הזיכרון לחללי מערכות ישראל ולנפגעי פעולות האיבה. 💙\nקהילת גבעת מורגן משתתפת בצערן של משפחות השכולות.\nזכרם ייחצב בליבנו לעד. יהי זכרם ברוך. 🕯️',
+  'יום העצמאות': 'יום העצמאות שמח! 🇮🇱🎉\nשבעים ושמונה שנה למדינת ישראל — ואנחנו חוגגים יחד כאן בגבעת מורגן!\nריקודים, אוכל, גאווה ישראלית — מי בא? 🕺💃\nעם ישראל חי! 💙🤍🎆',
+  'ל"ג בעומר':  'ל"ג בעומר שמח! 🔥\nהדורה דולקת, ילדים שמחים, וקהילה מתכנסת סביב המדורה.\nמאחלים לכולם ל"ג בעומר שמח ומחמם לב! 💙\nגבעת מורגן — יחד תמיד! 🤝',
+  'שבועות':      'חג שבועות שמח מגבעת מורגן! 🌸🍦\nחג מתן תורה — לילות לימוד, בוקר של גבינות ועוגת גבינה 🧀😄\nמי מביא עוגת גבינה לאירוע שלנו? 🙋‍♀️🙋\nחג שמח לכל הקהילה! 💙🤍',
+};
+
+
+// ═══════════════════════════════════════════
+//  BRAND SWITCHING
+// ═══════════════════════════════════════════
+function toggleBrandDropdown(){
+  const dd=document.getElementById('brandDropdown');
+  const caret=document.getElementById('brandCaret');
+  const isOpen=dd.classList.contains('open');
+  dd.classList.toggle('open',!isOpen);
+  caret.classList.toggle('open',!isOpen);
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.brand-switcher'))closeBrandDropdown();
+});
+function closeBrandDropdown(){
+  document.getElementById('brandDropdown').classList.remove('open');
+  document.getElementById('brandCaret').classList.remove('open');
+}
+
+const PLAT_CHIP_LABELS={'ig':'IG','fb':'FB Page','fbp':'Moshe','fbg':'FB Group','li':'LI','wa':'WA','tw':'TW'};
+function platChip(pl){return`<span class="platform-chip ${pl}">${PLAT_CHIP_LABELS[pl]||pl.toUpperCase()}</span>`;}
+
+function switchBrand(id){
+  if(id===currentBrand){closeBrandDropdown();return;}
+  currentBrand=id;
+  const b=BRANDS[id];
+  // Body class
+  document.body.className=b.class;
+  // Sidebar brand btn
+  document.getElementById('sidebarBrandIcon').textContent=b.icon;
+  document.getElementById('sidebarBrandIcon').className='brand-icon '+id;
+  document.getElementById('sidebarBrandName').textContent=b.name;
+  document.getElementById('sidebarBrandSub').textContent=b.sub;
+  // Active dots
+  document.getElementById('dot-sbf').style.display=id==='sbf'?'':'none';
+  document.getElementById('dot-gm').style.display=id==='gm'?'':'none';
+  document.querySelectorAll('.brand-option').forEach(o=>o.classList.remove('active'));
+  document.getElementById('opt-'+id).classList.add('active');
+  // Topbar badge
+  const badge=document.getElementById('topbarBrandBadge');
+  badge.textContent=b.icon+' '+b.name;
+  badge.className='topbar-brand-badge '+b.badgeClass;
+  // Compose
+  document.getElementById('composingAs').textContent=b.name;
+  document.getElementById('aiPanelDesc').textContent=`Generate captions tailored for ${b.name}.`;
+  document.getElementById('previewUsername').textContent=b.name;
+  document.getElementById('previewHandle').textContent=b.handle;
+  // Re-init tone
+  currentTone=b.tones[0];
+  renderToneChips();
+  renderPlatformButtons();
+  renderHolidaysPanel();
+  // Badge
+  const scheduled=POSTS[id].filter(p=>p.status==='scheduled').length;
+  document.getElementById('queueBadge').textContent=scheduled;
+  // Refresh current view
+  const activeView=document.querySelector('.view.active');
+  if(activeView){
+    const name=activeView.id.replace('view-','');
+    if(name==='dashboard')renderDashboard();
+    if(name==='calendar')renderCalendar();
+    if(name==='queue')renderQueue('all');
+    if(name==='analytics')renderAnalytics();
+    if(name==='accounts')renderAccounts();
+    if(name==='stories')renderStories();
+  }
+  closeBrandDropdown();
+  showToast(`Switched to ${b.name} ${b.icon}`,'var(--brand)');
+}
+
+// ═══════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════
+function showView(name,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  const titles={dashboard:'Dashboard',calendar:'Content Calendar',compose:'Compose Post',queue:'Post Queue',analytics:'Analytics',accounts:'Connected Accounts'};
+  document.getElementById('topbar-title').textContent=titles[name]||name;
+  if(name==='dashboard')renderDashboard();
+  if(name==='calendar')renderCalendar();
+  if(name==='queue')renderQueue('all');
+  if(name==='analytics')renderAnalytics();
+  if(name==='accounts')renderAccounts();
+  if(name==='stories')renderStories();
+  if(name==='compose')renderPlatformButtons();
+}
+
+// ═══════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════
+function renderDashboard(){
+  const b=BRANDS[currentBrand];
+  // Stats
+  document.getElementById('dashStats').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Followers</div><div class="stat-value">${b.stats.followers}</div><div class="stat-change up">▲ across all platforms</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Engagement</div><div class="stat-value">${b.stats.engagement}</div><div class="stat-change up">▲ above industry avg</div></div>
+    <div class="stat-card"><div class="stat-label">Posts This Month</div><div class="stat-value">${b.stats.posts}</div><div class="stat-change up">▲ consistent output</div></div>
+    <div class="stat-card"><div class="stat-label">Scheduled</div><div class="stat-value">${b.stats.scheduled}</div><div class="stat-change up">▲ ready to publish</div></div>`;
+  // Weekly Pillars (SBF) / Story Cadence (GM)
+  const plannerEl=document.getElementById('weeklyPlannerCard');
+  const gmCadenceEl=document.getElementById('gmCadenceCard');
+  if(currentBrand==='sbf'){
+    plannerEl.style.display='block'; renderPillarsCard();
+    gmCadenceEl.style.display='none';
+  } else if(currentBrand==='gm'){
+    gmCadenceEl.style.display='block'; renderGMCadenceCard();
+    plannerEl.style.display='none';
+  } else {
+    plannerEl.style.display='none';
+    gmCadenceEl.style.display='none';
+  }
+  // Chart
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const eng=b.engData;
+  const keys=Object.keys(eng);
+  const allVals=keys.flatMap(k=>eng[k]);
+  const maxVal=Math.max(...allVals);
+  const colors={'ig':'var(--pink)','fb':'#6fa8dc','fbg':'#6fa8dc','li':'#6aa3d5','tw':'var(--blue)','wa':'#25d366'};
+  document.getElementById('engChart').innerHTML=days.map((d,i)=>`
+    <div class="bar-group"><div class="bars">${keys.map(k=>`<div class="bar" style="height:${eng[k][i]/maxVal*100}%;background:${colors[k]||'var(--brand)'}" title="${k.toUpperCase()}: ${eng[k][i]}"></div>`).join('')}</div><div class="bar-label">${d}</div></div>`).join('');
+  document.getElementById('engLegend').innerHTML=keys.map(k=>`<div><span class="legend-dot" style="background:${colors[k]}"></span>${k.toUpperCase()}</div>`).join('');
+  // Upcoming
+  const upcoming=POSTS[currentBrand].filter(p=>p.status==='scheduled').sort((a,b)=>a.date-b.date).slice(0,4);
+  const el=document.getElementById('upcomingPosts');
+  if(!upcoming.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>No upcoming posts scheduled.</p></div>';return;}
+  el.innerHTML=upcoming.map(p=>`
+    <div class="upcoming-post">
+      <div class="post-time">${formatTime(p.date)}<br><span style="font-size:.62rem">${formatDateShort(p.date)}</span></div>
+      <div style="flex:1">
+        <div class="post-text">${p.emoji} ${p.text.slice(0,75)}${p.text.length>75?'…':''}</div>
+        <div class="post-platforms">${p.platforms.map(pl=>platChip(pl)).join('')}</div>
+      </div>
+      <div class="status-dot sdot-scheduled"></div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+//  CALENDAR
+// ═══════════════════════════════════════════
+function changeMonth(dir){currentMonth+=dir;if(currentMonth>11){currentMonth=0;currentYear++;}else if(currentMonth<0){currentMonth=11;currentYear--;}renderCalendar();}
+function renderCalendar(){
+  const isGM=currentBrand==='gm';
+  document.getElementById('calMonthLabel').textContent=`${MONTHS[currentMonth]} ${currentYear}`;
+  const firstDay=new Date(currentYear,currentMonth,1).getDay();
+  const daysInMonth=new Date(currentYear,currentMonth+1,0).getDate();
+  const daysInPrev=new Date(currentYear,currentMonth,0).getDate();
+  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const colors={'ig':'var(--pink)','fb':'#6fa8dc','fbg':'#6fa8dc','li':'#6aa3d5','tw':'var(--blue)','wa':'#25d366','draft':'var(--yellow)'};
+  let html=dayNames.map(d=>`<div class="cal-day-head">${d}</div>`).join('');
+  let cells=[];
+  for(let i=firstDay-1;i>=0;i--)cells.push({day:daysInPrev-i,other:true});
+  for(let i=1;i<=daysInMonth;i++)cells.push({day:i,other:false});
+  while(cells.length%7!==0)cells.push({day:cells.length-daysInMonth-firstDay+1,other:true});
+  cells.forEach(c=>{
+    const isToday=!c.other&&c.day===today.getDate()&&currentMonth===today.getMonth()&&currentYear===today.getFullYear();
+    const dayPosts=POSTS[currentBrand].filter(p=>p.date.getDate()===c.day&&p.date.getMonth()===currentMonth&&p.date.getFullYear()===currentYear&&!c.other);
+    // Holidays for this day
+    const hkey=`${currentYear}-${currentMonth}-${c.day}`;
+    const dayHolidays=(!c.other&&isGM&&HOLIDAY_MAP[hkey])||[];
+    // Shabbat highlight (Friday col index = 6)
+    const cellIdx=cells.indexOf(c);
+    const isFriday=!c.other&&(cellIdx%7===6);
+    html+=`<div class="cal-day${c.other?' other-month':''}${isToday?' today':''}${dayHolidays.length?' holiday-day':''}${isFriday?' friday-day':''}" onclick="${c.other?'':('calDayClick('+c.day+')')}">
+      <div class="day-num">${c.day}</div>
+      ${dayHolidays.map(h=>`<div class="holiday-chip" style="background:${h.color}18;color:${h.color};border-left-color:${h.color}" title="${h.name}">${h.emoji} ${h.name}</div>`).join('')}
+      ${dayPosts.slice(0,2).map(p=>{const col=p.status==='draft'?colors.draft:(colors[p.platforms[0]]||'var(--brand)');return`<div class="cal-post-chip" style="background:${col}22;color:${col}" onclick="event.stopPropagation();showPostModal(${p.id})">${p.emoji} ${p.text.slice(0,18)}…</div>`}).join('')}
+      ${dayPosts.length>2?`<div style="font-size:.6rem;color:var(--text-muted)">+${dayPosts.length-2} more</div>`:''}
+    </div>`;
+  });
+  document.getElementById('calGrid').innerHTML=html;
+}
+function calDayClick(day){showView('compose',document.querySelector('[onclick*=compose]'));const d=new Date(currentYear,currentMonth,day);document.getElementById('schedDate').value=d.toISOString().split('T')[0];}
+
+// ═══════════════════════════════════════════
+//  COMPOSE
+// ═══════════════════════════════════════════
+function renderGMCadenceCard(){
+  const cadence=BRANDS.gm.storyCadence||[];
+  const slotLabel={am:'🌅 AM · 9:00', pm:'🌆 PM · 18:00'};
+  document.getElementById('gmCadenceGrid').innerHTML=cadence.map(c=>`
+    <div class="gm-cadence-card" onclick="showView('stories',document.querySelector('[onclick*=stories]'))" style="border-top:3px solid ${c.color}">
+      <div class="gm-cadence-header" style="background:${c.color}15">
+        <span class="gm-cadence-day" style="background:${c.color}">${c.dayHeb}</span>
+        <span class="gm-cadence-icon">${c.icon}</span>
+        <div class="gm-cadence-label">${c.label}</div>
+        <div class="gm-cadence-caption">"${c.caption}"</div>
+      </div>
+      <div class="gm-cadence-slot">${slotLabel[c.slot]||c.slot}</div>
+    </div>`).join('');
+}
+
+function renderPillarsCard(){
+  const b=BRANDS.sbf;
+  document.getElementById('pillarsCardGrid').innerHTML=(b.pillars||[]).map(p=>`
+    <div class="pillar-card" style="border-top:3px solid ${p.color}">
+      <div class="pillar-card-header" style="background:${p.color}18">
+        <div class="pillar-card-icon">${p.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="pillar-card-day" style="background:${p.color}">${p.day}</span>
+            <span class="pillar-card-label">${p.label}</span>
+          </div>
+          <div class="pillar-card-desc">${p.desc}</div>
+        </div>
+      </div>
+      <div class="pillar-card-types">
+        ${p.types.map(t=>`
+          <div class="pillar-card-type" onclick="openComposeWithType('${p.day}','${t.id}')">
+            <span class="pillar-card-type-icon">${t.icon}</span>
+            <span>${t.label}</span>
+            <span style="margin-left:auto;font-size:.65rem;color:var(--text-dim)">→</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function renderPillarPicker(){
+  const b=BRANDS.sbf;
+  document.getElementById('pillarPicker').innerHTML=(b.pillars||[]).map(p=>`
+    <div class="pillar-row${currentPillar===p.day?' open active':''}" id="pillar-${p.day.replace('/','')}" style="--pillar-color:${p.color}">
+      <div class="pillar-header" onclick="togglePillar('${p.day}')">
+        <span class="pillar-day-badge" style="background:${p.color}">${p.day}</span>
+        <div style="flex:1">
+          <div class="pillar-label">${p.icon} ${p.label}</div>
+          <div class="pillar-desc">${p.desc}</div>
+        </div>
+        <span class="pillar-chevron">▾</span>
+      </div>
+      <div class="pillar-types">
+        ${p.types.map(t=>`
+          <button class="pillar-type-btn${currentContentType===t.id?' selected':''}" onclick="selectContentType('${p.day}','${t.id}','${p.color}')" style="--pillar-color:${p.color}">
+            ${t.icon} ${t.label}
+          </button>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function togglePillar(day){
+  const b=BRANDS.sbf;
+  const p=b.pillars.find(x=>x.day===day);
+  if(!p) return;
+  currentPillar=currentPillar===day?null:day;
+  currentContentType=null;
+  renderPillarPicker();
+}
+
+function selectContentType(day,typeId,color){
+  currentPillar=day;
+  currentContentType=typeId;
+  renderPillarPicker();
+  // Load AI suggestions for this type
+  const b=BRANDS.sbf;
+  const suggestions=(b.pillarSuggestions||{})[typeId]||[];
+  const pillar=b.pillars.find(p=>p.day===day);
+  const type=pillar&&pillar.types.find(t=>t.id===typeId);
+  document.getElementById('aiPanelDesc').textContent=`${type?type.icon+' '+type.label:typeId} — ${pillar?pillar.day+' '+pillar.label:''}`;
+  const box=document.getElementById('aiSuggestions');
+  if(suggestions.length){
+    box.innerHTML=suggestions.map((s,i)=>`
+      <div class="suggestion-item" onclick="useSuggestion(this)">
+        <div class="suggestion-text">${s.replace(/\n/g,'<br>')}</div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:6px;font-size:.7rem" onclick="event.stopPropagation();useSuggestion(this.parentElement)">Use This ↗</button>
+      </div>`).join('');
+  } else {
+    box.innerHTML='<div style="color:var(--text-muted);font-size:.8rem">No suggestions yet for this type.</div>';
+  }
+}
+
+function openComposeWithType(day,typeId){
+  showView('compose',document.querySelector('[onclick*=compose]'));
+  setTimeout(()=>{
+    const b=BRANDS.sbf;
+    const pillar=b.pillars.find(p=>p.day===day);
+    if(pillar) selectContentType(day,typeId,pillar.color);
+    // Open the correct pillar accordion
+    currentPillar=day;
+    renderPillarPicker();
+  },80);
+}
+
+function renderPlatformButtons(){
+  const b=BRANDS[currentBrand];
+  activePlatforms=[b.platforms[0]];
+  const labels={'ig':'📷 Instagram','tw':'🐦 Twitter/X','li':'💼 LinkedIn','fb':'📘 FB Page','fbp':'👤 Moshe Personal','fbg':'👥 FB Group','wa':'💬 WhatsApp'};
+  document.getElementById('platformSelect').innerHTML=b.platforms.map(p=>`
+    <button class="plat-btn ${p}${p===b.platforms[0]?' active':''}" onclick="togglePlatform(this,'${p}')">${labels[p]||p.toUpperCase()}</button>`).join('');
+  // RTL textarea for Givat Morgan
+  const area=document.getElementById('composeArea');
+  if(b.rtl){area.dir='rtl';area.classList.add('rtl-caption');area.placeholder='כתבו את הכיתוב כאן… או השתמשו בעוזר AI ←';}
+  else{area.dir='ltr';area.classList.remove('rtl-caption');area.placeholder='Write your caption… or use AI Suggestions →';}
+  // Holidays panel
+  renderHolidaysPanel();
+  // Pillar picker + story UI (SBF only)
+  const seriesSel=document.getElementById('seriesSelector');
+  const typeToggle=document.getElementById('postTypeToggle');
+  currentSeries=null;
+  setPostType('post');
+  if(currentBrand==='sbf'){
+    seriesSel.style.display='block';
+    renderPillarPicker();
+    typeToggle.style.display='flex';
+  } else {
+    seriesSel.style.display='none';
+    typeToggle.style.display='none';
+    currentPillar=null; currentContentType=null;
+  }
+}
+
+function renderHolidaysPanel(){
+  const panel=document.getElementById('holidaysPanel');
+  if(currentBrand!=='gm'){panel.style.display='none';return;}
+  // Find next 4 upcoming holidays
+  const now=new Date();
+  const upcoming=[];
+  ISRAELI_HOLIDAYS.forEach(h=>{
+    h.dates.forEach(([yr,mo,dy])=>{
+      const d=new Date(yr,mo,dy);
+      if(d>=now) upcoming.push({...h,date:d,_dateStr:`${dy} ${['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'][mo]} ${yr}`});
+    });
+  });
+  // Dedupe by holiday name, keep earliest
+  const seen=new Set();const deduped=[];
+  upcoming.sort((a,b)=>a.date-b.date).forEach(h=>{if(!seen.has(h.name)){seen.add(h.name);deduped.push(h);}});
+  const next=deduped.slice(0,4);
+  if(!next.length){panel.style.display='none';return;}
+  panel.style.display='block';
+  document.getElementById('holidayQuickList').innerHTML=next.map(h=>`
+    <button class="holiday-quick-btn" onclick="useHolidayCaption('${h.name.replace(/'/g,'\\\'')}')" style="border-color:${h.color}22">
+      <div class="holiday-quick-icon">${h.emoji}</div>
+      <div class="holiday-quick-info">
+        <div class="holiday-quick-name" style="color:${h.color}">${h.name}</div>
+        <div class="holiday-quick-date">${h._dateStr}</div>
+      </div>
+      <div class="holiday-quick-use">השתמש ←</div>
+    </button>`).join('');
+}
+
+function useHolidayCaption(name){
+  const caption=HOLIDAY_CAPTIONS[name];
+  if(!caption){showToast('אין כיתוב מוכן לחג זה','var(--orange)');return;}
+  const area=document.getElementById('composeArea');
+  area.value=caption;updateCharCount(area);
+  showToast(`✅ כיתוב ל${name} הוכנס!`,'var(--brand)');
+}
+// ── SERIES & STORY ──
+
+function selectSeries(id){
+  currentSeries=id;
+  const b=BRANDS[currentBrand];
+  const s=b.series.find(s=>s.id===id);
+  document.querySelectorAll('.series-select-btn').forEach(btn=>btn.classList.remove('active'));
+  const btn=document.getElementById('sb-'+id);
+  if(btn){btn.classList.add('active');btn.style.background=s.color+'18';btn.style.color=s.color;btn.style.borderColor=s.color;}
+  // If it's a story series, auto-switch to story tab
+  if(s.isStory) setPostType('story');
+  else setPostType('post');
+  // Map series to AI tone
+  const toneMap={'market-insight':'Market Insight 📊','mh-local-love':'Local Love 💚','behind-the-deal':'Behind the Deal 🔑','client-love':'Personal 🎬'};
+  if(toneMap[id]){
+    currentTone=toneMap[id];
+    document.querySelectorAll('.tone-chip').forEach(c=>c.classList.remove('active'));
+    const tc=Array.from(document.querySelectorAll('.tone-chip')).find(c=>c.textContent.includes(toneMap[id].split(' ')[0]));
+    if(tc) tc.classList.add('active');
+  }
+  if(id!=='client-love') generateSuggestions();
+}
+
+function setPostType(type){
+  currentPostType=type;
+  document.getElementById('btnTypePost')?.classList.toggle('active',type==='post');
+  document.getElementById('btnTypeStory')?.classList.toggle('active',type==='story');
+  const cc=document.getElementById('captionComposer');
+  const sc=document.getElementById('storyComposer');
+  if(cc) cc.style.display=type==='story'?'none':'block';
+  if(sc) sc.style.display=type==='story'?'block':'none';
+}
+
+function openSeriesCompose(seriesId){
+  showView('compose',document.querySelector('[onclick*=compose]'));
+  setTimeout(()=>selectSeries(seriesId),100);
+}
+
+function updateStoryPreview(){
+  const q=document.getElementById('storyQuote').value||'"Your client quote will appear here..."';
+  const n=document.getElementById('storyClientName').value||'— Client Name, City';
+  const stars=document.querySelector('input[name="storyStars"]:checked')?.value||5;
+  document.getElementById('storyQuotePreview').textContent=`"${q.replace(/^"|"$/g,'')}"`;
+  document.getElementById('storyNamePreview').textContent=`— ${n.replace(/^—\s*/,'')}`;
+  document.getElementById('storyStarsPreview').textContent='★'.repeat(+stars)+'☆'.repeat(5-+stars);
+}
+
+function scheduleStory(isDraft=false){
+  const q=document.getElementById('storyQuote').value.trim();
+  const n=document.getElementById('storyClientName').value.trim();
+  if(!q||!n){showToast('⚠️ Add a quote and client name','var(--orange)');return;}
+  const stars=document.querySelector('input[name="storyStars"]:checked')?.value||5;
+  const dv=document.getElementById('storyDate').value;
+  const postDate=dv?new Date(`${dv}T15:00`):nextWeekday(3,15,0);
+  const text=`⭐️ Client Love — ${'★'.repeat(+stars)}\n"${q.replace(/^"|"$/g,'')}"\n— ${n.replace(/^—\s*/,'')}`;
+  const st=isDraft?'draft':'scheduled';
+  POSTS.sbf.push({id:Date.now(),text,platforms:['ig'],date:postDate,status:st,emoji:'⭐️',series:'client-love',type:'story'});
+  document.getElementById('queueBadge').textContent=POSTS.sbf.filter(p=>p.status==='scheduled').length;
+  showToast(isDraft?'💾 Story draft saved!':'⭐️ Client Love story scheduled for Wednesday!','var(--brand)');
+  document.getElementById('storyQuote').value='';document.getElementById('storyClientName').value='';updateStoryPreview();
+}
+function saveStoryDraft(){scheduleStory(true);}
+
+function filterQueueBySeries(seriesId){
+  showView('queue',document.querySelector('[onclick*=queue]'));
+  setTimeout(()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    renderQueueBySeries(seriesId);
+  },80);
+}
+function renderQueueBySeries(seriesId){
+  const list=POSTS[currentBrand].filter(p=>p.series===seriesId).sort((a,b)=>a.date-b.date);
+  renderQueueList(list);
+}
+
+function renderToneChips(){
+  const b=BRANDS[currentBrand];
+  currentTone=b.tones[0];
+  document.getElementById('toneChips').innerHTML=b.tones.map((t,i)=>`
+    <button class="tone-chip${i===0?' active':''}" onclick="setTone(this,'${t}')">${t}</button>`).join('');
+}
+function togglePlatform(btn,cls){btn.classList.toggle('active');if(btn.classList.contains('active'))activePlatforms.push(cls);else activePlatforms=activePlatforms.filter(p=>p!==cls);}
+function updateCharCount(el){const n=el.value.length;const max=2200;const cc=document.getElementById('charCount');cc.textContent=`${n.toLocaleString()} / ${max.toLocaleString()}`;cc.className='char-count'+(n>max*.9?' warn':'')+(n>max?' over':'');document.getElementById('previewText').textContent=el.value||'Caption will appear here…';}
+function insertEmoji(e){const a=document.getElementById('composeArea');a.value+=e;updateCharCount(a);}
+function addHashtag(){const inp=document.getElementById('hashtagInput');const val=inp.value.trim().replace(/^#/,'');if(!val||hashtags.includes(val))return;hashtags.push(val);inp.value='';renderHashtags();}
+function renderHashtags(){document.getElementById('hashtagList').innerHTML=hashtags.map(h=>`<div class="hashtag-tag" onclick="removeHashtag('${h}')">#${h} <span>×</span></div>`).join('');document.getElementById('previewHashtags').textContent=hashtags.map(h=>`#${h}`).join(' ');}
+function removeHashtag(h){hashtags=hashtags.filter(t=>t!==h);renderHashtags();}
+function suggestHashtags(){const picks=BRANDS[currentBrand].defaultHashtags.filter(h=>!hashtags.includes(h)).slice(0,8);picks.forEach(h=>hashtags.push(h));renderHashtags();showToast('✨ Hashtags suggested!','var(--brand)');}
+function setTone(btn,tone){currentTone=tone;document.querySelectorAll('.tone-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');}
+function generateSuggestions(){
+  const sugg=BRANDS[currentBrand].aiSuggestions[currentTone]||Object.values(BRANDS[currentBrand].aiSuggestions)[0];
+  document.getElementById('aiSuggestions').innerHTML=sugg.map(s=>`<div class="ai-suggestion" onclick="useSuggestion(this)">${s}</div>`).join('');
+  showToast('✨ Captions generated!','var(--brand)');
+}
+function useSuggestion(el){const a=document.getElementById('composeArea');a.value=el.textContent;updateCharCount(a);showToast('Caption applied!','var(--green)');}
+function schedulePost(){
+  const text=document.getElementById('composeArea').value.trim();
+  if(!text){showToast('⚠️ Please write a caption','var(--orange)');return;}
+  if(!activePlatforms.length){showToast('⚠️ Select at least one platform','var(--orange)');return;}
+  const status=document.getElementById('schedStatus').value;
+  const dv=document.getElementById('schedDate').value,tv=document.getElementById('schedTime').value;
+  const postDate=dv?new Date(`${dv}T${tv||'09:00'}`):new Date();
+  const st=status==='Post Now'?'published':status==='Save as Draft'?'draft':'scheduled';
+  const b=BRANDS[currentBrand];
+  POSTS[currentBrand].push({id:Date.now(),text,platforms:[...activePlatforms],date:postDate,status:st,emoji:b.brandEmoji});
+  if(st==='scheduled'){b.stats.scheduled++;document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;}
+  showToast(st==='published'?'🚀 Posted!':st==='draft'?'💾 Draft saved!':'✅ Scheduled!','var(--green)');
+  document.getElementById('composeArea').value='';hashtags=[];renderHashtags();updateCharCount(document.getElementById('composeArea'));
+}
+function saveDraft(){document.getElementById('schedStatus').value='Save as Draft';schedulePost();}
+
+// ═══════════════════════════════════════════
+//  QUEUE
+// ═══════════════════════════════════════════
+function renderQueue(filter){
+  const list=POSTS[currentBrand].filter(p=>filter==='all'||p.status===filter).sort((a,b)=>a.date-b.date);
+  renderQueueList(list);
+}
+function renderQueueList(list){
+  const el=document.getElementById('queueList');
+  const b=BRANDS[currentBrand];
+  if(!list.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>No posts in this category.</p></div>';return;}
+  el.innerHTML=list.map(p=>{
+    const seriesInfo=b.series&&b.series.find(s=>s.id===p.series);
+    const isStory=p.type==='story';
+    return`<div class="queue-post" id="qp-${p.id}">
+      <div class="queue-date">
+        <div class="qd-month">${MONTHS[p.date.getMonth()].slice(0,3)}</div>
+        <div class="qd-day">${p.date.getDate()}</div>
+        <div class="qd-time">${formatTime(p.date)}</div>
+      </div>
+      <div class="queue-body">
+        ${seriesInfo?`<div class="queue-series-badge" style="background:${seriesInfo.color}15;color:${seriesInfo.color};border-color:${seriesInfo.color}33">${seriesInfo.icon} ${seriesInfo.name}${isStory?' · Story':''}</div>`:''}
+        <div class="queue-post-text">${p.emoji} ${p.text.replace(/\n/g,' ')}</div>
+        <div class="queue-meta">${p.platforms.map(pl=>platChip(pl)).join('')}<span class="queue-status ${p.status}">${p.status.charAt(0).toUpperCase()+p.status.slice(1)}</span>${isStory?'<span style="font-size:.65rem;color:var(--text-muted);background:var(--surface2);padding:2px 7px;border-radius:20px">📱 Story</span>':''}</div>
+      </div>
+      <div class="queue-actions">
+        <button class="action-btn" onclick="openExportModal(${p.id})" title="Export to Metricool" style="font-size:.7rem;padding:4px 8px;color:var(--brand)">📤</button>
+        <button class="action-btn" onclick="editPost(${p.id})" title="Edit">✏️</button>
+        <button class="action-btn" onclick="deletePost(${p.id})" title="Delete">🗑️</button>
+      </div>
+    </div>`;}).join('');
+}
+function filterQueue(f,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderQueue(f);}
+function deletePost(id){const idx=POSTS[currentBrand].findIndex(p=>p.id===id);if(idx>-1)POSTS[currentBrand].splice(idx,1);renderQueue('all');document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;showToast('🗑️ Post deleted','var(--pink)');}
+function editPost(id){const p=POSTS[currentBrand].find(p=>p.id===id);if(!p)return;showView('compose',document.querySelector('[onclick*=compose]'));document.getElementById('composeArea').value=p.text;updateCharCount(document.getElementById('composeArea'));showToast('✏️ Loaded for editing','var(--blue)');}
+
+// ═══════════════════════════════════════════
+//  ANALYTICS
+// ═══════════════════════════════════════════
+function renderAnalytics(){
+  const b=BRANDS[currentBrand];
+  document.getElementById('analyticsPlatforms').innerHTML=b.platforms_data.map(p=>`
+    <div class="metric-card">
+      <div class="metric-platform" style="color:${p.color}">${p.icon} ${p.name}</div>
+      <div class="metric-val">${p.followers}</div>
+      <div class="metric-sub" style="color:${p.growth.startsWith('-')?'var(--pink)':'var(--green)'}">${p.growth} this month</div>
+      <div class="metric-sub" style="margin-top:4px">Avg Eng: <strong>${p.eng}</strong> · ${p.posts} posts</div>
+    </div>`).join('');
+  // Donut
+  const data=b.donut;const total=data.reduce((s,d)=>s+d.val,0);
+  let angle=0;const cx=65,cy=65,r=48,inner=28;
+  const paths=data.map(d=>{const slice=(d.val/total)*Math.PI*2;const x1=cx+r*Math.sin(angle),y1=cy-r*Math.cos(angle);angle+=slice;const x2=cx+r*Math.sin(angle),y2=cy-r*Math.cos(angle);const ix1=cx+inner*Math.sin(angle-slice),iy1=cy-inner*Math.cos(angle-slice);const ix2=cx+inner*Math.sin(angle),iy2=cy-inner*Math.cos(angle);const large=slice>Math.PI?1:0;return`<path d="M${ix1},${iy1} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${ix2},${iy2} A${inner},${inner} 0 ${large},0 ${ix1},${iy1}" fill="${d.color}" opacity=".85"/>`;}).join('');
+  const totalK=(total/1000).toFixed(1);
+  document.getElementById('donutSvg').innerHTML=paths+`<text x="${cx}" y="${cy+4}" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="700" font-family="Inter">${totalK}K</text>`;
+  document.getElementById('donutLegend').innerHTML=data.map(d=>`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:${d.color}"></div>${d.label}<span class="donut-leg-val">${(d.val/1000).toFixed(1)}K</span></div>`).join('');
+  // Top posts
+  document.getElementById('topPostsList').innerHTML=b.topPosts.map(p=>`
+    <div class="top-post-row"><div class="top-post-thumb">${p.icon}</div><div style="flex:1;min-width:0"><div class="top-post-text">${p.text}</div><div class="top-post-meta">${p.plat}</div></div><div class="top-post-eng">${p.eng}</div></div>`).join('');
+  // Reach chart
+  const labels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const rd=b.reachData;const colors=[b.platforms_data[0]?.color||'var(--pink)',b.platforms_data[1]?.color||'#6fa8dc',b.platforms_data[2]?.color||'#6aa3d5'];
+  const maxR=Math.max(...rd.flat());
+  document.getElementById('reachChart').innerHTML=labels.map((d,i)=>`<div class="bar-group"><div class="bars">${rd.map((r,ri)=>`<div class="bar" style="height:${r[i]/maxR*100}%;background:${colors[ri]};min-width:7px" title="${d}: ${r[i].toLocaleString()} impressions"></div>`).join('')}</div><div class="bar-label">${d}</div></div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+//  ACCOUNTS
+// ═══════════════════════════════════════════
+function renderAccounts(){
+  const b=BRANDS[currentBrand];
+  document.getElementById('accountsTitle').textContent=`${b.name} — Connected Accounts`;
+  const accounts=b.accounts||b.platforms_data.map(p=>({
+    platform:p.name,icon:p.icon,
+    iconBg:p.color.startsWith('var')?p.color.replace('var(','').replace(')','')+'22':p.color+'22',
+    name:b.name,handle:b.handle,followers:p.followers
+  }));
+  document.getElementById('accountsList').innerHTML=accounts.map(a=>`
+    <div class="account-card">
+      <div class="account-icon" style="background:${a.iconBg||'var(--surface2)'}">${a.icon}</div>
+      <div class="account-info">
+        <div class="account-name">${a.name}</div>
+        <div class="account-handle">${a.platform} · ${a.handle}</div>
+        <div class="account-followers">${a.followers} followers</div>
+      </div>
+      <span class="connected-badge">✓ Connected</span>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════
+function showPostModal(id){
+  const allPosts=[...POSTS.sbf,...POSTS.gm];
+  const p=allPosts.find(p=>p.id===id);if(!p)return;
+  document.getElementById('modalTitle').textContent=`${p.emoji} Post Detail`;
+  document.getElementById('modalBody').innerHTML=`
+    <div style="font-size:.84rem;line-height:1.7;margin-bottom:14px">${p.text}</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+      ${p.platforms.map(pl=>platChip(pl)).join('')}
+      <span class="queue-status ${p.status}" style="padding:2px 9px;border-radius:20px;font-size:.67rem;font-weight:600">${p.status}</span>
+    </div>
+    <div style="font-size:.76rem;color:var(--text-muted)">📅 ${p.date.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} at ${formatTime(p.date)}</div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-primary btn-sm" onclick="editPost(${p.id});closeModal()">✏️ Edit</button>
+      <button class="btn btn-ghost btn-sm" onclick="deletePost(${p.id});closeModal()">🗑️ Delete</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(e){if(!e||e.target.id==='modalOverlay')document.getElementById('modalOverlay').classList.remove('open');}
+
+// ═══════════════════════════════════════════
+//  TOAST & HELPERS
+// ═══════════════════════════════════════════
+function showToast(msg,color='var(--green)'){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.borderLeftColor=color;
+  t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3500);
+}
+function formatTime(d){return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});}
+function formatDateShort(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+// nextWeekday(dow,h,m,weeksAhead) — 0=Sun,1=Mon,…,5=Fri,6=Sat
+function nextWeekday(dow,h=9,m=0,weeksAhead=0){
+  const d=new Date(today);
+  let diff=(dow-d.getDay()+7)%7||7;
+  d.setDate(d.getDate()+diff+weeksAhead*7);
+  d.setHours(h,m,0,0);return d;
+}
+
+// ═══════════════════════════════════════════
+//  STORIES PLANNER
+// ═══════════════════════════════════════════
+let storyWeekOffset=0;
+// STORY_SLOTS[brand][`${year}-${weekNum}-${dow}-${slot}`] = templateId | null
+const STORY_SLOTS={sbf:{},gm:{}};
+
+function getWeekStart(offset=0){
+  const d=new Date(today);
+  const day=d.getDay();
+  d.setDate(d.getDate()-day+1+(offset*7)); // Monday
+  d.setHours(0,0,0,0);
+  return d;
+}
+function getWeekKey(d,dow,slot){
+  const yw=`${d.getFullYear()}-W${getISOWeek(d)}`;
+  return`${yw}-${dow}-${slot}`;
+}
+function getISOWeek(d){
+  const tmp=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  tmp.setUTCDate(tmp.getUTCDate()+4-(tmp.getUTCDay()||7));
+  const yearStart=new Date(Date.UTC(tmp.getUTCFullYear(),0,1));
+  return Math.ceil((((tmp-yearStart)/86400000)+1)/7);
+}
+
+function changeStoryWeek(dir){storyWeekOffset+=dir;renderStories();}
+
+function renderStories(){
+  const b=BRANDS[currentBrand];
+  document.getElementById('storiesBrandLabel').textContent=`— ${b.name}`;
+  const ws=getWeekStart(storyWeekOffset);
+  const we=new Date(ws);we.setDate(we.getDate()+6);
+  const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  document.getElementById('storyWeekLabel').textContent=`${fmt(ws)} – ${fmt(we)}`;
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const slots=[{id:'am',icon:'☀️',label:'AM · 9am'},{id:'pm',icon:'🌙',label:'PM · 6pm'}];
+  const PLAT_COLORS={'ig':'var(--pink)','fb':'#6fa8dc','fbg':'#6fa8dc','fbp':'#a0c4f8','li':'#6aa3d5','wa':'#25d366'};
+  const templates=b.storyTemplates||[];
+  const tMap={};templates.forEach(t=>tMap[t.id]=t);
+
+  // Build legend
+  document.getElementById('storiesLegend').innerHTML=templates.map(t=>`
+    <div class="legend-item"><div style="width:10px;height:10px;border-radius:3px;background:${t.color};flex-shrink:0"></div>${t.icon} ${t.name}</div>`).join('');
+
+  // Build grid header
+  let gridHTML=`<div class="sg-head"></div>`; // corner
+  for(let d=0;d<7;d++){
+    const date=new Date(ws);date.setDate(ws.getDate()+d);
+    const isToday=date.toDateString()===today.toDateString();
+    gridHTML+=`<div class="sg-head${isToday?' today':''}">
+      <div class="sg-head-day">${days[d]}</div>
+      <div class="sg-head-date">${date.getDate()}</div>
+    </div>`;
+  }
+
+  // Build slot rows
+  slots.forEach(slot=>{
+    gridHTML+=`<div class="sg-slot-label"><span class="slot-icon">${slot.icon}</span><span class="slot-time">${slot.id.toUpperCase()}</span></div>`;
+    for(let d=0;d<7;d++){
+      const date=new Date(ws);date.setDate(ws.getDate()+d);
+      const dow=date.getDay()===0?7:date.getDay(); // 1=Mon…7=Sun
+      const key=getWeekKey(ws,d,slot.id);
+      const assigned=STORY_SLOTS[currentBrand][key];
+      const tmpl=assigned?tMap[assigned]:null;
+      if(tmpl){
+        gridHTML+=`<div class="sg-cell filled">
+          <div class="sg-cell-inner" style="background:${tmpl.color}12;border-color:${tmpl.color}44">
+            <button class="sc-remove" onclick="event.stopPropagation();clearStorySlot('${key}')">✕</button>
+            <div class="sc-icon">${tmpl.icon}</div>
+            <div class="sc-name" style="color:${tmpl.color}">${tmpl.name}</div>
+            <div class="sc-plats">${tmpl.platforms.map(p=>`<div class="sc-plat-dot" style="background:${PLAT_COLORS[p]||'#888'}" title="${p}"></div>`).join('')}</div>
+          </div>
+        </div>`;
+      } else {
+        gridHTML+=`<div class="sg-cell" onclick="openSlotPicker('${key}','${slot.id}')">
+          <div class="sg-empty">+</div>
+        </div>`;
+      }
+    }
+  });
+
+  document.getElementById('storiesGrid').innerHTML=gridHTML;
+
+  // Template library
+  document.getElementById('templateLibrary').innerHTML=templates.map(t=>`
+    <button class="template-card" onclick="quickFillNext('${t.id}')" style="border-color:${t.color}33">
+      <div class="tc-icon" style="background:${t.color}18;color:${t.color}">${t.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div class="tc-name">${t.name}</div>
+        <div class="tc-desc">${t.desc}</div>
+      </div>
+      <div class="tc-slot" style="background:${t.color}15;color:${t.color}">${t.slot.toUpperCase()}</div>
+    </button>`).join('');
+
+  updateStoryProgress();
+}
+
+function updateStoryProgress(){
+  const ws=getWeekStart(storyWeekOffset);
+  let filled=0;
+  for(let d=0;d<7;d++){
+    if(STORY_SLOTS[currentBrand][getWeekKey(ws,d,'am')]) filled++;
+    if(STORY_SLOTS[currentBrand][getWeekKey(ws,d,'pm')]) filled++;
+  }
+  const total=14;const pct=Math.round(filled/total*100);
+  document.getElementById('storiesProgressFill').style.width=pct+'%';
+  document.getElementById('storiesProgressLabel').textContent=`${filled}/${total} slots`;
+  document.getElementById('weekFillPct').textContent=pct+'%';
+  document.getElementById('weekFillBar').style.width=pct+'%';
+}
+
+let pendingSlotKey=null;
+function openSlotPicker(key,slotId){
+  pendingSlotKey=key;
+  const b=BRANDS[currentBrand];
+  const templates=b.storyTemplates||[];
+  document.getElementById('modalTitle').textContent=`Pick story template — ${slotId.toUpperCase()} slot`;
+  document.getElementById('modalBody').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${templates.map(t=>`
+        <button onclick="assignStorySlot('${key}','${t.id}')" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:9px;background:${t.color}10;border:1px solid ${t.color}44;cursor:pointer;font-family:inherit;color:var(--text);text-align:left;transition:all .15s" onmouseover="this.style.background='${t.color}22'" onmouseout="this.style.background='${t.color}10'">
+          <span style="font-size:1.2rem">${t.icon}</span>
+          <div><div style="font-size:.8rem;font-weight:600;color:${t.color}">${t.name}</div><div style="font-size:.68rem;color:var(--text-muted)">${t.desc}</div></div>
+        </button>`).join('')}
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function assignStorySlot(key,templateId){
+  STORY_SLOTS[currentBrand][key]=templateId;
+  closeModal();renderStories();
+  showToast('📱 Story slot filled!','var(--brand)');
+}
+
+function clearStorySlot(key){
+  delete STORY_SLOTS[currentBrand][key];
+  renderStories();
+}
+
+function autoFillWeek(){
+  const b=BRANDS[currentBrand];
+  const ws=getWeekStart(storyWeekOffset);
+  (b.defaultStoryWeek||[]).forEach(entry=>{
+    // entry.dow: 1=Mon…7=Sun, convert to 0-based index for our grid (0=Mon)
+    const idx=entry.dow===0?6:entry.dow-1;
+    const key=getWeekKey(ws,idx,entry.slot);
+    if(!STORY_SLOTS[currentBrand][key]) STORY_SLOTS[currentBrand][key]=entry.template;
+  });
+  renderStories();
+  showToast('✨ Week auto-filled with your cadence!','var(--brand)');
+}
+
+function quickFillNext(templateId){
+  const b=BRANDS[currentBrand];
+  const t=b.storyTemplates.find(t=>t.id===templateId);
+  const ws=getWeekStart(storyWeekOffset);
+  // Find first empty slot of matching type
+  for(let d=0;d<7;d++){
+    const slot=t.slot||'am';
+    const key=getWeekKey(ws,d,slot);
+    if(!STORY_SLOTS[currentBrand][key]){
+      STORY_SLOTS[currentBrand][key]=templateId;
+      renderStories();
+      showToast(`${t.icon} Added to ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][d]} ${slot.toUpperCase()}!`,'var(--brand)');
+      return;
+    }
+  }
+  showToast('All slots for this type are filled this week!','var(--orange)');
+}
+
+// ── INIT ──
+document.getElementById('schedDate').value=today.toISOString().split('T')[0];
+renderToneChips();
+renderPlatformButtons();
+renderDashboard();
+renderCalendar();
+</script>
+
+<!-- ── EXPORT MODAL ── -->
+<div id="exportModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeExportModal()">
+  <div class="modal-box export-modal">
+    <div class="export-modal-header">
+      <div>
+        <div style="font-size:1rem;font-weight:700">📤 Export to Metricool</div>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-top:3px" id="exportSub">Copy your content and paste it into Metricool</div>
+      </div>
+      <button onclick="closeExportModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem;padding:2px 6px">✕</button>
+    </div>
+
+    <!-- Caption -->
+    <div class="export-section">
+      <div class="export-label">Caption</div>
+      <div class="export-textbox" id="exportCaption"></div>
+      <button class="export-copy-btn" id="copyCaptionBtn" onclick="copyExport('caption')">📋 Copy Caption</button>
+    </div>
+
+    <!-- Hashtags -->
+    <div class="export-section" id="exportHashtagsSection">
+      <div class="export-label">Hashtags</div>
+      <div class="export-textbox" id="exportHashtags" style="font-size:.78rem;color:var(--brand)"></div>
+      <button class="export-copy-btn" id="copyHashtagsBtn" onclick="copyExport('hashtags')">📋 Copy Hashtags</button>
+    </div>
+
+    <!-- Schedule -->
+    <div class="export-section">
+      <div class="export-label">Scheduled For</div>
+      <div class="export-schedule">📅 <span id="exportDateTime">—</span></div>
+    </div>
+
+    <!-- Platforms -->
+    <div class="export-section">
+      <div class="export-label">Where to Post</div>
+      <div class="export-platforms" id="exportPlatforms"></div>
+    </div>
+
+    <!-- Steps -->
+    <div class="export-steps">
+      <div class="export-steps-title">📋 Steps in Metricool</div>
+      <ol>
+        <li>Open <strong>Metricool</strong> → <strong>Planner</strong></li>
+        <li>Click <strong>"New Post"</strong></li>
+        <li>Paste your <strong>caption</strong> (add hashtags at the bottom)</li>
+        <li>Select the platforms marked <span class="hl">✅ Metricool</span> above</li>
+        <li>Set date to <strong id="exportStepsDate">the scheduled date</strong></li>
+        <li>Click <strong>"Schedule"</strong> — done! 🎉</li>
+      </ol>
+    </div>
+
+    <div style="display:flex;gap:9px;margin-top:16px">
+      <a href="https://app.metricool.com" target="_blank" class="export-metricool-btn" style="flex:1">Open Metricool →</a>
+      <button class="btn btn-ghost" onclick="closeExportModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── EXPORT TO METRICOOL ──
+const METRICOOL_PLATFORMS={ig:true,fb:true,fbg:true,li:true,fbp:false,wa:false};
+const PLAT_FULL_LABELS={ig:'📷 Instagram',fb:'📘 Facebook Page',fbg:'👥 Facebook Group',li:'💼 LinkedIn',fbp:'👤 Moshe Personal (FB)',wa:'💬 WhatsApp'};
+let _exportCaption='';
+let _exportHashtags='';
+
+function openExportModal(postId){
+  let caption='',htags='',dateStr='',platforms=[];
+  if(postId==='compose'){
+    caption=document.getElementById('composeArea').value.trim();
+    htags=hashtags.map(h=>'#'+h).join(' ');
+    const dv=document.getElementById('schedDate').value;
+    const tv=document.getElementById('schedTime').value||'09:00';
+    const d=dv?new Date(dv+'T'+tv):new Date();
+    dateStr=formatExportDate(d);
+    platforms=[...activePlatforms];
+  } else {
+    const p=POSTS[currentBrand].find(p=>p.id===postId);
+    if(!p)return;
+    caption=p.text;
+    htags=(p.hashtags||BRANDS[currentBrand].defaultHashtags.slice(0,6)).map(h=>'#'+h).join(' ');
+    dateStr=formatExportDate(p.date);
+    platforms=p.platforms||[];
+  }
+  if(!caption){showToast('⚠️ No caption to export','var(--orange)');return;}
+  _exportCaption=caption;
+  _exportHashtags=htags;
+  document.getElementById('exportCaption').textContent=caption;
+  const hashEl=document.getElementById('exportHashtags');
+  const hashSec=document.getElementById('exportHashtagsSection');
+  if(htags){hashEl.textContent=htags;hashSec.style.display='block';}else{hashSec.style.display='none';}
+  document.getElementById('exportDateTime').textContent=dateStr;
+  document.getElementById('exportStepsDate').textContent=dateStr;
+  document.getElementById('exportSub').textContent=`${BRANDS[currentBrand].name} · ${platforms.length} platform${platforms.length!==1?'s':''}`;
+  document.getElementById('exportPlatforms').innerHTML=platforms.map(p=>{
+    const supported=METRICOOL_PLATFORMS[p]!==false;
+    return`<div class="export-plat-row ${supported?'supported':'manual'}">
+      <span class="export-plat-icon">${PLAT_FULL_LABELS[p]?.split(' ')[0]||'📱'}</span>
+      <span class="export-plat-name">${PLAT_FULL_LABELS[p]?.slice(2)||p}</span>
+      <span class="export-plat-badge ${supported?'badge-metricool':'badge-manual'}">${supported?'✅ Metricool':'⚠️ Post manually'}</span>
+    </div>`;}).join('');
+  // Reset copy buttons
+  ['copyCaptionBtn','copyHashtagsBtn'].forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('copied');b.innerHTML=id.includes('Caption')?'📋 Copy Caption':'📋 Copy Hashtags';}});
+  const em=document.getElementById('exportModal');
+  em.style.display='flex';
+  em.style.opacity='1';
+  em.style.pointerEvents='all';
+}
+
+function copyExport(type){
+  const text=type==='caption'?_exportCaption:_exportHashtags;
+  const btnId=type==='caption'?'copyCaptionBtn':'copyHashtagsBtn';
+  const label=type==='caption'?'Caption':'Hashtags';
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById(btnId);
+    btn.classList.add('copied');
+    btn.innerHTML=`✅ ${label} Copied!`;
+    setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML=`📋 Copy ${label}`;},2500);
+  }).catch(()=>{
+    // Fallback
+    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    showToast(`✅ ${label} copied!`,'var(--green)');
+  });
+}
+
+function closeExportModal(){const em=document.getElementById('exportModal');em.style.display='none';em.style.opacity='';em.style.pointerEvents='';}
+
+function formatExportDate(d){
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const h=d.getHours(),m=d.getMinutes();
+  const ampm=h>=12?'PM':'AM';
+  const h12=h%12||12;
+  const mm=m.toString().padStart(2,'0');
+  return`${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()} · ${h12}:${mm} ${ampm}`;
+}
+</script>
+</body>
+</html>
