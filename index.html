@@ -1727,12 +1727,22 @@ function renderQueueList(list){
       </div>
       <div class="queue-actions">
         <button class="action-btn" onclick="openExportModal(${p.id})" title="Export to Metricool" style="font-size:.7rem;padding:4px 8px;color:var(--brand)">📤</button>
+        ${p.status==='scheduled'?`<button class="action-btn" onclick="markPosted(${p.id})" title="Mark as Posted" style="color:#22c55e">✅</button>`:''}
         <button class="action-btn" onclick="editPost(${p.id})" title="Edit">✏️</button>
         <button class="action-btn" onclick="deletePost(${p.id})" title="Delete">🗑️</button>
       </div>
     </div>`;}).join('');
 }
 function filterQueue(f,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderQueue(f);}
+function markPosted(id){
+  const p=POSTS[currentBrand].find(p=>p.id===id);
+  if(!p)return;
+  p.status='published';
+  savePosts();
+  renderQueue('all');
+  document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;
+  showToast('✅ Marked as posted!','var(--green)');
+}
 function deletePost(id){const idx=POSTS[currentBrand].findIndex(p=>p.id===id);if(idx>-1)POSTS[currentBrand].splice(idx,1);savePosts();renderQueue('all');document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;showToast('🗑️ Post deleted','var(--pink)');}
 function editPost(id){
   const p=POSTS[currentBrand].find(x=>x.id===id);
