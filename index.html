@@ -1103,8 +1103,17 @@ function savePosts(){
 function loadSavedPosts(){
   try{
     const saved=localStorage.getItem(STORAGE_KEY);
-    if(saved){const p=deserializePosts(saved);for(const b in p)if(POSTS[b])POSTS[b]=p[b];}
-  }catch(e){console.warn('Could not load saved posts:',e);}
+    if(saved){
+      const p=deserializePosts(saved);
+      let total=0;
+      for(const b in p){if(POSTS[b]){POSTS[b]=p[b];total+=p[b].length;}}
+      // Show confirmation after page renders
+      setTimeout(()=>showToast(`📂 Loaded ${total} saved posts`,'var(--green)'),800);
+    }
+  }catch(e){
+    console.warn('Could not load saved posts:',e);
+    setTimeout(()=>showToast('⚠️ Could not load saved posts: '+e.message,'var(--orange)'),800);
+  }
 }
 
 // Build POSTS from defaults then overlay localStorage
