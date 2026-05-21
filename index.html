@@ -1052,7 +1052,7 @@ let currentContentType = null;
 let currentPostType = 'post';
 
 // ── PER-BRAND POST DATA ──
-const POSTS = {
+const DEFAULT_POSTS = {
   sbf:[
     // MON — Market Insight
     {id:101,text:'📊 Monday Market Insight\nBay Area inventory is down 18% this quarter — Morgan Hill remains the most accessible entry point in Santa Clara County.\nMedian days on market: 14. List-to-sale: 103%. The data is clear. DM me to talk strategy.',platforms:['ig','li'],date:nextWeekday(1,9,0),status:'scheduled',emoji:'📊',series:'market-insight',type:'post'},
@@ -1080,6 +1080,36 @@ const POSTS = {
     {id:206,text:'חג פסח כשר ושמח לכל משפחות גבעת מורגן! 🍷🌿\nמאחלים לכולם ליל סדר מרגש, שולחן ערוך עם אהובים, וחג של חירות ושמחה. חג שמח! 🕍',platforms:['ig','fbg'],date:new Date(today.getFullYear(),today.getMonth(),today.getDate()+7,8,0),status:'scheduled',emoji:'🍷'},
   ]
 };
+
+// ── Persistence helpers ──
+const STORAGE_KEY='moya_posts_v1';
+function serializePosts(posts){
+  const out={};
+  for(const brand in posts){
+    out[brand]=posts[brand].map(p=>({...p,date:p.date instanceof Date?p.date.toISOString():p.date}));
+  }
+  return JSON.stringify(out);
+}
+function deserializePosts(json){
+  const raw=JSON.parse(json);
+  for(const brand in raw){
+    raw[brand]=raw[brand].map(p=>({...p,date:new Date(p.date)}));
+  }
+  return raw;
+}
+function savePosts(){
+  try{localStorage.setItem(STORAGE_KEY,serializePosts(POSTS));}catch(e){console.warn('Could not save posts:',e);}
+}
+function loadSavedPosts(){
+  try{
+    const saved=localStorage.getItem(STORAGE_KEY);
+    if(saved){const p=deserializePosts(saved);for(const b in p)if(POSTS[b])POSTS[b]=p[b];}
+  }catch(e){console.warn('Could not load saved posts:',e);}
+}
+
+// Build POSTS from defaults then overlay localStorage
+const POSTS={sbf:[...DEFAULT_POSTS.sbf],gm:[...DEFAULT_POSTS.gm]};
+loadSavedPosts();
 
 // ═══════════════════════════════════════════
 //  ISRAELI HOLIDAYS (Gregorian dates)
@@ -1533,6 +1563,7 @@ function scheduleStory(isDraft=false){
   const text=`⭐️ Client Love — ${'★'.repeat(+stars)}\n"${q.replace(/^"|"$/g,'')}"\n— ${n.replace(/^—\s*/,'')}`;
   const st=isDraft?'draft':'scheduled';
   POSTS.sbf.push({id:Date.now(),text,platforms:['ig'],date:postDate,status:st,emoji:'⭐️',series:'client-love',type:'story'});
+  savePosts();
   document.getElementById('queueBadge').textContent=POSTS.sbf.filter(p=>p.status==='scheduled').length;
   showToast(isDraft?'💾 Story draft saved!':'⭐️ Client Love story scheduled for Wednesday!','var(--brand)');
   document.getElementById('storyQuote').value='';document.getElementById('storyClientName').value='';updateStoryPreview();
@@ -1611,6 +1642,7 @@ function schedulePost(){
   const b=BRANDS[currentBrand];
   POSTS[currentBrand].push({id:Date.now(),text,platforms:[...activePlatforms],date:postDate,status:st,emoji:b.brandEmoji,media:[...composeMedia]});
   if(st==='scheduled'){b.stats.scheduled++;document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;}
+  savePosts();
   showToast(st==='published'?'🚀 Posted!':st==='draft'?'💾 Draft saved!':'✅ Scheduled!','var(--green)');
   document.getElementById('composeArea').value='';hashtags=[];renderHashtags();updateCharCount(document.getElementById('composeArea'));clearMedia();
 }
@@ -1654,7 +1686,7 @@ function renderQueueList(list){
     </div>`;}).join('');
 }
 function filterQueue(f,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderQueue(f);}
-function deletePost(id){const idx=POSTS[currentBrand].findIndex(p=>p.id===id);if(idx>-1)POSTS[currentBrand].splice(idx,1);renderQueue('all');document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;showToast('🗑️ Post deleted','var(--pink)');}
+function deletePost(id){const idx=POSTS[currentBrand].findIndex(p=>p.id===id);if(idx>-1)POSTS[currentBrand].splice(idx,1);savePosts();renderQueue('all');document.getElementById('queueBadge').textContent=POSTS[currentBrand].filter(p=>p.status==='scheduled').length;showToast('🗑️ Post deleted','var(--pink)');}
 function editPost(id){const p=POSTS[currentBrand].find(p=>p.id===id);if(!p)return;showView('compose',document.querySelector('[onclick*=compose]'));document.getElementById('composeArea').value=p.text;updateCharCount(document.getElementById('composeArea'));showToast('✏️ Loaded for editing','var(--blue)');}
 
 // ═══════════════════════════════════════════
