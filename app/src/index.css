@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Brand CSS variables (toggled by data-brand on <html>) ── */
+:root, [data-brand="sbf"] {
+  --bg:         #fbf5ec;
+  --surface:    #ffffff;
+  --soft:       #f4ecd8;
+  --softer:     #f9f1e0;
+  --sand:       #efe5cf;
+  --ink:        #2b1f12;
+  --text:       #1e1810;
+  --muted:      #7a6a55;
+  --dim:        #a8997f;
+  --line:       #e3d6b6;
+  --line2:      #cebd97;
+  --accent:     #d96c3b;
+  --accent2:    #3d6e54;
+  --accent3:    #e8b658;
+  --accent-soft:#fadab9;
+  --accent-bg:  #fbe8d3;
+}
+
+[data-brand="gm"] {
+  --bg:         #f4f0e6;
+  --surface:    #ffffff;
+  --soft:       #e8e1cf;
+  --softer:     #f0e9d6;
+  --sand:       #dfd5bd;
+  --ink:        #1a2532;
+  --text:       #15212c;
+  --muted:      #646b78;
+  --dim:        #9aa3b1;
+  --line:       #d4c9b0;
+  --line2:      #b8ab8c;
+  --accent:     #2c6e8a;
+  --accent2:    #c97132;
+  --accent3:    #e6b94a;
+  --accent-soft:#c2ddea;
+  --accent-bg:  #d8e8f0;
+}
+
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  /* Prevent rubber-band scroll on iOS at body level */
+  overscroll-behavior: none;
+}
+
+#root {
+  width: 100vw;
+  height: 100svh; /* svh = small viewport height — correct on mobile with browser chrome */
+  overflow: hidden;
+}
+
+/* ── Mobile: kill 300ms tap delay everywhere ── */
+a, button, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* ── Mobile: momentum scrolling for all scrollable containers ── */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Utility: display font ── */
+.font-display {
+  font-family: 'DM Serif Display', 'Cormorant Garamond', Georgia, serif;
+}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
+
+/* ── Animations ── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Reset buttons ── */
+button { font-family: inherit; }
