@@ -17,6 +17,44 @@ function readFile(file) {
   });
 }
 
+const MEDIA_TYPES = ['image/', 'video/'];
+function isMedia(file) { return MEDIA_TYPES.some(t => file.type.startsWith(t)); }
+
+// Recursively collect all media files from a FileSystemEntry (file or directory)
+function collectFromEntry(entry) {
+  return new Promise(resolve => {
+    if (entry.isFile) {
+      entry.file(file => resolve(isMedia(file) ? [file] : []), () => resolve([]));
+    } else if (entry.isDirectory) {
+      const reader = entry.createReader();
+      const results = [];
+      function readBatch() {
+        reader.readEntries(async entries => {
+          if (!entries.length) { resolve(results.flat()); return; }
+          const batch = await Promise.all(entries.map(collectFromEntry));
+          results.push(...batch);
+          readBatch(); // keep reading until empty batch
+        }, () => resolve(results.flat()));
+      }
+      readBatch();
+    } else {
+      resolve([]);
+    }
+  });
+}
+
+// Extract all media files from a drop event, including folder contents
+async function extractDroppedFiles(e) {
+  const items = [...(e.dataTransfer.items || [])];
+  if (items.length && items[0].webkitGetAsEntry) {
+    const entries = items.map(i => i.webkitGetAsEntry()).filter(Boolean);
+    const batches = await Promise.all(entries.map(collectFromEntry));
+    return batches.flat();
+  }
+  // fallback: plain files (no folder support)
+  return [...e.dataTransfer.files].filter(isMedia);
+}
+
 function localDatetimeValue(date) {
   const d = date instanceof Date ? date : new Date(date);
   const pad = n => String(n).padStart(2, '0');
@@ -62,7 +100,7 @@ function Dropzone({ onFiles, t }) {
   const handleDrop = useCallback(async e => {
     e.preventDefault();
     setDragging(false);
-    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
+    const files = await extractDroppedFiles(e);
     if (files.length) onFiles(files);
   }, [onFiles]);
 

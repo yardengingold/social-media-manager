@@ -15,6 +15,41 @@ function readFile(file) {
   });
 }
 
+const MEDIA_TYPES = ['image/', 'video/'];
+function isMedia(file) { return MEDIA_TYPES.some(t => file.type.startsWith(t)); }
+
+function collectFromEntry(entry) {
+  return new Promise(resolve => {
+    if (entry.isFile) {
+      entry.file(file => resolve(isMedia(file) ? [file] : []), () => resolve([]));
+    } else if (entry.isDirectory) {
+      const reader = entry.createReader();
+      const results = [];
+      function readBatch() {
+        reader.readEntries(async entries => {
+          if (!entries.length) { resolve(results.flat()); return; }
+          const batch = await Promise.all(entries.map(collectFromEntry));
+          results.push(...batch);
+          readBatch();
+        }, () => resolve(results.flat()));
+      }
+      readBatch();
+    } else {
+      resolve([]);
+    }
+  });
+}
+
+async function extractDroppedFiles(e) {
+  const items = [...(e.dataTransfer.items || [])];
+  if (items.length && items[0].webkitGetAsEntry) {
+    const entries = items.map(i => i.webkitGetAsEntry()).filter(Boolean);
+    const batches = await Promise.all(entries.map(collectFromEntry));
+    return batches.flat();
+  }
+  return [...e.dataTransfer.files].filter(isMedia);
+}
+
 // ── stub library data ─────────────────────────────────────────────────────────
 const CAPTION_SEEDS_SBF = [
   { id: 'c1', label: 'Just Listed Hero', pillar: 'Listing', text: '🚨 JUST LISTED — Morgan Hill\n{beds} Bed · {baths} Bath · {feature}\nChef\'s kitchen, backyard built for California living.\nOpen house Sunday 1–4PM. DM for private tour. 🔑', tags: ['listing', 'morgan-hill'] },
@@ -121,7 +156,7 @@ function MediaGrid({ t, showToast }) {
         <div
           onDragOver={e => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
-          onDrop={e => { e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files); }}
+          onDrop={async e => { e.preventDefault(); setDragging(false); handleFiles(await extractDroppedFiles(e)); }}
           onClick={() => inputRef.current?.click()}
           style={{
             border: `2px dashed ${dragging ? t.accent : t.border}`,
@@ -144,7 +179,7 @@ function MediaGrid({ t, showToast }) {
           <div
             onDragOver={e => { e.preventDefault(); setDragging(true); }}
             onDragLeave={() => setDragging(false)}
-            onDrop={e => { e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files); }}
+            onDrop={async e => { e.preventDefault(); setDragging(false); handleFiles(await extractDroppedFiles(e)); }}
             onClick={() => inputRef.current?.click()}
             style={{
               aspectRatio: '1', borderRadius: 12,
