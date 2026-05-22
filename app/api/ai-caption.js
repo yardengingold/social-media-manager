@@ -31,7 +31,13 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'GEMINI_API_KEY not set' });
   }
 
-  const { imageData, mimeType = 'image/jpeg', brand = 'sbf' } = req.body;
+  // Vercel may or may not auto-parse — handle both cases
+  let parsed = req.body;
+  if (typeof parsed === 'string') {
+    try { parsed = JSON.parse(parsed); } catch { return res.status(400).json({ error: 'Invalid JSON' }); }
+  }
+
+  const { imageData, mimeType = 'image/jpeg', brand = 'sbf' } = parsed || {};
   if (!imageData) {
     return res.status(400).json({ error: 'Missing imageData' });
   }
