@@ -1,4 +1,4 @@
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent`;
 
 const PROMPTS = {
   sbf: `You are a social media expert for Moshe Fogel, a real estate agent in Morgan Hill, CA (brand: Sold By Fogel).
