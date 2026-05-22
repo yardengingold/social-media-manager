@@ -113,7 +113,7 @@ function resizeImage(dataUrl, maxSize = 768) {
 
 async function fetchAiCaption(dataUrl, mimeType, brand) {
   const imageData = await resizeImage(dataUrl);
-  const res = await fetch('/.netlify/functions/ai-caption', {
+  const res = await fetch('/api/ai-caption', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ imageData, mimeType: 'image/jpeg', brand }),
