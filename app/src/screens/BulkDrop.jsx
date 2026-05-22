@@ -92,6 +92,37 @@ function getAiStub(brand, index) {
   return pool[index % pool.length];
 }
 
+// Resize image to max 768px and return base64 (without data: prefix)
+function resizeImage(dataUrl, maxSize = 768) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const resized = canvas.toDataURL('image/jpeg', 0.85);
+      resolve(resized.split(',')[1]); // return base64 only
+    };
+    img.onerror = () => resolve(dataUrl.split(',')[1]);
+    img.src = dataUrl;
+  });
+}
+
+async function fetchAiCaption(dataUrl, mimeType, brand) {
+  const imageData = await resizeImage(dataUrl);
+  const res = await fetch('/.netlify/functions/ai-caption', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ imageData, mimeType: 'image/jpeg', brand }),
+  });
+  if (!res.ok) throw new Error('API error');
+  const data = await res.json();
+  return data.caption;
+}
+
 // ── dropzone ──────────────────────────────────────────────────────────────────
 function Dropzone({ onFiles, t }) {
   const [dragging, setDragging] = useState(false);
@@ -170,12 +201,22 @@ function ItemCard({ item, index, brand, onChange, onRemove, t }) {
   const pillars = BRANDS[brand]?.pillars || {};
   const pillarList = Object.entries(pillars);
 
-  function handleAiSuggest() {
+  async function handleAiSuggest() {
     setSuggestLoading(true);
-    setTimeout(() => {
+    try {
+      if (item.dataUrl && !isVideo) {
+        const caption = await fetchAiCaption(item.dataUrl, item.file?.type || 'image/jpeg', brand);
+        onChange({ caption });
+      } else {
+        // video or no dataUrl — fall back to stub
+        onChange({ caption: getAiStub(brand, index) });
+      }
+    } catch (e) {
+      console.warn('AI caption failed, using stub:', e);
       onChange({ caption: getAiStub(brand, index) });
+    } finally {
       setSuggestLoading(false);
-    }, 700);
+    }
   }
 
   const isVideo = item.file?.type?.startsWith('video/');
@@ -495,12 +536,22 @@ export default function BulkDropScreen() {
     setItems(prev => prev.filter(it => it.id !== id));
   }
 
-  function handleAiAll() {
-    setItems(prev => prev.map((it, i) => ({
-      ...it,
-      caption: it.caption || getAiStub(brand, i),
-    })));
-    showToast('✨ AI captions applied to all');
+  async function handleAiAll() {
+    const uncaptioned = items.filter(it => !it.caption);
+    if (!uncaptioned.length) { showToast('All items already have captions'); return; }
+    showToast(`✨ Generating ${uncaptioned.length} caption${uncaptioned.length > 1 ? 's' : ''}…`);
+    await Promise.all(uncaptioned.map(async (it, i) => {
+      const isVideo = it.file?.type?.startsWith('video/');
+      try {
+        const caption = (!isVideo && it.dataUrl)
+          ? await fetchAiCaption(it.dataUrl, it.file?.type || 'image/jpeg', brand)
+          : getAiStub(brand, i);
+        setItems(prev => prev.map(x => x.id === it.id ? { ...x, caption } : x));
+      } catch {
+        setItems(prev => prev.map(x => x.id === it.id ? { ...x, caption: getAiStub(brand, i) } : x));
+      }
+    }));
+    showToast('✨ AI captions done!');
   }
 
   function handleSubmit() {
