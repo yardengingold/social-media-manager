@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { AppProvider, useApp, FAM_SANS } from './AppContext.jsx';
+import Login from './screens/Login.jsx';
 import { SideNav, TopBar, MobileHeader, MobileNav } from './Nav.jsx';
 import Dashboard from './screens/Dashboard.jsx';
 import CalendarScreen from './screens/Calendar.jsx';
@@ -100,11 +101,32 @@ function Shell() {
   );
 }
 
+// ── Auth gate ─────────────────────────────────────────────────────────────────
+function AuthGate() {
+  const { user } = useApp();
+
+  // Still checking auth state
+  if (user === undefined) {
+    return (
+      <div style={{
+        minHeight: '100svh', background: '#fbf5ec',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <div style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid #e3d6b6', borderTopColor: '#d96c3b', animation: 'spin 0.7s linear infinite' }}/>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  if (!user) return <Login/>;
+  return <Shell/>;
+}
+
 // ── Root export ───────────────────────────────────────────────────────────────
 export default function App() {
   return (
     <AppProvider>
-      <Shell/>
+      <AuthGate/>
     </AppProvider>
   );
 }

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { BRANDS, DEFAULT_POSTS } from './data.js';
-import { loadFromCloud, savePosts } from './firebase.js';
+import { loadFromCloud, savePosts, onAuthChange } from './firebase.js';
 
 // ── Theme tokens (mirroring CSS vars, used for inline styles) ─────────────────
 export const TH = {
@@ -32,10 +32,17 @@ const AppCtx = createContext(null);
 export const useApp = () => useContext(AppCtx);
 
 export function AppProvider({ children }) {
+  const [user,  setUser]    = useState(undefined); // undefined = loading, null = logged out
   const [brand, setBrand]   = useState('sbf');
   const [view,  setViewRaw] = useState('dashboard');
   const [isMobile,  setIsMobile]  = useState(() => window.innerWidth < 768);
   const [isTablet,  setIsTablet]  = useState(() => window.innerWidth >= 768 && window.innerWidth < 1100);
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const unsub = onAuthChange(u => setUser(u));
+    return unsub;
+  }, []);
 
   useEffect(() => {
     const onResize = () => {
@@ -105,6 +112,7 @@ export function AppProvider({ children }) {
   const scheduledCount = posts[brand]?.filter(p => p.status === 'scheduled').length ?? 0;
 
   const ctx = {
+    user,
     brand, setBrand, view, setView,
     posts, setPosts, updatePosts,
     modal, setModal,
