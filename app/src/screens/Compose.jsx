@@ -199,8 +199,9 @@ const PLATFORM_TIPS = {
 };
 
 // ── Main Compose screen ───────────────────────────────────────────────────────
-export default function ComposeScreen({ editPost = null, onSaved }) {
-  const { t, brand, posts, updatePosts, showToast, setView, isMobile } = useApp();
+export default function ComposeScreen({ editPost: editPostProp = null, onSaved }) {
+  const { t, brand, posts, updatePosts, showToast, setView, setModal, modal, isMobile } = useApp();
+  const editPost = editPostProp ?? modal?.editPost ?? null;
   const b = BRANDS[brand];
   const isHe = brand === 'gm';
 
@@ -306,6 +307,7 @@ export default function ComposeScreen({ editPost = null, onSaved }) {
     // Reset form
     setText(''); setPlatforms(b.platforms.slice(0, 2));
     setMediaFiles([]); setAction('Schedule');
+    setModal(null);
     setView('queue');
   }
 

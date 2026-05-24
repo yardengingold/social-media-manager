@@ -353,6 +353,7 @@ export default function QueueScreen() {
   }, [brandPosts, activeTab, sortAsc]);
 
   function handleEdit(post) {
+    setModal({ type: 'compose', editPost: post });
     setView('compose');
   }
 
