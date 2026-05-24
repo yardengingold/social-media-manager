@@ -37,7 +37,9 @@ function serializePosts(posts) {
     out[brand] = posts[brand].map(p => ({
       ...p,
       date: p.date instanceof Date ? p.date.toISOString() : p.date,
-      media: p.media || [],
+      // Strip base64 dataUrls — they're too large for Firebase RTDB.
+      // The image stays in memory for the current session via React state.
+      media: (p.media || []).map(({ dataUrl: _omit, ...rest }) => rest),
     }));
   }
   return out;
