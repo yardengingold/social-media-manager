@@ -28,19 +28,19 @@ function PlaceholderScreen({ label }) {
 // ── Screen router ─────────────────────────────────────────────────────────────
 function ScreenRouter() {
   const { view } = useApp();
-  const screens = {
-    dashboard: () => <Dashboard/>,
-    calendar:  () => <CalendarScreen/>,
-    compose:   () => <ComposeScreen/>,
-    bulk:      () => <BulkDropScreen/>,
-    queue:     () => <QueueScreen/>,
-    stories:   () => <StoriesScreen/>,
-    analytics: () => <AnalyticsScreen/>,
-    inbox:     () => <InboxScreen/>,
-    library:   () => <LibraryScreen/>,
-  };
-  const Screen = screens[view] || screens.dashboard;
-  return <Screen/>;
+  // Use switch instead of object+arrow-functions to avoid creating new
+  // component references on every render (which would remount and reset state)
+  switch (view) {
+    case 'calendar':  return <CalendarScreen/>;
+    case 'compose':   return <ComposeScreen/>;
+    case 'bulk':      return <BulkDropScreen/>;
+    case 'queue':     return <QueueScreen/>;
+    case 'stories':   return <StoriesScreen/>;
+    case 'analytics': return <AnalyticsScreen/>;
+    case 'inbox':     return <InboxScreen/>;
+    case 'library':   return <LibraryScreen/>;
+    default:          return <Dashboard/>;
+  }
 }
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
