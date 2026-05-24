@@ -68,8 +68,9 @@ export function AppProvider({ children }) {
     document.documentElement.setAttribute('data-brand', brand);
   }, [brand]);
 
-  // Load from Firebase on mount
+  // Load from Firebase only after user is authenticated
   useEffect(() => {
+    if (!user) return; // wait until logged in
     loadFromCloud().then(cloud => {
       if (cloud) {
         setPosts(prev => {
@@ -85,7 +86,7 @@ export function AppProvider({ children }) {
         if (total > 0) showToast(`☁️ Loaded ${total} post${total !== 1 ? 's' : ''} from cloud`, '#3d6e54');
       }
     });
-  }, []);
+  }, [user?.uid]); // re-run when the logged-in user changes
 
   function showToast(msg, color = '#3d6e54') {
     clearTimeout(toastTimer.current);

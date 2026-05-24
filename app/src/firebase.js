@@ -58,6 +58,7 @@ function deserializePosts(raw) {
 }
 
 export async function savePosts(posts) {
+  if (!auth.currentUser) throw new Error('Not authenticated');
   const postsRef = ref(db, 'posts');
   await set(postsRef, serializePosts(posts));
 }
