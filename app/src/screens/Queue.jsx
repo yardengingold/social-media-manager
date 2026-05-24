@@ -37,6 +37,7 @@ function relativeTime(date) {
 
 // ── delete-confirm mini-modal ─────────────────────────────────────────────────
 function DeleteModal({ post, onConfirm, onCancel, t }) {
+  const caption = post.text || post.caption || '';
   return (
     <div style={{
       position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)',
@@ -46,7 +47,7 @@ function DeleteModal({ post, onConfirm, onCancel, t }) {
       onClick={onCancel}
     >
       <div style={{
-        background: t.card, borderRadius: 20, padding: 28, maxWidth: 380, width: '100%',
+        background: t.surface, borderRadius: 20, padding: 28, maxWidth: 380, width: '100%',
         boxShadow: '0 24px 64px rgba(0,0,0,.22)',
       }}
         onClick={e => e.stopPropagation()}
@@ -56,17 +57,17 @@ function DeleteModal({ post, onConfirm, onCancel, t }) {
         </div>
         <div style={{
           fontSize: 13, color: t.muted, marginBottom: 22,
-          background: t.bg, borderRadius: 10, padding: '10px 14px',
+          background: t.softer, borderRadius: 10, padding: '10px 14px',
           borderLeft: `3px solid ${t.accent}`,
         }}>
-          {(post.caption || '(no caption)').slice(0, 120)}{post.caption?.length > 120 ? '…' : ''}
+          {(caption || '(no caption)').slice(0, 120)}{caption.length > 120 ? '…' : ''}
         </div>
         <p style={{ fontSize: 13, color: t.muted, marginBottom: 24 }}>
           This will permanently remove the post from your queue and cannot be undone.
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
           <button onClick={onCancel} style={{
-            padding: '9px 18px', borderRadius: 10, border: `1px solid ${t.border}`,
+            padding: '9px 18px', borderRadius: 10, border: `1px solid ${t.line}`,
             background: 'transparent', color: t.text, cursor: 'pointer', fontSize: 13, fontWeight: 500,
           }}>
             Cancel
@@ -84,7 +85,7 @@ function DeleteModal({ post, onConfirm, onCancel, t }) {
 }
 
 // ── status badge ──────────────────────────────────────────────────────────────
-function StatusBadge({ status, t }) {
+function StatusBadge({ status }) {
   const cfg = {
     scheduled: { bg: '#e8f4ed', color: '#2d7a4f', label: 'Scheduled' },
     draft:     { bg: '#f5f0e8', color: '#8c6d3a', label: 'Draft'      },
@@ -112,15 +113,23 @@ function StatusBadge({ status, t }) {
 function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const platforms = Array.isArray(post.platforms) ? post.platforms : [];
-  const pillarCfg = BRANDS[brand]?.pillars?.[post.pillar];
-  const rel = relativeTime(post.scheduledAt);
+
+  // Pillars is an array — find by label
+  const pillarList = BRANDS[brand]?.pillars || [];
+  const pillarCfg  = pillarList.find(p => p.label === post.pillar);
+  const accentColor = pillarCfg?.color || t.accent;
+
+  // Posts use `date` field; support legacy `scheduledAt` too
+  const postDate = post.date || post.scheduledAt;
+  const rel      = relativeTime(postDate);
+  const caption  = post.text || post.caption || '';
   const hasImage = post.media?.length > 0;
 
   return (
     <div style={{
-      background: t.card,
+      background: t.surface,
       borderRadius: 16,
-      border: `1px solid ${t.border}`,
+      border: `1px solid ${t.line}`,
       overflow: 'hidden',
       transition: 'box-shadow .15s',
     }}>
@@ -129,29 +138,29 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
         {/* accent stripe */}
         <div style={{
           width: 4, flexShrink: 0,
-          background: pillarCfg?.color || t.accent,
+          background: accentColor,
         }}/>
 
         {/* main content */}
         <div style={{ flex: 1, padding: '16px 18px' }}>
 
           {/* top row: date pill + status + menu */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-            {post.scheduledAt && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
+            {postDate && (
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 6,
-                background: t.bg, borderRadius: 8, padding: '4px 10px',
+                background: t.softer, borderRadius: 8, padding: '4px 10px',
                 fontSize: 12, color: t.muted, fontWeight: 500,
-                border: `1px solid ${t.border}`,
+                border: `1px solid ${t.line}`,
               }}>
-                <Ico n="calendar" size={13} color={t.muted}/>
-                {fmtDateTime(post.scheduledAt)}
+                <Ico name="cal" size={13} c={t.muted}/>
+                {fmtDateTime(postDate)}
                 {rel && (
                   <span style={{ color: t.accent, fontWeight: 600 }}>{rel}</span>
                 )}
               </div>
             )}
-            <StatusBadge status={post.status || 'scheduled'} t={t}/>
+            <StatusBadge status={post.status || 'scheduled'}/>
             <div style={{ flex: 1 }}/>
 
             {/* kebab menu */}
@@ -160,30 +169,30 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
                 onClick={() => setMenuOpen(o => !o)}
                 style={{
                   width: 32, height: 32, borderRadius: 8,
-                  border: `1px solid ${t.border}`,
-                  background: menuOpen ? t.bg : 'transparent',
+                  border: `1px solid ${t.line}`,
+                  background: menuOpen ? t.softer : 'transparent',
                   cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   color: t.muted,
                 }}
               >
-                <Ico n="more-horizontal" size={16} color={t.muted}/>
+                <Ico name="dot" size={16} c={t.muted}/>
               </button>
               {menuOpen && (
                 <>
                   <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setMenuOpen(false)}/>
                   <div style={{
                     position: 'absolute', right: 0, top: 38,
-                    background: t.card, border: `1px solid ${t.border}`,
+                    background: t.surface, border: `1px solid ${t.line}`,
                     borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,.14)',
                     zIndex: 100, minWidth: 160, padding: '6px 0', overflow: 'hidden',
                   }}>
                     {[
-                      { icon: 'edit-2',   label: 'Edit',          action: () => { onEdit(post); setMenuOpen(false); } },
+                      { icon: 'pen',   label: 'Edit',          action: () => { onEdit(post); setMenuOpen(false); } },
                       ...(post.status !== 'published' ? [
-                        { icon: 'check-circle', label: 'Mark as posted', action: () => { onMarkPosted(post); setMenuOpen(false); } },
+                        { icon: 'check', label: 'Mark as posted', action: () => { onMarkPosted(post); setMenuOpen(false); } },
                       ] : []),
-                      { icon: 'trash-2',  label: 'Delete',        action: () => { onDelete(post); setMenuOpen(false); }, danger: true },
+                      { icon: 'trash', label: 'Delete',         action: () => { onDelete(post); setMenuOpen(false); }, danger: true },
                     ].map(item => (
                       <button key={item.label} onClick={item.action} style={{
                         width: '100%', textAlign: 'left', padding: '9px 14px',
@@ -193,7 +202,7 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
                         display: 'flex', alignItems: 'center', gap: 9,
                         fontWeight: item.danger ? 600 : 500,
                       }}>
-                        <Ico n={item.icon} size={14} color={item.danger ? '#c0392b' : t.muted}/>
+                        <Ico name={item.icon} size={14} c={item.danger ? '#c0392b' : t.muted}/>
                         {item.label}
                       </button>
                     ))}
@@ -203,25 +212,25 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
             </div>
           </div>
 
-          {/* pillar + subtype tags */}
-          {(post.pillar || post.subtype) && (
+          {/* pillar + series tags */}
+          {(post.pillar || post.series) && (
             <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
-              {post.pillar && pillarCfg && (
+              {post.pillar && (
                 <span style={{
                   fontSize: 11, fontWeight: 600, letterSpacing: '.3px',
                   padding: '2px 8px', borderRadius: 20,
-                  background: pillarCfg.color + '22', color: pillarCfg.color,
+                  background: accentColor + '22', color: accentColor,
                   textTransform: 'uppercase',
                 }}>
-                  {pillarCfg.label}
+                  {post.pillar}
                 </span>
               )}
-              {post.subtype && (
+              {post.series && (
                 <span style={{
                   fontSize: 11, fontWeight: 500, padding: '2px 8px', borderRadius: 20,
-                  background: t.bg, color: t.muted, border: `1px solid ${t.border}`,
+                  background: t.softer, color: t.muted, border: `1px solid ${t.line}`,
                 }}>
-                  {post.subtype}
+                  {post.series}
                 </span>
               )}
             </div>
@@ -233,13 +242,14 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
             margin: 0, marginBottom: 12,
             display: '-webkit-box', WebkitLineClamp: 3,
             WebkitBoxOrient: 'vertical', overflow: 'hidden',
+            whiteSpace: 'pre-wrap',
           }}>
-            {post.caption || <span style={{ color: t.muted, fontStyle: 'italic' }}>No caption</span>}
+            {caption || <span style={{ color: t.muted, fontStyle: 'italic' }}>No caption</span>}
           </p>
 
           {/* bottom row: platforms + image thumb */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ display: 'flex', gap: 5 }}>
+            <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
               {platforms.map(p => (
                 <span key={p} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -248,16 +258,16 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
                   background: (PLAT_COLORS[p] || t.accent) + '18',
                   color: PLAT_COLORS[p] || t.accent,
                 }}>
-                  <PlatIcon id={p} size={11}/>
+                  <PlatIcon p={p} size={11} color={PLAT_COLORS[p] || t.accent}/>
                   {PLAT_CHIP_LABELS[p] || p.toUpperCase()}
                 </span>
               ))}
             </div>
             <div style={{ flex: 1 }}/>
-            {hasImage && (
+            {hasImage && post.media[0]?.dataUrl && (
               <div style={{
                 width: 48, height: 48, borderRadius: 8, overflow: 'hidden',
-                border: `1px solid ${t.border}`, flexShrink: 0,
+                border: `1px solid ${t.line}`, flexShrink: 0,
               }}>
                 <img
                   src={post.media[0].dataUrl}
@@ -276,10 +286,10 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
 // ── empty state ───────────────────────────────────────────────────────────────
 function EmptyState({ tab, t, onCompose }) {
   const msgs = {
-    all:       { icon: 'inbox',       head: 'Queue is empty',         sub: 'Schedule your first post to get started.' },
-    scheduled: { icon: 'clock',       head: 'Nothing scheduled yet',  sub: 'Use Compose to schedule posts ahead of time.' },
-    draft:     { icon: 'file-text',   head: 'No drafts',              sub: 'Save a post as a draft to find it here.' },
-    published: { icon: 'check-circle',head: 'No published posts yet', sub: 'Posts you mark as published will appear here.' },
+    all:       { icon: 'inbox',   head: 'Queue is empty',         sub: 'Schedule your first post to get started.' },
+    scheduled: { icon: 'clock',   head: 'Nothing scheduled yet',  sub: 'Use Compose to schedule posts ahead of time.' },
+    draft:     { icon: 'edit',    head: 'No drafts',              sub: 'Save a post as a draft to find it here.' },
+    published: { icon: 'check',   head: 'No published posts yet', sub: 'Posts you mark as published will appear here.' },
   };
   const m = msgs[tab] || msgs.all;
   return (
@@ -292,7 +302,7 @@ function EmptyState({ tab, t, onCompose }) {
         background: t.accent + '18',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <Ico n={m.icon} size={28} color={t.accent}/>
+        <Ico name={m.icon} size={28} c={t.accent}/>
       </div>
       <div style={{ fontWeight: 700, fontSize: 17, color: t.text }}>{m.head}</div>
       <div style={{ fontSize: 13, color: t.muted, maxWidth: 300 }}>{m.sub}</div>
@@ -313,7 +323,7 @@ function EmptyState({ tab, t, onCompose }) {
 
 // ── main screen ───────────────────────────────────────────────────────────────
 export default function QueueScreen() {
-  const { brand, posts, updatePosts, t, setView, setModal, showToast } = useApp();
+  const { brand, posts, updatePosts, t, setView, showToast } = useApp();
   const brandPosts = posts[brand] || [];
 
   const [activeTab, setActiveTab] = useState('all');
@@ -328,22 +338,21 @@ export default function QueueScreen() {
     published: brandPosts.filter(p => p.status === 'published').length,
   }), [brandPosts]);
 
-  // filtered + sorted
+  // filtered + sorted — use `date` field (with `scheduledAt` fallback)
   const visible = useMemo(() => {
     let list = activeTab === 'all'
       ? [...brandPosts]
       : brandPosts.filter(p => (p.status || 'scheduled') === activeTab);
 
     list.sort((a, b) => {
-      const da = a.scheduledAt ? new Date(a.scheduledAt) : new Date(0);
-      const db = b.scheduledAt ? new Date(b.scheduledAt) : new Date(0);
+      const da = a.date || a.scheduledAt ? new Date(a.date || a.scheduledAt) : new Date(0);
+      const db = b.date || b.scheduledAt ? new Date(b.date || b.scheduledAt) : new Date(0);
       return sortAsc ? da - db : db - da;
     });
     return list;
   }, [brandPosts, activeTab, sortAsc]);
 
   function handleEdit(post) {
-    setModal({ type: 'compose', editPost: post });
     setView('compose');
   }
 
@@ -395,7 +404,7 @@ export default function QueueScreen() {
             fontSize: 13, fontWeight: 600,
           }}
         >
-          <Ico n="plus" size={15} color="#fff"/>
+          <Ico name="plus" size={15} c="#fff"/>
           New post
         </button>
       </div>
@@ -413,7 +422,7 @@ export default function QueueScreen() {
               padding: '7px 14px', borderRadius: 20,
               border: activeTab === tab.key
                 ? `1.5px solid ${t.accent}`
-                : `1px solid ${t.border}`,
+                : `1px solid ${t.line}`,
               background: activeTab === tab.key ? t.accent + '15' : 'transparent',
               color: activeTab === tab.key ? t.accent : t.muted,
               cursor: 'pointer', fontSize: 13, fontWeight: 600,
@@ -424,7 +433,7 @@ export default function QueueScreen() {
             {counts[tab.key] > 0 && (
               <span style={{
                 fontSize: 11, fontWeight: 700,
-                background: activeTab === tab.key ? t.accent : t.border,
+                background: activeTab === tab.key ? t.accent : t.line,
                 color: activeTab === tab.key ? '#fff' : t.muted,
                 borderRadius: 20, padding: '1px 6px', lineHeight: 1.5,
               }}>
@@ -442,13 +451,13 @@ export default function QueueScreen() {
           style={{
             display: 'flex', alignItems: 'center', gap: 6,
             padding: '7px 12px', borderRadius: 10,
-            border: `1px solid ${t.border}`,
+            border: `1px solid ${t.line}`,
             background: 'transparent', color: t.muted,
             cursor: 'pointer', fontSize: 12, fontWeight: 500,
           }}
           title="Toggle sort order"
         >
-          <Ico n={sortAsc ? 'arrow-up' : 'arrow-down'} size={13} color={t.muted}/>
+          <Ico name={sortAsc ? 'arrowUp' : 'arrowDown'} size={13} c={t.muted}/>
           {sortAsc ? 'Oldest first' : 'Newest first'}
         </button>
       </div>
