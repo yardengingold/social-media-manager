@@ -336,6 +336,7 @@ function EmptyState({ tab, t, onCompose }) {
 export default function QueueScreen() {
   const { brand, posts, updatePosts, t, setView, setModal, showToast } = useApp();
 
+  const calendarIds = new Set(MAY_CALENDAR.map(p => p.id));
   const alreadyImported = (posts['sbf'] || []).some(p => p.id === 20001);
 
   function importMayCalendar() {
@@ -345,6 +346,15 @@ export default function QueueScreen() {
       return [...prev, ...toAdd];
     });
     showToast(`✅ Imported ${MAY_CALENDAR.length} posts to SBF queue`, '#3d6e54');
+  }
+
+  function refreshMayCalendar() {
+    updatePosts('sbf', prev => {
+      // Remove old calendar posts, then add fresh ones
+      const withoutOld = prev.filter(p => !calendarIds.has(p.id));
+      return [...withoutOld, ...MAY_CALENDAR];
+    });
+    showToast(`✅ Updated ${MAY_CALENDAR.length} posts with new dates`, '#3d6e54');
   }
   const brandPosts = posts[brand] || [];
 
@@ -432,8 +442,8 @@ export default function QueueScreen() {
         </button>
       </div>
 
-      {/* May content calendar import banner — SBF only, disappears once imported */}
-      {brand === 'sbf' && !alreadyImported && (
+      {/* Content calendar banner — SBF only */}
+      {brand === 'sbf' && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '14px 18px', marginBottom: 20,
@@ -442,15 +452,24 @@ export default function QueueScreen() {
         }}>
           <Ico name="cal" size={20} c={t.accent}/>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>May content calendar ready</div>
-            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>22 posts (IG + FB) from May 9–31 — import them all in one click</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>
+              {alreadyImported ? 'Content calendar dates updated' : 'Content calendar ready'}
+            </div>
+            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
+              {alreadyImported
+                ? 'May 29 – Jun 21 · click to replace old posts with corrected dates'
+                : '22 posts (IG + FB) · May 29 – Jun 21 · import in one click'}
+            </div>
           </div>
-          <button onClick={importMayCalendar} style={{
-            padding: '9px 18px', background: t.accent, color: '#fff',
-            border: 'none', borderRadius: 10, cursor: 'pointer',
-            fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
-          }}>
-            Import all
+          <button
+            onClick={alreadyImported ? refreshMayCalendar : importMayCalendar}
+            style={{
+              padding: '9px 18px', background: t.accent, color: '#fff',
+              border: 'none', borderRadius: 10, cursor: 'pointer',
+              fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
+            }}
+          >
+            {alreadyImported ? 'Update dates' : 'Import all'}
           </button>
         </div>
       )}
