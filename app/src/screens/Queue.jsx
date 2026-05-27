@@ -457,8 +457,8 @@ export default function QueueScreen() {
             </div>
             <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
               {alreadyImported
-                ? 'May 29 – Jun 21 · click to replace old posts with corrected dates'
-                : '22 posts (IG + FB) · May 29 – Jun 21 · import in one click'}
+                ? 'May 29 – Jun 21 · updated with new Useful + Trust posts and corrected dates'
+                : '34 posts (IG + FB) · Reach, Useful + Trust · May 29 – Jun 21'}
             </div>
           </div>
           <button

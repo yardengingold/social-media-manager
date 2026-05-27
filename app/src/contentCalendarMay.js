@@ -346,4 +346,254 @@ Early mornings, neighborhood tours, client meetings and the best part, helping f
 
 #BehindTheScenes #BayAreaRealtor #SoldByFogel #MorganHill #RealEstateLife`,
   },
+
+  // ── Jun 1 — Market Insight (USEFUL / Monday) ─────────────────────────────────
+  {
+    id: 20023,
+    title: 'Market Insight — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-01T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'market-insight', type: 'post', emoji: '📊', media: [],
+    text: `📊 Monday Market Insight
+
+The Morgan Hill real estate market is moving fast right now.
+
+Homes priced right are selling in under 14 days. List-to-sale ratio is sitting at 103%. And inventory? Still tighter than most Bay Area cities.
+
+If you've been waiting for the market to slow down before making a move, the data says don't wait.
+
+Drop a 📊 and I'll send you the full market report for Morgan Hill right now!
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #MarketInsight #SiliconValley #RealEstateMarket`,
+  },
+  {
+    id: 20024,
+    title: 'Market Insight — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-01T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'market-insight', type: 'post', emoji: '📊', media: [],
+    text: `The Morgan Hill market is telling a very clear story right now 📊
+
+Homes are selling in under 14 days. List-to-sale is at 103%. Inventory is tight but opportunity is real.
+
+If you're thinking about buying or selling in Morgan Hill, now is the time to talk strategy.
+
+Comment "MARKET" below and I'll send you the full breakdown! 👇
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #MarketInsight`,
+  },
+
+  // ── Jun 3 — Client Love (TRUST / Wednesday) ──────────────────────────────────
+  {
+    id: 20025,
+    title: 'Client Love — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-03T18:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'client-review', type: 'post', emoji: '⭐️', media: [],
+    text: `⭐️⭐️⭐️⭐️⭐️ Client Love Wednesday
+
+"We had been searching for over a year. After one meeting with Moshe we had a strategy. Three weeks later we had keys. He knew exactly what to do and when."
+
+Sarah and Mark found their dream home in Morgan Hill and I could not be more proud of them.
+
+This is exactly why I do what I do every day. 🏡
+
+Tag someone who is still searching. I might be able to help. 👇
+
+#SoldByFogel #MorganHill #ClientLove #BayAreaRealEstate #RealEstate`,
+  },
+  {
+    id: 20026,
+    title: 'Client Love — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-03T18:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'client-review', type: 'post', emoji: '⭐️', media: [],
+    text: `This one hit different. ⭐️
+
+"We had been searching for over a year. After one meeting with Moshe we had a strategy. Three weeks later we had keys."
+
+Helping families find the right home in Morgan Hill is the most rewarding thing I do. Sarah and Mark are proof that the right strategy changes everything.
+
+If you or someone you know is still searching, let's talk. 👇
+
+#SoldByFogel #MorganHill #BayAreaRealEstate #ClientLove`,
+  },
+
+  // ── Jun 8 — Buyer Tip (USEFUL / Monday) ──────────────────────────────────────
+  {
+    id: 20027,
+    title: 'Buyer Tip — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-08T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
+    text: `💡 Buyer Tip Monday
+
+Most buyers focus on the listing price. The best buyers focus on the terms.
+
+In a competitive Morgan Hill market, winning an offer is rarely about paying the most. It is about:
+
+A strong pre-approval letter
+Clean contingencies
+A flexible close date that works for the seller
+A personal letter that connects
+
+I have helped buyers win at asking price against higher offers. Strategy beats price every time.
+
+Drop a 💡 if you want my full offer strategy guide sent directly to you!
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #HomeBuying #BuyerTip #SiliconValley`,
+  },
+  {
+    id: 20028,
+    title: 'Buyer Tip — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-08T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
+    text: `Want to win your next offer without overpaying? 💡
+
+In Morgan Hill's market, the strongest offer is not always the highest number. Terms, timing and strategy matter just as much as price.
+
+I have helped buyers win against higher offers by structuring smarter offers.
+
+Comment "OFFER" below and I will share my full buyer strategy guide with you! 👇
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #HomeBuying #BuyerTip`,
+  },
+
+  // ── Jun 10 — Transaction Win (TRUST / Wednesday) ──────────────────────────────
+  {
+    id: 20029,
+    title: 'Transaction Win — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-10T18:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'transaction-win', type: 'post', emoji: '🏆', media: [],
+    text: `🏆 Just closed in Morgan Hill!
+
+4 Bed · 3 Bath · 2,200 sqft
+Listed at $1,195,000
+Sold for $1,268,000
+12 days on market · Multiple offers
+
+My sellers walked away with $73,000 over asking. Not by luck. By strategy.
+
+Professional staging. Thursday launch. Targeted marketing. And the right price from day one.
+
+If you are thinking about selling in Morgan Hill this summer, DM me. Let's talk about what your home is worth right now. 🏡
+
+#SoldByFogel #MorganHill #JustClosed #BayAreaRealEstate #HomeSelling #SiliconValley`,
+  },
+  {
+    id: 20030,
+    title: 'Transaction Win — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-10T18:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'transaction-win', type: 'post', emoji: '🏆', media: [],
+    text: `Another one closed in Morgan Hill! 🏆
+
+4 Bed · 3 Bath in Morgan Hill
+Listed at $1,195,000
+Sold for $1,268,000 in 12 days
+
+$73,000 over asking. Multiple offers. And a very happy family.
+
+This is what happens when you price right, market smart and launch strategically.
+
+Thinking about selling this summer? Let's talk about what your home could do. 👇
+
+#SoldByFogel #MorganHill #BayAreaRealEstate #JustClosed`,
+  },
+
+  // ── Jun 15 — Mortgage Breakdown (USEFUL / Monday) ────────────────────────────
+  {
+    id: 20031,
+    title: 'Mortgage Breakdown — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-15T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'mortgage-breakdown', type: 'post', emoji: '🏦', media: [],
+    text: `🏦 Mortgage Monday
+
+What does a $900K home in Morgan Hill actually cost per month right now?
+
+With 20% down ($180K down payment):
+Loan amount: $720K
+At today's rates (~6.8%): roughly $4,700/mo
+Property tax: ~$750/mo
+Insurance: ~$130/mo
+
+Total monthly: around $5,580/mo
+
+That is less than renting a 3 bedroom in San Jose or Santa Clara right now.
+
+Drop a 🏦 if you want me to run the numbers for your exact budget. I will send you a full breakdown!
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #MortgageMonday #HomeBuying #SiliconValley`,
+  },
+  {
+    id: 20032,
+    title: 'Mortgage Breakdown — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-15T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'mortgage-breakdown', type: 'post', emoji: '🏦', media: [],
+    text: `Thinking about buying in Morgan Hill but not sure what it actually costs per month? Let me break it down. 🏦
+
+$900K home with 20% down:
+Monthly mortgage: ~$4,700
+Property tax: ~$750
+Insurance: ~$130
+Total: ~$5,580/mo
+
+That is less than renting in most Bay Area cities right now.
+
+Comment "NUMBERS" below and I will run a custom breakdown for your budget! 👇
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #MortgageMonday #HomeBuying`,
+  },
+
+  // ── Jun 17 — Family & Community (TRUST / Wednesday) ──────────────────────────
+  {
+    id: 20033,
+    title: 'Family & Community — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-17T18:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'family-community', type: 'post', emoji: '👨‍👩‍👧', media: [],
+    text: `This is why Morgan Hill keeps winning. 👨‍👩‍👧
+
+Great schools. Safe neighborhoods. Real community. Trails and parks right outside your door. Neighbors who actually know your name.
+
+And you are still 45 minutes from the heart of Silicon Valley.
+
+I have lived here and sold here for over a decade. Morgan Hill is not just a market to me. It is home.
+
+Tag a family who needs to discover Morgan Hill. 👇
+
+#MorganHill #SoldByFogel #MorganHillLife #BayAreaFamilies #BayAreaRealEstate #CaliforniaLiving`,
+  },
+  {
+    id: 20034,
+    title: 'Family & Community — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-17T18:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'family-community', type: 'post', emoji: '👨‍👩‍👧', media: [],
+    text: `After more than a decade living and working in Morgan Hill, I still feel lucky to call this place home. 🏡
+
+Great schools. Incredible trails. Real neighbors who look out for each other. And a lifestyle you simply cannot find anywhere else this close to Silicon Valley.
+
+This is why families keep choosing Morgan Hill. And why I keep showing up for them every day.
+
+Share this with a family who is thinking about making the move south. 👇
+
+#MorganHill #SoldByFogel #BayAreaFamilies #BayAreaRealEstate #MorganHillLife`,
+  },
 ];
