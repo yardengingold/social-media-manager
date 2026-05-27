@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useApp } from '../AppContext.jsx';
 import { PLATFORMS, PLAT_COLORS, PLAT_CHIP_LABELS, BRANDS } from '../data.js';
 import { Ico, PlatIcon } from '../Icons.jsx';
+import { MAY_CALENDAR } from '../contentCalendarMay.js';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 function fmtDateTime(date) {
@@ -324,6 +325,17 @@ function EmptyState({ tab, t, onCompose }) {
 // ── main screen ───────────────────────────────────────────────────────────────
 export default function QueueScreen() {
   const { brand, posts, updatePosts, t, setView, setModal, showToast } = useApp();
+
+  const alreadyImported = (posts['sbf'] || []).some(p => p.id === 20001);
+
+  function importMayCalendar() {
+    updatePosts('sbf', prev => {
+      const existingIds = new Set(prev.map(p => p.id));
+      const toAdd = MAY_CALENDAR.filter(p => !existingIds.has(p.id));
+      return [...prev, ...toAdd];
+    });
+    showToast(`✅ Imported ${MAY_CALENDAR.length} posts to SBF queue`, '#3d6e54');
+  }
   const brandPosts = posts[brand] || [];
 
   const [activeTab, setActiveTab] = useState('all');
@@ -409,6 +421,29 @@ export default function QueueScreen() {
           New post
         </button>
       </div>
+
+      {/* May content calendar import banner — SBF only, disappears once imported */}
+      {brand === 'sbf' && !alreadyImported && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '14px 18px', marginBottom: 20,
+          background: t.accentBg, border: `1px solid ${t.accentSoft}`,
+          borderRadius: 14,
+        }}>
+          <Ico name="cal" size={20} c={t.accent}/>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>May content calendar ready</div>
+            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>22 posts (IG + FB) from May 9–31 — import them all in one click</div>
+          </div>
+          <button onClick={importMayCalendar} style={{
+            padding: '9px 18px', background: t.accent, color: '#fff',
+            border: 'none', borderRadius: 10, cursor: 'pointer',
+            fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
+          }}>
+            Import all
+          </button>
+        </div>
+      )}
 
       {/* tab bar + sort toggle */}
       <div style={{
