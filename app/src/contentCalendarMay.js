@@ -1,9 +1,28 @@
-// SBF content calendar — May 29 through Jun 21, 2026
-// IDs 20001–20022 — used to detect if already imported
+// SBF content calendar — May 29 through Jun 30, 2026 (every 2 days)
+// IDs 20001–20034 — used to detect if already imported
+//
+// Schedule (1 post every 2 days):
+//  May 29  Borello Ranch Reel
+//  May 31  $1.5M Reel
+//  Jun 2   Market Insight
+//  Jun 4   Coyote Valley Reel
+//  Jun 6   Client Love
+//  Jun 8   Mayor Interview Reel
+//  Jun 10  Favorite Corners Carousel
+//  Jun 12  Buyer Tip
+//  Jun 14  SB9 Reel
+//  Jun 16  Transaction Win
+//  Jun 18  3 Buyer Misconceptions Carousel
+//  Jun 20  Families Move South Reel
+//  Jun 22  Mortgage Breakdown
+//  Jun 24  Neighborhood Comparison Reel
+//  Jun 26  Family & Community
+//  Jun 28  Drone Photo
+//  Jun 30  Behind the Scenes Reel
 
 export const MAY_CALENDAR = [
 
-  // ── May 9 — Borello Ranch REEL ───────────────────────────────────────────────
+  // ── May 29 — Borello Ranch REEL ──────────────────────────────────────────────
   {
     id: 20001,
     title: 'Borello Ranch Reel — IG',
@@ -37,7 +56,7 @@ Would you trade your current neighborhood for this? Comment below! 👇
 #MorganHill #BorelloRanch #BayAreaRealEstate #SoldByFogel`,
   },
 
-  // ── May 11 — "$1.5M in Morgan Hill" REEL ────────────────────────────────────
+  // ── May 31 — $1.5M REEL ──────────────────────────────────────────────────────
   {
     id: 20003,
     title: '$1.5M in Morgan Hill Reel — IG',
@@ -69,290 +88,12 @@ Watch till the end and tell me which one you'd choose! 👇
 #MorganHill #BayAreaRealEstate #SoldByFogel #HomeTour`,
   },
 
-  // ── May 13 — Coyote Valley REEL ─────────────────────────────────────────────
-  {
-    id: 20005,
-    title: 'Coyote Valley Reel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-02T09:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🌿', media: [],
-    text: `This is still the Bay Area 👀
-
-Coyote Valley in Morgan Hill feels like a completely different world. Open space, rolling hills, trails right outside your door and a lifestyle most people only dream about.
-
-And you can still commute to Silicon Valley in under 30 minutes.
-
-Drop a 🌿 if this is your vibe!
-
-#MorganHill #CoyoteValley #BayAreaRealEstate #SoldByFogel #SiliconValley #CaliforniaLiving`,
-  },
-  {
-    id: 20006,
-    title: 'Coyote Valley Reel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-02T09:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🌿', media: [],
-    text: `Hard to believe this is still the Bay Area!
-
-Coyote Valley in Morgan Hill offers open space, trails, hills and an incredible lifestyle while still being close to everything Silicon Valley has to offer.
-
-Would you make the move here? Comment below! 👇
-
-#MorganHill #CoyoteValley #BayAreaRealEstate #SoldByFogel`,
-  },
-
-  // ── May 15 — Mayor Clip REEL ─────────────────────────────────────────────────
-  {
-    id: 20007,
-    title: 'Mayor Interview Pt.2 Reel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-04T18:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🍽️', media: [],
-    text: `Morgan Hill's food and sports scene is about to explode 🍽️🏅
-
-In part 2 of my interview with Mayor Mark Turner we talk about what's coming to Morgan Hill that most people have no idea about.
-
-This city is growing fast. Are you paying attention?
-
-Drop a 🍽️ if you want to see the full interview!
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #MorganHillFood #MorganHillMayor #SiliconValley`,
-  },
-  {
-    id: 20008,
-    title: 'Mayor Interview Pt.2 Reel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-04T18:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🍽️', media: [],
-    text: `Part 2 of my interview with Mayor Mark Turner of Morgan Hill is here!
-
-This time we talk about the incredible food and sports scene that's coming to our city. Morgan Hill is growing fast and this is just the beginning.
-
-Watch till the end and comment what surprised you most! 👇
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #MorganHillMayor`,
-  },
-
-  // ── May 18 — Favorite corners CAROUSEL ──────────────────────────────────────
-  {
-    id: 20009,
-    title: 'Favorite Corners Carousel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-07T11:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🍷', media: [],
-    text: `A few of our favorite corners of Morgan Hill lately 🏡🍷☕
-
-From downtown to the vineyards to the trails, this place never gets old. Every corner tells a different story.
-
-Save this post for your next Morgan Hill visit! Which spot is your favorite? 👇
-
-#MorganHill #MorganHillLife #BayAreaRealEstate #SoldByFogel #DowntownMorganHill #CaliforniaLife`,
-  },
-  {
-    id: 20010,
-    title: 'Favorite Corners Carousel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-07T11:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🍷', media: [],
-    text: `Morgan Hill never gets old! 🏡🍷☕
-
-Here are some of our favorite spots around the city lately. From downtown to the vineyards to the trails, there is always something beautiful to discover here.
-
-Tag someone who needs to visit Morgan Hill! 👇
-
-#MorganHill #MorganHillLife #BayAreaRealEstate #SoldByFogel`,
-  },
-
-  // ── May 20 — SB9 REEL ───────────────────────────────────────────────────────
-  {
-    id: 20011,
-    title: 'SB9 Reel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-09T09:00:00'),
-    status: 'draft',
-    pillar: 'Useful', series: 'investment-explainer', type: 'post', emoji: '🏠', media: [],
-    text: `Most Bay Area homeowners are sitting on a goldmine and don't even know it 👀
-
-California's SB9 law could allow you to split your lot or build a second home on your property. I've been helping homeowners in Morgan Hill and Silicon Valley explore this opportunity and the results are incredible.
-
-Drop a 🏠 if you want to know if your property qualifies. I'll send you the details!
-
-#SB9 #BayAreaRealEstate #SoldByFogel #MorganHill #RealEstateInvesting #BayAreaHomes`,
-  },
-  {
-    id: 20012,
-    title: 'SB9 Reel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-09T09:00:00'),
-    status: 'draft',
-    pillar: 'Useful', series: 'investment-explainer', type: 'post', emoji: '🏠', media: [],
-    text: `Did you know your property could be worth more than you think?
-
-California's SB9 law may allow Bay Area homeowners to split their lot or build a second home. This is one of the biggest wealth building opportunities available right now.
-
-Comment "SB9" below and I'll reach out with everything you need to know! 👇
-
-#SB9 #BayAreaRealEstate #SoldByFogel #MorganHill`,
-  },
-
-  // ── May 22 — 3 things buyers misunderstand CAROUSEL ─────────────────────────
-  {
-    id: 20013,
-    title: '3 Buyer Misconceptions Carousel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-11T11:00:00'),
-    status: 'draft',
-    pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
-    text: `3 things buyers always get wrong about Morgan Hill 👇
-
-Swipe through to find out the truth about commute, pricing and inventory in Morgan Hill. Number 2 surprises everyone!
-
-Save this post and share it with anyone thinking about buying in the Bay Area!
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #HomeBuying #SiliconValley #FirstTimeHomeBuyer`,
-  },
-  {
-    id: 20014,
-    title: '3 Buyer Misconceptions Carousel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-11T11:00:00'),
-    status: 'draft',
-    pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
-    text: `Thinking about Morgan Hill but have some hesitations? Let me clear things up!
-
-Here are the 3 biggest misconceptions buyers have about Morgan Hill and the truth behind each one. Number 2 surprises everyone!
-
-Drop a comment with your biggest question about Morgan Hill and I'll answer it personally! 👇
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #HomeBuying`,
-  },
-
-  // ── May 25 — Families move south REEL ───────────────────────────────────────
-  {
-    id: 20015,
-    title: 'Why Families Move South Reel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-14T09:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'local-business', type: 'post', emoji: '🏡', media: [],
-    text: `More and more Bay Area families are making the move south to Morgan Hill and this is exactly why 🏡
-
-Better schools. More space. Incredible community. Amazing trails and parks. And still close to everything Silicon Valley offers.
-
-Tag a family who needs to see this! 👇
-
-#MorganHill #BayAreaFamilies #SoldByFogel #MovingSouth #SiliconValley #BayAreaRealEstate`,
-  },
-  {
-    id: 20016,
-    title: 'Why Families Move South Reel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-14T09:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'local-business', type: 'post', emoji: '🏡', media: [],
-    text: `Have you noticed more Bay Area families moving to Morgan Hill? There's a reason for that!
-
-Better schools, more space, incredible community feel and still close to Silicon Valley. This is why families are choosing Morgan Hill over anywhere else in the Bay Area right now.
-
-Share this with a family who's been thinking about making the move! 👇
-
-#MorganHill #BayAreaFamilies #SoldByFogel #BayAreaRealEstate`,
-  },
-
-  // ── May 27 — Neighborhood Comparison REEL ───────────────────────────────────
-  {
-    id: 20017,
-    title: 'Borello Ranch vs Coyote Valley Reel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-16T18:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
-    text: `Borello Ranch vs Coyote Valley — two incredible neighborhoods, two totally different vibes 🏡
-
-Which side of Morgan Hill are you? Drop your pick in the comments! 👇
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #BorelloRanch #CoyoteValley #NeighborhoodTour`,
-  },
-  {
-    id: 20018,
-    title: 'Borello Ranch vs Coyote Valley Reel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-16T18:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
-    text: `Borello Ranch or Coyote Valley? Two of Morgan Hill's most beautiful neighborhoods but they couldn't be more different!
-
-Watch the full comparison and tell me which one you'd choose! 👇
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #NeighborhoodTour`,
-  },
-
-  // ── May 29 — Drone Photo POST ────────────────────────────────────────────────
-  {
-    id: 20019,
-    title: 'Drone Photo Post — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-18T09:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'drone-footage', type: 'post', emoji: '🏔️', media: [],
-    text: `This is Morgan Hill. 🏔️
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #CaliforniaLife #DronePhotography #SiliconValley`,
-  },
-  {
-    id: 20020,
-    title: 'Drone Photo Post — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-18T09:00:00'),
-    status: 'draft',
-    pillar: 'Reach', series: 'drone-footage', type: 'post', emoji: '🏔️', media: [],
-    text: `There's nowhere quite like Morgan Hill. 🏔️
-
-#MorganHill #BayAreaRealEstate #SoldByFogel #CaliforniaLife`,
-  },
-
-  // ── May 31 — Behind the Scenes REEL ─────────────────────────────────────────
-  {
-    id: 20021,
-    title: 'Behind the Scenes Reel — IG',
-    platforms: ['ig'],
-    date: new Date('2026-06-21T11:00:00'),
-    status: 'draft',
-    pillar: 'Trust', series: 'behind-the-deal', type: 'post', emoji: '🎬', media: [],
-    text: `Behind the scenes of life as a Bay Area realtor in Morgan Hill 🎬
-
-Early mornings. Neighborhood tours. Client meetings. Open houses. And everything in between.
-
-This is why I love what I do every single day. Follow along for more! 🏡
-
-#BehindTheScenes #BayAreaRealtor #SoldByFogel #MorganHill #RealEstateLife #DayInTheLife`,
-  },
-  {
-    id: 20022,
-    title: 'Behind the Scenes Reel — FB',
-    platforms: ['fb'],
-    date: new Date('2026-06-21T11:00:00'),
-    status: 'draft',
-    pillar: 'Trust', series: 'behind-the-deal', type: 'post', emoji: '🎬', media: [],
-    text: `Ever wonder what a day in the life of a Bay Area real estate agent looks like?
-
-Early mornings, neighborhood tours, client meetings and the best part, helping families find their perfect home. This is why I love what I do!
-
-#BehindTheScenes #BayAreaRealtor #SoldByFogel #MorganHill #RealEstateLife`,
-  },
-
-  // ── Jun 1 — Market Insight (USEFUL / Monday) ─────────────────────────────────
+  // ── Jun 2 — Market Insight (USEFUL) ──────────────────────────────────────────
   {
     id: 20023,
     title: 'Market Insight — IG',
     platforms: ['ig'],
-    date: new Date('2026-06-01T09:00:00'),
+    date: new Date('2026-06-02T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'market-insight', type: 'post', emoji: '📊', media: [],
     text: `📊 Monday Market Insight
@@ -371,7 +112,7 @@ Drop a 📊 and I'll send you the full market report for Morgan Hill right now!
     id: 20024,
     title: 'Market Insight — FB',
     platforms: ['fb'],
-    date: new Date('2026-06-01T09:00:00'),
+    date: new Date('2026-06-02T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'market-insight', type: 'post', emoji: '📊', media: [],
     text: `The Morgan Hill market is telling a very clear story right now 📊
@@ -385,15 +126,49 @@ Comment "MARKET" below and I'll send you the full breakdown! 👇
 #MorganHill #BayAreaRealEstate #SoldByFogel #MarketInsight`,
   },
 
-  // ── Jun 3 — Client Love (TRUST / Wednesday) ──────────────────────────────────
+  // ── Jun 4 — Coyote Valley REEL ───────────────────────────────────────────────
+  {
+    id: 20005,
+    title: 'Coyote Valley Reel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-04T09:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🌿', media: [],
+    text: `This is still the Bay Area 👀
+
+Coyote Valley in Morgan Hill feels like a completely different world. Open space, rolling hills, trails right outside your door and a lifestyle most people only dream about.
+
+And you can still commute to Silicon Valley in under 30 minutes.
+
+Drop a 🌿 if this is your vibe!
+
+#MorganHill #CoyoteValley #BayAreaRealEstate #SoldByFogel #SiliconValley #CaliforniaLiving`,
+  },
+  {
+    id: 20006,
+    title: 'Coyote Valley Reel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-04T09:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🌿', media: [],
+    text: `Hard to believe this is still the Bay Area!
+
+Coyote Valley in Morgan Hill offers open space, trails, hills and an incredible lifestyle while still being close to everything Silicon Valley has to offer.
+
+Would you make the move here? Comment below! 👇
+
+#MorganHill #CoyoteValley #BayAreaRealEstate #SoldByFogel`,
+  },
+
+  // ── Jun 6 — Client Love (TRUST) ──────────────────────────────────────────────
   {
     id: 20025,
     title: 'Client Love — IG',
     platforms: ['ig'],
-    date: new Date('2026-06-03T18:00:00'),
+    date: new Date('2026-06-06T18:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'client-review', type: 'post', emoji: '⭐️', media: [],
-    text: `⭐️⭐️⭐️⭐️⭐️ Client Love Wednesday
+    text: `⭐️⭐️⭐️⭐️⭐️ Client Love
 
 "We had been searching for over a year. After one meeting with Moshe we had a strategy. Three weeks later we had keys. He knew exactly what to do and when."
 
@@ -409,7 +184,7 @@ Tag someone who is still searching. I might be able to help. 👇
     id: 20026,
     title: 'Client Love — FB',
     platforms: ['fb'],
-    date: new Date('2026-06-03T18:00:00'),
+    date: new Date('2026-06-06T18:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'client-review', type: 'post', emoji: '⭐️', media: [],
     text: `This one hit different. ⭐️
@@ -423,15 +198,81 @@ If you or someone you know is still searching, let's talk. 👇
 #SoldByFogel #MorganHill #BayAreaRealEstate #ClientLove`,
   },
 
-  // ── Jun 8 — Buyer Tip (USEFUL / Monday) ──────────────────────────────────────
+  // ── Jun 8 — Mayor Interview REEL ─────────────────────────────────────────────
+  {
+    id: 20007,
+    title: 'Mayor Interview Pt.2 Reel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-08T18:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🍽️', media: [],
+    text: `Morgan Hill's food and sports scene is about to explode 🍽️🏅
+
+In part 2 of my interview with Mayor Mark Turner we talk about what's coming to Morgan Hill that most people have no idea about.
+
+This city is growing fast. Are you paying attention?
+
+Drop a 🍽️ if you want to see the full interview!
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #MorganHillFood #MorganHillMayor #SiliconValley`,
+  },
+  {
+    id: 20008,
+    title: 'Mayor Interview Pt.2 Reel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-08T18:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🍽️', media: [],
+    text: `Part 2 of my interview with Mayor Mark Turner of Morgan Hill is here!
+
+This time we talk about the incredible food and sports scene that's coming to our city. Morgan Hill is growing fast and this is just the beginning.
+
+Watch till the end and comment what surprised you most! 👇
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #MorganHillMayor`,
+  },
+
+  // ── Jun 10 — Favorite Corners CAROUSEL ───────────────────────────────────────
+  {
+    id: 20009,
+    title: 'Favorite Corners Carousel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-10T11:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🍷', media: [],
+    text: `A few of our favorite corners of Morgan Hill lately 🏡🍷☕
+
+From downtown to the vineyards to the trails, this place never gets old. Every corner tells a different story.
+
+Save this post for your next Morgan Hill visit! Which spot is your favorite? 👇
+
+#MorganHill #MorganHillLife #BayAreaRealEstate #SoldByFogel #DowntownMorganHill #CaliforniaLife`,
+  },
+  {
+    id: 20010,
+    title: 'Favorite Corners Carousel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-10T11:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🍷', media: [],
+    text: `Morgan Hill never gets old! 🏡🍷☕
+
+Here are some of our favorite spots around the city lately. From downtown to the vineyards to the trails, there is always something beautiful to discover here.
+
+Tag someone who needs to visit Morgan Hill! 👇
+
+#MorganHill #MorganHillLife #BayAreaRealEstate #SoldByFogel`,
+  },
+
+  // ── Jun 12 — Buyer Tip (USEFUL) ───────────────────────────────────────────────
   {
     id: 20027,
     title: 'Buyer Tip — IG',
     platforms: ['ig'],
-    date: new Date('2026-06-08T09:00:00'),
+    date: new Date('2026-06-12T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
-    text: `💡 Buyer Tip Monday
+    text: `💡 Buyer Tip
 
 Most buyers focus on the listing price. The best buyers focus on the terms.
 
@@ -452,7 +293,7 @@ Drop a 💡 if you want my full offer strategy guide sent directly to you!
     id: 20028,
     title: 'Buyer Tip — FB',
     platforms: ['fb'],
-    date: new Date('2026-06-08T09:00:00'),
+    date: new Date('2026-06-12T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
     text: `Want to win your next offer without overpaying? 💡
@@ -466,12 +307,44 @@ Comment "OFFER" below and I will share my full buyer strategy guide with you! �
 #MorganHill #BayAreaRealEstate #SoldByFogel #HomeBuying #BuyerTip`,
   },
 
-  // ── Jun 10 — Transaction Win (TRUST / Wednesday) ──────────────────────────────
+  // ── Jun 14 — SB9 REEL ────────────────────────────────────────────────────────
+  {
+    id: 20011,
+    title: 'SB9 Reel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-14T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'investment-explainer', type: 'post', emoji: '🏠', media: [],
+    text: `Most Bay Area homeowners are sitting on a goldmine and don't even know it 👀
+
+California's SB9 law could allow you to split your lot or build a second home on your property. I've been helping homeowners in Morgan Hill and Silicon Valley explore this opportunity and the results are incredible.
+
+Drop a 🏠 if you want to know if your property qualifies. I'll send you the details!
+
+#SB9 #BayAreaRealEstate #SoldByFogel #MorganHill #RealEstateInvesting #BayAreaHomes`,
+  },
+  {
+    id: 20012,
+    title: 'SB9 Reel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-14T09:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'investment-explainer', type: 'post', emoji: '🏠', media: [],
+    text: `Did you know your property could be worth more than you think?
+
+California's SB9 law may allow Bay Area homeowners to split their lot or build a second home. This is one of the biggest wealth building opportunities available right now.
+
+Comment "SB9" below and I'll reach out with everything you need to know! 👇
+
+#SB9 #BayAreaRealEstate #SoldByFogel #MorganHill`,
+  },
+
+  // ── Jun 16 — Transaction Win (TRUST) ─────────────────────────────────────────
   {
     id: 20029,
     title: 'Transaction Win — IG',
     platforms: ['ig'],
-    date: new Date('2026-06-10T18:00:00'),
+    date: new Date('2026-06-16T18:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'transaction-win', type: 'post', emoji: '🏆', media: [],
     text: `🏆 Just closed in Morgan Hill!
@@ -493,7 +366,7 @@ If you are thinking about selling in Morgan Hill this summer, DM me. Let's talk 
     id: 20030,
     title: 'Transaction Win — FB',
     platforms: ['fb'],
-    date: new Date('2026-06-10T18:00:00'),
+    date: new Date('2026-06-16T18:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'transaction-win', type: 'post', emoji: '🏆', media: [],
     text: `Another one closed in Morgan Hill! 🏆
@@ -511,15 +384,79 @@ Thinking about selling this summer? Let's talk about what your home could do. �
 #SoldByFogel #MorganHill #BayAreaRealEstate #JustClosed`,
   },
 
-  // ── Jun 15 — Mortgage Breakdown (USEFUL / Monday) ────────────────────────────
+  // ── Jun 18 — 3 Buyer Misconceptions CAROUSEL ─────────────────────────────────
+  {
+    id: 20013,
+    title: '3 Buyer Misconceptions Carousel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-18T11:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
+    text: `3 things buyers always get wrong about Morgan Hill 👇
+
+Swipe through to find out the truth about commute, pricing and inventory in Morgan Hill. Number 2 surprises everyone!
+
+Save this post and share it with anyone thinking about buying in the Bay Area!
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #HomeBuying #SiliconValley #FirstTimeHomeBuyer`,
+  },
+  {
+    id: 20014,
+    title: '3 Buyer Misconceptions Carousel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-18T11:00:00'),
+    status: 'draft',
+    pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
+    text: `Thinking about Morgan Hill but have some hesitations? Let me clear things up!
+
+Here are the 3 biggest misconceptions buyers have about Morgan Hill and the truth behind each one. Number 2 surprises everyone!
+
+Drop a comment with your biggest question about Morgan Hill and I'll answer it personally! 👇
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #HomeBuying`,
+  },
+
+  // ── Jun 20 — Families Move South REEL ────────────────────────────────────────
+  {
+    id: 20015,
+    title: 'Why Families Move South Reel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-20T09:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'local-business', type: 'post', emoji: '🏡', media: [],
+    text: `More and more Bay Area families are making the move south to Morgan Hill and this is exactly why 🏡
+
+Better schools. More space. Incredible community. Amazing trails and parks. And still close to everything Silicon Valley offers.
+
+Tag a family who needs to see this! 👇
+
+#MorganHill #BayAreaFamilies #SoldByFogel #MovingSouth #SiliconValley #BayAreaRealEstate`,
+  },
+  {
+    id: 20016,
+    title: 'Why Families Move South Reel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-20T09:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'local-business', type: 'post', emoji: '🏡', media: [],
+    text: `Have you noticed more Bay Area families moving to Morgan Hill? There's a reason for that!
+
+Better schools, more space, incredible community feel and still close to Silicon Valley. This is why families are choosing Morgan Hill over anywhere else in the Bay Area right now.
+
+Share this with a family who's been thinking about making the move! 👇
+
+#MorganHill #BayAreaFamilies #SoldByFogel #BayAreaRealEstate`,
+  },
+
+  // ── Jun 22 — Mortgage Breakdown (USEFUL) ─────────────────────────────────────
   {
     id: 20031,
     title: 'Mortgage Breakdown — IG',
     platforms: ['ig'],
-    date: new Date('2026-06-15T09:00:00'),
+    date: new Date('2026-06-22T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'mortgage-breakdown', type: 'post', emoji: '🏦', media: [],
-    text: `🏦 Mortgage Monday
+    text: `🏦 Mortgage Breakdown
 
 What does a $900K home in Morgan Hill actually cost per month right now?
 
@@ -541,7 +478,7 @@ Drop a 🏦 if you want me to run the numbers for your exact budget. I will send
     id: 20032,
     title: 'Mortgage Breakdown — FB',
     platforms: ['fb'],
-    date: new Date('2026-06-15T09:00:00'),
+    date: new Date('2026-06-22T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'mortgage-breakdown', type: 'post', emoji: '🏦', media: [],
     text: `Thinking about buying in Morgan Hill but not sure what it actually costs per month? Let me break it down. 🏦
@@ -559,12 +496,40 @@ Comment "NUMBERS" below and I will run a custom breakdown for your budget! 👇
 #MorganHill #BayAreaRealEstate #SoldByFogel #MortgageMonday #HomeBuying`,
   },
 
-  // ── Jun 17 — Family & Community (TRUST / Wednesday) ──────────────────────────
+  // ── Jun 24 — Neighborhood Comparison REEL ────────────────────────────────────
+  {
+    id: 20017,
+    title: 'Borello Ranch vs Coyote Valley Reel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-24T18:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
+    text: `Borello Ranch vs Coyote Valley — two incredible neighborhoods, two totally different vibes 🏡
+
+Which side of Morgan Hill are you? Drop your pick in the comments! 👇
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #BorelloRanch #CoyoteValley #NeighborhoodTour`,
+  },
+  {
+    id: 20018,
+    title: 'Borello Ranch vs Coyote Valley Reel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-24T18:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
+    text: `Borello Ranch or Coyote Valley? Two of Morgan Hill's most beautiful neighborhoods but they couldn't be more different!
+
+Watch the full comparison and tell me which one you'd choose! 👇
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #NeighborhoodTour`,
+  },
+
+  // ── Jun 26 — Family & Community (TRUST) ──────────────────────────────────────
   {
     id: 20033,
     title: 'Family & Community — IG',
     platforms: ['ig'],
-    date: new Date('2026-06-17T18:00:00'),
+    date: new Date('2026-06-26T18:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'family-community', type: 'post', emoji: '👨‍👩‍👧', media: [],
     text: `This is why Morgan Hill keeps winning. 👨‍👩‍👧
@@ -583,7 +548,7 @@ Tag a family who needs to discover Morgan Hill. 👇
     id: 20034,
     title: 'Family & Community — FB',
     platforms: ['fb'],
-    date: new Date('2026-06-17T18:00:00'),
+    date: new Date('2026-06-26T18:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'family-community', type: 'post', emoji: '👨‍👩‍👧', media: [],
     text: `After more than a decade living and working in Morgan Hill, I still feel lucky to call this place home. 🏡
@@ -595,5 +560,59 @@ This is why families keep choosing Morgan Hill. And why I keep showing up for th
 Share this with a family who is thinking about making the move south. 👇
 
 #MorganHill #SoldByFogel #BayAreaFamilies #BayAreaRealEstate #MorganHillLife`,
+  },
+
+  // ── Jun 28 — Drone Photo POST ─────────────────────────────────────────────────
+  {
+    id: 20019,
+    title: 'Drone Photo Post — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-28T09:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'drone-footage', type: 'post', emoji: '🏔️', media: [],
+    text: `This is Morgan Hill. 🏔️
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #CaliforniaLife #DronePhotography #SiliconValley`,
+  },
+  {
+    id: 20020,
+    title: 'Drone Photo Post — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-28T09:00:00'),
+    status: 'draft',
+    pillar: 'Reach', series: 'drone-footage', type: 'post', emoji: '🏔️', media: [],
+    text: `There's nowhere quite like Morgan Hill. 🏔️
+
+#MorganHill #BayAreaRealEstate #SoldByFogel #CaliforniaLife`,
+  },
+
+  // ── Jun 30 — Behind the Scenes REEL ──────────────────────────────────────────
+  {
+    id: 20021,
+    title: 'Behind the Scenes Reel — IG',
+    platforms: ['ig'],
+    date: new Date('2026-06-30T11:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'behind-the-deal', type: 'post', emoji: '🎬', media: [],
+    text: `Behind the scenes of life as a Bay Area realtor in Morgan Hill 🎬
+
+Early mornings. Neighborhood tours. Client meetings. Open houses. And everything in between.
+
+This is why I love what I do every single day. Follow along for more! 🏡
+
+#BehindTheScenes #BayAreaRealtor #SoldByFogel #MorganHill #RealEstateLife #DayInTheLife`,
+  },
+  {
+    id: 20022,
+    title: 'Behind the Scenes Reel — FB',
+    platforms: ['fb'],
+    date: new Date('2026-06-30T11:00:00'),
+    status: 'draft',
+    pillar: 'Trust', series: 'behind-the-deal', type: 'post', emoji: '🎬', media: [],
+    text: `Ever wonder what a day in the life of a Bay Area real estate agent looks like?
+
+Early mornings, neighborhood tours, client meetings and the best part, helping families find their perfect home. This is why I love what I do!
+
+#BehindTheScenes #BayAreaRealtor #SoldByFogel #MorganHill #RealEstateLife`,
   },
 ];
