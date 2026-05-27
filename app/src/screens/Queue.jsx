@@ -323,7 +323,7 @@ function EmptyState({ tab, t, onCompose }) {
 
 // ── main screen ───────────────────────────────────────────────────────────────
 export default function QueueScreen() {
-  const { brand, posts, updatePosts, t, setView, showToast } = useApp();
+  const { brand, posts, updatePosts, t, setView, setModal, showToast } = useApp();
   const brandPosts = posts[brand] || [];
 
   const [activeTab, setActiveTab] = useState('all');
