@@ -3,6 +3,7 @@ import { useApp } from '../AppContext.jsx';
 import { PLATFORMS, PLAT_COLORS, PLAT_CHIP_LABELS, BRANDS } from '../data.js';
 import { Ico, PlatIcon } from '../Icons.jsx';
 import { MAY_CALENDAR } from '../contentCalendarMay.js';
+import { GM_CALENDAR }  from '../contentCalendarGM.js';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 function fmtDateTime(date) {
@@ -336,7 +337,8 @@ function EmptyState({ tab, t, onCompose }) {
 export default function QueueScreen() {
   const { brand, posts, updatePosts, t, setView, setModal, showToast } = useApp();
 
-  const calendarIds = new Set(MAY_CALENDAR.map(p => p.id));
+  // ── SBF calendar ────────────────────────────────────────────────────────────
+  const calendarIds     = new Set(MAY_CALENDAR.map(p => p.id));
   const alreadyImported = (posts['sbf'] || []).some(p => p.id === 20001);
 
   function importMayCalendar() {
@@ -350,11 +352,31 @@ export default function QueueScreen() {
 
   function refreshMayCalendar() {
     updatePosts('sbf', prev => {
-      // Remove old calendar posts, then add fresh ones
       const withoutOld = prev.filter(p => !calendarIds.has(p.id));
       return [...withoutOld, ...MAY_CALENDAR];
     });
     showToast(`✅ Updated ${MAY_CALENDAR.length} posts with new dates`, '#3d6e54');
+  }
+
+  // ── GM calendar ─────────────────────────────────────────────────────────────
+  const gmCalendarIds     = new Set(GM_CALENDAR.map(p => p.id));
+  const gmAlreadyImported = (posts['gm'] || []).some(p => p.id === 30001);
+
+  function importGMCalendar() {
+    updatePosts('gm', prev => {
+      const existingIds = new Set(prev.map(p => p.id));
+      const toAdd = GM_CALENDAR.filter(p => !existingIds.has(p.id));
+      return [...prev, ...toAdd];
+    });
+    showToast(`✅ יובאו ${GM_CALENDAR.length} פוסטים לתור GM`, '#2c6e8a');
+  }
+
+  function refreshGMCalendar() {
+    updatePosts('gm', prev => {
+      const withoutOld = prev.filter(p => !gmCalendarIds.has(p.id));
+      return [...withoutOld, ...GM_CALENDAR];
+    });
+    showToast(`✅ עודכנו ${GM_CALENDAR.length} פוסטים עם תאריכים חדשים`, '#2c6e8a');
   }
   const brandPosts = posts[brand] || [];
 
@@ -442,7 +464,7 @@ export default function QueueScreen() {
         </button>
       </div>
 
-      {/* Content calendar banner — SBF only */}
+      {/* Content calendar banner — SBF */}
       {brand === 'sbf' && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 14,
@@ -457,8 +479,8 @@ export default function QueueScreen() {
             </div>
             <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
               {alreadyImported
-                ? 'May 29 – Jun 21 · updated with new Useful + Trust posts and corrected dates'
-                : '34 posts (IG + FB) · Reach, Useful + Trust · May 29 – Jun 21'}
+                ? 'May 29 – Jun 30 · updated with new Useful + Trust posts and corrected dates'
+                : '34 posts (IG + FB) · Reach, Useful + Trust · May 29 – Jun 30'}
             </div>
           </div>
           <button
@@ -470,6 +492,39 @@ export default function QueueScreen() {
             }}
           >
             {alreadyImported ? 'Update dates' : 'Import all'}
+          </button>
+        </div>
+      )}
+
+      {/* Content calendar banner — GM */}
+      {brand === 'gm' && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '14px 18px', marginBottom: 20,
+          background: t.accentBg, border: `1px solid ${t.accentSoft}`,
+          borderRadius: 14,
+          direction: 'rtl',
+        }}>
+          <Ico name="cal" size={20} c={t.accent}/>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>
+              {gmAlreadyImported ? 'לוח תוכן — תאריכים עודכנו' : 'לוח תוכן גבעת מורגן מוכן'}
+            </div>
+            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
+              {gmAlreadyImported
+                ? '22 פוסטים (IG + FB) · 28 מאי – 21 יוני · כולל תאריכים מעודכנים'
+                : '22 פוסטים (IG + FB Group) · תמונות חיים + שאלת שבוע · 28 מאי – 21 יוני'}
+            </div>
+          </div>
+          <button
+            onClick={gmAlreadyImported ? refreshGMCalendar : importGMCalendar}
+            style={{
+              padding: '9px 18px', background: t.accent, color: '#fff',
+              border: 'none', borderRadius: 10, cursor: 'pointer',
+              fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
+            }}
+          >
+            {gmAlreadyImported ? 'עדכן תאריכים' : 'יבא הכל'}
           </button>
         </div>
       )}
