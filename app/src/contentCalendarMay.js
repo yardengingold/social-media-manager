@@ -1,4 +1,4 @@
-// May 2026 content calendar for SBF (Sold By Fogel)
+// SBF content calendar — May 29 through Jun 21, 2026
 // IDs 20001–20022 — used to detect if already imported
 
 export const MAY_CALENDAR = [
@@ -8,7 +8,7 @@ export const MAY_CALENDAR = [
     id: 20001,
     title: 'Borello Ranch Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-09T18:00:00'),
+    date: new Date('2026-05-29T18:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏊', media: [],
     text: `Resort style living in Morgan Hill 🏊
@@ -25,7 +25,7 @@ Drop a 🏊 if you'd live here!
     id: 20002,
     title: 'Borello Ranch Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-09T18:00:00'),
+    date: new Date('2026-05-29T18:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏊', media: [],
     text: `Did you know Morgan Hill has neighborhoods that look like this? 🏊
@@ -42,7 +42,7 @@ Would you trade your current neighborhood for this? Comment below! 👇
     id: 20003,
     title: '$1.5M in Morgan Hill Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-11T11:00:00'),
+    date: new Date('2026-05-31T11:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
     text: `$1.5M in Morgan Hill hits different 🏡
@@ -57,7 +57,7 @@ Which one would you choose? Drop your pick in the comments! 👇
     id: 20004,
     title: '$1.5M in Morgan Hill Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-11T11:00:00'),
+    date: new Date('2026-05-31T11:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
     text: `Curious what $1.5M actually gets you in Morgan Hill right now?
@@ -74,7 +74,7 @@ Watch till the end and tell me which one you'd choose! 👇
     id: 20005,
     title: 'Coyote Valley Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-13T09:00:00'),
+    date: new Date('2026-06-02T09:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🌿', media: [],
     text: `This is still the Bay Area 👀
@@ -91,7 +91,7 @@ Drop a 🌿 if this is your vibe!
     id: 20006,
     title: 'Coyote Valley Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-13T09:00:00'),
+    date: new Date('2026-06-02T09:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🌿', media: [],
     text: `Hard to believe this is still the Bay Area!
@@ -108,7 +108,7 @@ Would you make the move here? Comment below! 👇
     id: 20007,
     title: 'Mayor Interview Pt.2 Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-15T18:00:00'),
+    date: new Date('2026-06-04T18:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🍽️', media: [],
     text: `Morgan Hill's food and sports scene is about to explode 🍽️🏅
@@ -125,7 +125,7 @@ Drop a 🍽️ if you want to see the full interview!
     id: 20008,
     title: 'Mayor Interview Pt.2 Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-15T18:00:00'),
+    date: new Date('2026-06-04T18:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🍽️', media: [],
     text: `Part 2 of my interview with Mayor Mark Turner of Morgan Hill is here!
@@ -142,7 +142,7 @@ Watch till the end and comment what surprised you most! 👇
     id: 20009,
     title: 'Favorite Corners Carousel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-18T11:00:00'),
+    date: new Date('2026-06-07T11:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🍷', media: [],
     text: `A few of our favorite corners of Morgan Hill lately 🏡🍷☕
@@ -157,7 +157,7 @@ Save this post for your next Morgan Hill visit! Which spot is your favorite? �
     id: 20010,
     title: 'Favorite Corners Carousel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-18T11:00:00'),
+    date: new Date('2026-06-07T11:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'mh-hidden-gem', type: 'post', emoji: '🍷', media: [],
     text: `Morgan Hill never gets old! 🏡🍷☕
@@ -174,7 +174,7 @@ Tag someone who needs to visit Morgan Hill! 👇
     id: 20011,
     title: 'SB9 Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-20T09:00:00'),
+    date: new Date('2026-06-09T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'investment-explainer', type: 'post', emoji: '🏠', media: [],
     text: `Most Bay Area homeowners are sitting on a goldmine and don't even know it 👀
@@ -189,7 +189,7 @@ Drop a 🏠 if you want to know if your property qualifies. I'll send you the de
     id: 20012,
     title: 'SB9 Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-20T09:00:00'),
+    date: new Date('2026-06-09T09:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'investment-explainer', type: 'post', emoji: '🏠', media: [],
     text: `Did you know your property could be worth more than you think?
@@ -206,7 +206,7 @@ Comment "SB9" below and I'll reach out with everything you need to know! 👇
     id: 20013,
     title: '3 Buyer Misconceptions Carousel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-22T11:00:00'),
+    date: new Date('2026-06-11T11:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
     text: `3 things buyers always get wrong about Morgan Hill 👇
@@ -221,7 +221,7 @@ Save this post and share it with anyone thinking about buying in the Bay Area!
     id: 20014,
     title: '3 Buyer Misconceptions Carousel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-22T11:00:00'),
+    date: new Date('2026-06-11T11:00:00'),
     status: 'draft',
     pillar: 'Useful', series: 'buyer-seller-tip', type: 'post', emoji: '💡', media: [],
     text: `Thinking about Morgan Hill but have some hesitations? Let me clear things up!
@@ -238,7 +238,7 @@ Drop a comment with your biggest question about Morgan Hill and I'll answer it p
     id: 20015,
     title: 'Why Families Move South Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-25T09:00:00'),
+    date: new Date('2026-06-14T09:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'local-business', type: 'post', emoji: '🏡', media: [],
     text: `More and more Bay Area families are making the move south to Morgan Hill and this is exactly why 🏡
@@ -253,7 +253,7 @@ Tag a family who needs to see this! 👇
     id: 20016,
     title: 'Why Families Move South Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-25T09:00:00'),
+    date: new Date('2026-06-14T09:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'local-business', type: 'post', emoji: '🏡', media: [],
     text: `Have you noticed more Bay Area families moving to Morgan Hill? There's a reason for that!
@@ -270,7 +270,7 @@ Share this with a family who's been thinking about making the move! 👇
     id: 20017,
     title: 'Borello Ranch vs Coyote Valley Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-27T18:00:00'),
+    date: new Date('2026-06-16T18:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
     text: `Borello Ranch vs Coyote Valley — two incredible neighborhoods, two totally different vibes 🏡
@@ -283,7 +283,7 @@ Which side of Morgan Hill are you? Drop your pick in the comments! 👇
     id: 20018,
     title: 'Borello Ranch vs Coyote Valley Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-27T18:00:00'),
+    date: new Date('2026-06-16T18:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'reel', type: 'post', emoji: '🏡', media: [],
     text: `Borello Ranch or Coyote Valley? Two of Morgan Hill's most beautiful neighborhoods but they couldn't be more different!
@@ -298,7 +298,7 @@ Watch the full comparison and tell me which one you'd choose! 👇
     id: 20019,
     title: 'Drone Photo Post — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-29T09:00:00'),
+    date: new Date('2026-06-18T09:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'drone-footage', type: 'post', emoji: '🏔️', media: [],
     text: `This is Morgan Hill. 🏔️
@@ -309,7 +309,7 @@ Watch the full comparison and tell me which one you'd choose! 👇
     id: 20020,
     title: 'Drone Photo Post — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-29T09:00:00'),
+    date: new Date('2026-06-18T09:00:00'),
     status: 'draft',
     pillar: 'Reach', series: 'drone-footage', type: 'post', emoji: '🏔️', media: [],
     text: `There's nowhere quite like Morgan Hill. 🏔️
@@ -322,7 +322,7 @@ Watch the full comparison and tell me which one you'd choose! 👇
     id: 20021,
     title: 'Behind the Scenes Reel — IG',
     platforms: ['ig'],
-    date: new Date('2026-05-31T11:00:00'),
+    date: new Date('2026-06-21T11:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'behind-the-deal', type: 'post', emoji: '🎬', media: [],
     text: `Behind the scenes of life as a Bay Area realtor in Morgan Hill 🎬
@@ -337,7 +337,7 @@ This is why I love what I do every single day. Follow along for more! 🏡
     id: 20022,
     title: 'Behind the Scenes Reel — FB',
     platforms: ['fb'],
-    date: new Date('2026-05-31T11:00:00'),
+    date: new Date('2026-06-21T11:00:00'),
     status: 'draft',
     pillar: 'Trust', series: 'behind-the-deal', type: 'post', emoji: '🎬', media: [],
     text: `Ever wonder what a day in the life of a Bay Area real estate agent looks like?
