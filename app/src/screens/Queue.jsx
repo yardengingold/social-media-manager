@@ -237,15 +237,25 @@ function PostCard({ post, brand, onEdit, onDelete, onMarkPosted, t }) {
             </div>
           )}
 
+          {/* title */}
+          {post.title && (
+            <div style={{
+              fontSize: 13, fontWeight: 700, color: t.text,
+              marginBottom: 5, letterSpacing: '-.01em',
+            }}>
+              {post.title}
+            </div>
+          )}
+
           {/* caption */}
           <p style={{
-            fontSize: 14, lineHeight: 1.55, color: t.text,
+            fontSize: 14, lineHeight: 1.55, color: t.muted,
             margin: 0, marginBottom: 12,
             display: '-webkit-box', WebkitLineClamp: 3,
             WebkitBoxOrient: 'vertical', overflow: 'hidden',
             whiteSpace: 'pre-wrap',
           }}>
-            {caption || <span style={{ color: t.muted, fontStyle: 'italic' }}>No caption</span>}
+            {caption || <span style={{ fontStyle: 'italic' }}>No caption</span>}
           </p>
 
           {/* bottom row: platforms + image thumb */}

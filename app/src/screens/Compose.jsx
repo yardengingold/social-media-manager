@@ -222,6 +222,7 @@ export default function ComposeScreen({ editPost: editPostProp = null, onSaved }
     }
     return '09:00';
   });
+  const [title,    setTitle]    = useState(editPost?.title || '');
   const [action,   setAction]   = useState('Schedule');
   const [mediaFiles, setMediaFiles] = useState(editPost?.media || []);
   const [activePreview, setActivePreview] = useState(platforms[0] || 'ig');
@@ -287,13 +288,13 @@ export default function ComposeScreen({ editPost: editPostProp = null, onSaved }
     if (editPost) {
       updatePosts(brand, prev => prev.map(p =>
         p.id === editPost.id
-          ? { ...p, text, platforms, date, status, pillar, series: subType, media: mediaFiles }
+          ? { ...p, title, text, platforms, date, status, pillar, series: subType, media: mediaFiles }
           : p
       ));
       showToast('✅ Post updated!', '#3d6e54');
     } else {
       const newPost = {
-        id: Date.now(), text, platforms, date, status,
+        id: Date.now(), title, text, platforms, date, status,
         pillar, series: subType, type: 'post',
         emoji: b.brandEmoji, media: mediaFiles,
       };
@@ -305,7 +306,7 @@ export default function ComposeScreen({ editPost: editPostProp = null, onSaved }
     }
 
     // Reset form
-    setText(''); setPlatforms(b.platforms.slice(0, 2));
+    setTitle(''); setText(''); setPlatforms(b.platforms.slice(0, 2));
     setMediaFiles([]); setAction('Schedule');
     setModal(null);
     setView('queue');
@@ -427,6 +428,19 @@ export default function ComposeScreen({ editPost: editPostProp = null, onSaved }
           t={t} mediaFiles={mediaFiles}
           onAdd={() => fileInputRef.current?.click()}
           onRemove={removeMedia}
+        />
+
+        {/* Title / subject */}
+        <SectionLabel t={t}>{isHe ? 'כותרת (אופציונלי)' : 'Title / subject'}</SectionLabel>
+        <input
+          value={title} onChange={e => setTitle(e.target.value)}
+          placeholder={isHe ? 'למשל: רילס שכונת בורלו...' : 'e.g. Borello Ranch Reel, SB9 explainer…'}
+          style={{
+            width: '100%', padding: '11px 14px', marginBottom: 18,
+            background: t.surface, border: `1px solid ${t.line2}`, borderRadius: 10,
+            fontFamily: FAM_SANS, fontSize: 13, color: t.text, outline: 'none',
+            boxSizing: 'border-box',
+          }}
         />
 
         {/* Caption textarea */}
