@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp, FAM_DISPLAY, FAM_SANS } from '../AppContext.jsx';
 import { Ico, PlatIcon } from '../Icons.jsx';
 import { HOLIDAY_MAP } from '../data.js';
@@ -376,6 +376,9 @@ export default function CalendarScreen() {
   const brandPosts = posts[brand] || [];
   const pillarColors = t.pillarColors || {};
 
+  // Reset filter when brand switches so stale SBF filters don't hide GM posts
+  useEffect(() => { setFilter(null); }, [brand]);
+
   function prevMonth() {
     if (month === 0) { setYear(y => y - 1); setMonth(11); }
     else setMonth(m => m - 1);
@@ -440,24 +443,24 @@ export default function CalendarScreen() {
         </div>
       </div>
 
-      {/* Pillar filter chips — SBF only */}
-      {brand === 'sbf' && (
-        <div style={{ display: 'flex', gap: 8, marginBottom: 14, alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 11, color: t.muted, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase' }}>
-            Filter:
-          </span>
-          <button onClick={() => setFilter(null)} style={chipStyle(t, filter === null)}>All posts</button>
-          {Object.entries(pillarColors).map(([p, c]) => (
-            <button key={p} onClick={() => setFilter(filter === p ? null : p)} style={{
-              ...chipStyle(t, filter === p),
-              ...(filter === p ? { background: `${c}25`, borderColor: c, color: c } : {}),
-            }}>
-              <span style={{ width: 8, height: 8, borderRadius: 4, background: c, display: 'inline-block' }}/>
-              {p}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Pillar filter chips */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 14, alignItems: 'center', flexWrap: 'wrap', direction: 'ltr' }}>
+        <span style={{ fontSize: 11, color: t.muted, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase' }}>
+          {isHe ? 'סינון:' : 'Filter:'}
+        </span>
+        <button onClick={() => setFilter(null)} style={chipStyle(t, filter === null)}>
+          {isHe ? 'הכל' : 'All posts'}
+        </button>
+        {Object.entries(pillarColors).map(([p, c]) => (
+          <button key={p} onClick={() => setFilter(filter === p ? null : p)} style={{
+            ...chipStyle(t, filter === p),
+            ...(filter === p ? { background: `${c}25`, borderColor: c, color: c } : {}),
+          }}>
+            <span style={{ width: 8, height: 8, borderRadius: 4, background: c, display: 'inline-block' }}/>
+            {p}
+          </button>
+        ))}
+      </div>
 
       {/* Calendar views */}
       {viewMode === 'month' && (
