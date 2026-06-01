@@ -107,5 +107,29 @@ export const DRAFT_IDEAS = {
       media: [],
       text: 'יש פרויקטים חדשים שמתפתחים במורגן היל 🏗️\n\nבנייה חדשה = בחירת גימור, אין מלחמות מחיר, ביטחון של אחריות.\n\nמישהו כאן עבר לבית חדש מהקבלן? איך הייתה החוויה? ⬇️\n\n#givat_morgan #מורגן_היל #נדלן #בנייה_חדשה #newconstruction',
     },
+
+    // ── Published: Crab Crawl Reel (posted Sun May 31) ───────────────────────
+    {
+      id: 40010,
+      title: 'Crab Crawl Reel — IG',
+      platforms: ['ig'],
+      date: new Date('2026-05-31T19:30:00'),
+      status: 'published',
+      pillar: 'תמונות חיים',
+      type: 'reel',
+      media: [],
+      text: 'קראב קרול במורגן היל 🦀\n\nיצאנו לחגוג את אחד האירועים הכי מיוחדים בעיר.\nמסעדה אחרי מסעדה, צבאים טריים, אנשים מגניבים — וכל זה ממש בדאונטאון שלנו.\n\nזה מורגן היל. ❤️\n\n#givat_morgan #מורגן_היל #crabcrawl #morganhill #bayareafood #דאונטאון',
+    },
+    {
+      id: 40011,
+      title: 'Crab Crawl Reel — FB',
+      platforms: ['fbg'],
+      date: new Date('2026-05-31T19:30:00'),
+      status: 'published',
+      pillar: 'תמונות חיים',
+      type: 'reel',
+      media: [],
+      text: 'קראב קרול במורגן היל 🦀\n\nיצאנו לחגוג את אחד האירועים הכי מיוחדים בעיר.\nמסעדה אחרי מסעדה, צבאים טריים, אנשים מגניבים — וכל זה ממש בדאונטאון שלנו.\n\nזה מורגן היל. ❤️\n\n#givat_morgan #מורגן_היל #crabcrawl #morganhill #bayareafood #דאונטאון',
+    },
   ],
 };
