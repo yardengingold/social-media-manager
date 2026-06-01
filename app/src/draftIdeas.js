@@ -1,10 +1,21 @@
 // Draft ideas — SBF + GM
-// IDs 40001–40009
-// Added from filmed content: Paradise Valley, Aquatic Center, New Build
+// IDs 40001–40013
+// Added from filmed content: Paradise Valley, Aquatic Center, New Build, Coyote Estates
 
 export const DRAFT_IDEAS = {
 
   sbf: [
+    {
+      id: 40012,
+      title: 'Coyote Estates Reel',
+      platforms: ['ig', 'fb'],
+      date: new Date('2026-06-10T11:00:00'),
+      status: 'draft',
+      pillar: 'Reach',
+      type: 'reel',
+      media: [],
+      text: "This is still the Bay Area. 👀\n\nCoyote Estates, Morgan Hill — where the streets are quiet, the hills are right there, and you actually have a backyard.\n\nSilicon Valley is 30 minutes away.\nThis life is a lot closer than you think.\n\nDM me to learn more. 📩\n\n#morganhill #coyoteestates #bayarea #siliconvalley #morganhillrealestate #caliving",
+    },
     {
       id: 40001,
       title: 'Paradise Valley Reel',
@@ -106,6 +117,30 @@ export const DRAFT_IDEAS = {
       type: 'carousel',
       media: [],
       text: 'יש פרויקטים חדשים שמתפתחים במורגן היל 🏗️\n\nבנייה חדשה = בחירת גימור, אין מלחמות מחיר, ביטחון של אחריות.\n\nמישהו כאן עבר לבית חדש מהקבלן? איך הייתה החוויה? ⬇️\n\n#givat_morgan #מורגן_היל #נדלן #בנייה_חדשה #newconstruction',
+    },
+
+    // ── Coyote Estates Reel ──────────────────────────────────────────────────
+    {
+      id: 40013,
+      title: 'Coyote Estates Reel — IG',
+      platforms: ['ig'],
+      date: new Date('2026-06-10T19:30:00'),
+      status: 'draft',
+      pillar: 'תמונות חיים',
+      type: 'reel',
+      media: [],
+      text: 'הכרתם את זה? 👀\n\nCoyote Estates — שכונה שקטה, ירוקה, עם בתים גדולים ופארק ממש בפינה.\nהרים ברקע, ילדים משחקים בחוץ, ואנשים שאוהבים לגור כאן.\n\nזה מורגן היל. 💚\n\n#givat_morgan #מורגן_היל #coyoteestates #bayarea #ישראלים_בקליפורניה',
+    },
+    {
+      id: 40014,
+      title: 'Coyote Estates Reel — FB',
+      platforms: ['fbg'],
+      date: new Date('2026-06-10T19:30:00'),
+      status: 'draft',
+      pillar: 'תמונות חיים',
+      type: 'reel',
+      media: [],
+      text: 'הכרתם את זה? 👀\n\nCoyote Estates — שכונה שקטה, ירוקה, עם בתים גדולים ופארק ממש בפינה.\nהרים ברקע, ילדים משחקים בחוץ, ואנשים שאוהבים לגור כאן.\n\nזה מורגן היל. 💚\n\n#givat_morgan #מורגן_היל #coyoteestates #bayarea #ישראלים_בקליפורניה',
     },
 
     // ── Published: Crab Crawl @ Terra Amico Reel (posted Sun May 31) ─────────
