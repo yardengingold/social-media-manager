@@ -353,27 +353,33 @@ export default function QueueScreen() {
 
   function refreshMayCalendar() {
     updatePosts('sbf', prev => {
+      // Preserve status changes made by user
+      const statusMap = {};
+      prev.forEach(p => { if (calendarIds.has(p.id)) statusMap[p.id] = p.status; });
       const withoutOld = prev.filter(p => !calendarIds.has(p.id));
-      return [...withoutOld, ...MAY_CALENDAR];
+      const updated = MAY_CALENDAR.map(p => ({ ...p, status: statusMap[p.id] ?? p.status }));
+      return [...withoutOld, ...updated];
     });
     showToast(`✅ Updated ${MAY_CALENDAR.length} posts with new dates`, '#3d6e54');
   }
 
   // ── Draft ideas ─────────────────────────────────────────────────────────────
+  // Show banner if ANY idea for this brand hasn't been imported yet
   const draftIdeasImported = {
-    sbf: (posts['sbf'] || []).some(p => p.id === 40001),
-    gm:  (posts['gm']  || []).some(p => p.id === 40004),
+    sbf: DRAFT_IDEAS.sbf.every(p => (posts['sbf'] || []).some(e => e.id === p.id)),
+    gm:  DRAFT_IDEAS.gm.every(p => (posts['gm']  || []).some(e => e.id === p.id)),
   };
 
   function importDraftIdeas(br) {
     const ideas = DRAFT_IDEAS[br] || [];
     updatePosts(br, prev => {
       const existingIds = new Set(prev.map(p => p.id));
-      return [...prev, ...ideas.filter(p => !existingIds.has(p.id))];
+      const toAdd = ideas.filter(p => !existingIds.has(p.id));
+      showToast(br === 'gm'
+        ? `✅ נוספו ${toAdd.length} טיוטות חדשות`
+        : `✅ Added ${toAdd.length} new draft posts`, '#3d6e54');
+      return [...prev, ...toAdd];
     });
-    showToast(br === 'gm'
-      ? `✅ נוספו ${ideas.length} טיוטות חדשות`
-      : `✅ Added ${ideas.length} new draft posts`, '#3d6e54');
   }
 
   // ── GM calendar ─────────────────────────────────────────────────────────────
@@ -391,8 +397,12 @@ export default function QueueScreen() {
 
   function refreshGMCalendar() {
     updatePosts('gm', prev => {
+      // Preserve status changes made by user
+      const statusMap = {};
+      prev.forEach(p => { if (gmCalendarIds.has(p.id)) statusMap[p.id] = p.status; });
       const withoutOld = prev.filter(p => !gmCalendarIds.has(p.id));
-      return [...withoutOld, ...GM_CALENDAR];
+      const updated = GM_CALENDAR.map(p => ({ ...p, status: statusMap[p.id] ?? p.status }));
+      return [...withoutOld, ...updated];
     });
     showToast(`✅ עודכנו ${GM_CALENDAR.length} פוסטים עם תאריכים חדשים`, '#2c6e8a');
   }
