@@ -4,6 +4,7 @@ import { PLATFORMS, PLAT_COLORS, PLAT_CHIP_LABELS, BRANDS } from '../data.js';
 import { Ico, PlatIcon } from '../Icons.jsx';
 import { MAY_CALENDAR } from '../contentCalendarMay.js';
 import { GM_CALENDAR }  from '../contentCalendarGM.js';
+import { DRAFT_IDEAS }  from '../draftIdeas.js';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 function fmtDateTime(date) {
@@ -358,6 +359,23 @@ export default function QueueScreen() {
     showToast(`✅ Updated ${MAY_CALENDAR.length} posts with new dates`, '#3d6e54');
   }
 
+  // ── Draft ideas ─────────────────────────────────────────────────────────────
+  const draftIdeasImported = {
+    sbf: (posts['sbf'] || []).some(p => p.id === 40001),
+    gm:  (posts['gm']  || []).some(p => p.id === 40004),
+  };
+
+  function importDraftIdeas(br) {
+    const ideas = DRAFT_IDEAS[br] || [];
+    updatePosts(br, prev => {
+      const existingIds = new Set(prev.map(p => p.id));
+      return [...prev, ...ideas.filter(p => !existingIds.has(p.id))];
+    });
+    showToast(br === 'gm'
+      ? `✅ נוספו ${ideas.length} טיוטות חדשות`
+      : `✅ Added ${ideas.length} new draft posts`, '#3d6e54');
+  }
+
   // ── GM calendar ─────────────────────────────────────────────────────────────
   const gmCalendarIds     = new Set(GM_CALENDAR.map(p => p.id));
   const gmAlreadyImported = (posts['gm'] || []).some(p => p.id === 30001);
@@ -496,6 +514,34 @@ export default function QueueScreen() {
         </div>
       )}
 
+      {/* Draft ideas banner — SBF */}
+      {brand === 'sbf' && !draftIdeasImported.sbf && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '14px 18px', marginBottom: 20,
+          background: t.softer, border: `1px solid ${t.line}`,
+          borderRadius: 14,
+        }}>
+          <Ico name="edit" size={20} c={t.muted}/>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>New draft ideas ready</div>
+            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
+              Paradise Valley · Aquatic Center · New Build — 3 posts (IG + FB + LI)
+            </div>
+          </div>
+          <button
+            onClick={() => importDraftIdeas('sbf')}
+            style={{
+              padding: '9px 18px', background: t.ink, color: t.bg,
+              border: 'none', borderRadius: 10, cursor: 'pointer',
+              fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
+            }}
+          >
+            Add drafts
+          </button>
+        </div>
+      )}
+
       {/* Content calendar banner — GM */}
       {brand === 'gm' && (
         <div style={{
@@ -525,6 +571,34 @@ export default function QueueScreen() {
             }}
           >
             {gmAlreadyImported ? 'עדכן תאריכים' : 'יבא הכל'}
+          </button>
+        </div>
+      )}
+
+      {/* Draft ideas banner — GM */}
+      {brand === 'gm' && !draftIdeasImported.gm && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '14px 18px', marginBottom: 20,
+          background: t.softer, border: `1px solid ${t.line}`,
+          borderRadius: 14, direction: 'rtl',
+        }}>
+          <Ico name="edit" size={20} c={t.muted}/>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>טיוטות חדשות מוכנות</div>
+            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
+              Paradise Valley · מרכז המים · בנייה חדשה — 6 פוסטים (IG + FB)
+            </div>
+          </div>
+          <button
+            onClick={() => importDraftIdeas('gm')}
+            style={{
+              padding: '9px 18px', background: t.ink, color: t.bg,
+              border: 'none', borderRadius: 10, cursor: 'pointer',
+              fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
+            }}
+          >
+            הוסף טיוטות
           </button>
         </div>
       )}
