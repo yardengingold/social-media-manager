@@ -447,9 +447,18 @@ export default function QueueScreen() {
 
   // filtered + sorted — use `date` field (with `scheduledAt` fallback)
   const visible = useMemo(() => {
+    const now = new Date();
     let list = activeTab === 'all'
       ? [...brandPosts]
-      : brandPosts.filter(p => (p.status || 'scheduled') === activeTab);
+      : brandPosts.filter(p => {
+          if ((p.status || 'scheduled') !== activeTab) return false;
+          // Scheduled tab: only show future posts
+          if (activeTab === 'scheduled') {
+            const d = p.date || p.scheduledAt;
+            return !d || new Date(d) >= now;
+          }
+          return true;
+        });
 
     list.sort((a, b) => {
       const da = a.date || a.scheduledAt ? new Date(a.date || a.scheduledAt) : new Date(0);
