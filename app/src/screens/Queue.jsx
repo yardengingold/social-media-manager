@@ -339,6 +339,9 @@ function EmptyState({ tab, t, onCompose }) {
 export default function QueueScreen() {
   const { brand, posts, updatePosts, t, setView, setModal, showToast } = useApp();
 
+  const [sbfCalendarDone, setSbfCalendarDone] = useState(false);
+  const [gmCalendarDone,  setGmCalendarDone]  = useState(false);
+
   // ── SBF calendar ────────────────────────────────────────────────────────────
   const calendarIds     = new Set(MAY_CALENDAR.map(p => p.id));
   const alreadyImported = (posts['sbf'] || []).some(p => p.id === 20001);
@@ -349,6 +352,7 @@ export default function QueueScreen() {
       const toAdd = MAY_CALENDAR.filter(p => !existingIds.has(p.id));
       return [...prev, ...toAdd];
     });
+    setSbfCalendarDone(true);
     showToast(`✅ Imported ${MAY_CALENDAR.length} posts to SBF queue`, '#3d6e54');
   }
 
@@ -361,6 +365,7 @@ export default function QueueScreen() {
       const updated = MAY_CALENDAR.map(p => ({ ...p, status: statusMap[p.id] ?? p.status }));
       return [...withoutOld, ...updated];
     });
+    setSbfCalendarDone(true);
     showToast(`✅ Updated ${MAY_CALENDAR.length} posts with new dates`, '#3d6e54');
   }
 
@@ -410,6 +415,7 @@ export default function QueueScreen() {
       const toAdd = GM_CALENDAR.filter(p => !existingIds.has(p.id));
       return [...prev, ...toAdd];
     });
+    setGmCalendarDone(true);
     showToast(`✅ יובאו ${GM_CALENDAR.length} פוסטים לתור GM`, '#2c6e8a');
   }
 
@@ -422,6 +428,7 @@ export default function QueueScreen() {
       const updated = GM_CALENDAR.map(p => ({ ...p, status: statusMap[p.id] ?? p.status }));
       return [...withoutOld, ...updated];
     });
+    setGmCalendarDone(true);
     showToast(`✅ עודכנו ${GM_CALENDAR.length} פוסטים עם תאריכים חדשים`, '#2c6e8a');
   }
   const brandPosts = posts[brand] || [];
@@ -511,7 +518,7 @@ export default function QueueScreen() {
       </div>
 
       {/* Content calendar banner — SBF */}
-      {brand === 'sbf' && (
+      {brand === 'sbf' && !sbfCalendarDone && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '14px 18px', marginBottom: 20,
@@ -596,7 +603,7 @@ export default function QueueScreen() {
       )}
 
       {/* Content calendar banner — GM */}
-      {brand === 'gm' && (
+      {brand === 'gm' && !gmCalendarDone && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '14px 18px', marginBottom: 20,
