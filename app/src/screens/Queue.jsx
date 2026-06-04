@@ -517,8 +517,8 @@ export default function QueueScreen() {
         </button>
       </div>
 
-      {/* Content calendar banner — SBF */}
-      {brand === 'sbf' && !sbfCalendarDone && (
+      {/* Content calendar banner — SBF (only show if not yet imported) */}
+      {brand === 'sbf' && !alreadyImported && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '14px 18px', marginBottom: 20,
@@ -527,24 +527,20 @@ export default function QueueScreen() {
         }}>
           <Ico name="cal" size={20} c={t.accent}/>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>
-              {alreadyImported ? 'Content calendar dates updated' : 'Content calendar ready'}
-            </div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>Content calendar ready</div>
             <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
-              {alreadyImported
-                ? 'May 29 – Jun 30 · updated with new Useful + Trust posts and corrected dates'
-                : '34 posts (IG + FB) · Reach, Useful + Trust · May 29 – Jun 30'}
+              34 posts (IG + FB) · Reach, Useful + Trust · May 29 – Jun 30
             </div>
           </div>
           <button
-            onClick={alreadyImported ? refreshMayCalendar : importMayCalendar}
+            onClick={importMayCalendar}
             style={{
               padding: '9px 18px', background: t.accent, color: '#fff',
               border: 'none', borderRadius: 10, cursor: 'pointer',
               fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
             }}
           >
-            {alreadyImported ? 'Update dates' : 'Import all'}
+            Import all
           </button>
         </div>
       )}
@@ -602,8 +598,8 @@ export default function QueueScreen() {
         </div>
       )}
 
-      {/* Content calendar banner — GM */}
-      {brand === 'gm' && !gmCalendarDone && (
+      {/* Content calendar banner — GM (only show if not yet imported) */}
+      {brand === 'gm' && !gmAlreadyImported && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '14px 18px', marginBottom: 20,
@@ -613,24 +609,20 @@ export default function QueueScreen() {
         }}>
           <Ico name="cal" size={20} c={t.accent}/>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>
-              {gmAlreadyImported ? 'לוח תוכן — תאריכים עודכנו' : 'לוח תוכן גבעת מורגן מוכן'}
-            </div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>לוח תוכן גבעת מורגן מוכן</div>
             <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
-              {gmAlreadyImported
-                ? '22 פוסטים (IG + FB) · 28 מאי – 21 יוני · כולל תאריכים מעודכנים'
-                : '22 פוסטים (IG + FB Group) · תמונות חיים + שאלת שבוע · 28 מאי – 21 יוני'}
+              22 פוסטים (IG + FB Group) · תמונות חיים + שאלת שבוע · 28 מאי – 21 יוני
             </div>
           </div>
           <button
-            onClick={gmAlreadyImported ? refreshGMCalendar : importGMCalendar}
+            onClick={importGMCalendar}
             style={{
               padding: '9px 18px', background: t.accent, color: '#fff',
               border: 'none', borderRadius: 10, cursor: 'pointer',
               fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
             }}
           >
-            {gmAlreadyImported ? 'עדכן תאריכים' : 'יבא הכל'}
+            יבא הכל
           </button>
         </div>
       )}
