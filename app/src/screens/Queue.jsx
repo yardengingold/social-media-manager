@@ -4,7 +4,8 @@ import { PLATFORMS, PLAT_COLORS, PLAT_CHIP_LABELS, BRANDS } from '../data.js';
 import { Ico, PlatIcon } from '../Icons.jsx';
 import { MAY_CALENDAR } from '../contentCalendarMay.js';
 import { GM_CALENDAR }  from '../contentCalendarGM.js';
-import { DRAFT_IDEAS }  from '../draftIdeas.js';
+import { DRAFT_IDEAS }       from '../draftIdeas.js';
+import { MONTHLY_CALENDAR } from '../contentCalendarMonthly.js';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 function fmtDateTime(date) {
@@ -382,6 +383,25 @@ export default function QueueScreen() {
     });
   }
 
+  // ── Monthly calendar ────────────────────────────────────────────────────────
+  const monthlyImported = {
+    sbf: (posts['sbf'] || []).some(p => p.id === 50001),
+    gm:  (posts['gm']  || []).some(p => p.id === 50020),
+  };
+
+  function importMonthly(br) {
+    const items = MONTHLY_CALENDAR[br] || [];
+    updatePosts(br, prev => {
+      const existingIds = new Set(prev.map(p => p.id));
+      const toAdd = items.filter(p => !existingIds.has(p.id));
+      return [...prev, ...toAdd];
+    });
+    const count = MONTHLY_CALENDAR[br]?.length ?? 0;
+    showToast(br === 'gm'
+      ? `✅ נוספו ${count} פוסטים לחודש`
+      : `✅ Added ${count} posts for the month`, '#3d6e54');
+  }
+
   // ── GM calendar ─────────────────────────────────────────────────────────────
   const gmCalendarIds     = new Set(GM_CALENDAR.map(p => p.id));
   const gmAlreadyImported = (posts['gm'] || []).some(p => p.id === 30001);
@@ -524,6 +544,31 @@ export default function QueueScreen() {
         </div>
       )}
 
+      {/* Monthly content banner — SBF */}
+      {brand === 'sbf' && !monthlyImported.sbf && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '14px 18px', marginBottom: 20,
+          background: t.accentBg, border: `1px solid ${t.accentSoft}`,
+          borderRadius: 14,
+        }}>
+          <Ico name="cal" size={20} c={t.accent}/>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>Monthly content ready — Jun 5 through Jul 9</div>
+            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
+              19 posts · Trust, Useful + Reach · fills daily gaps in existing calendar
+            </div>
+          </div>
+          <button onClick={() => importMonthly('sbf')} style={{
+            padding: '9px 18px', background: t.accent, color: '#fff',
+            border: 'none', borderRadius: 10, cursor: 'pointer',
+            fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
+          }}>
+            Import all
+          </button>
+        </div>
+      )}
+
       {/* Draft ideas banner — SBF */}
       {brand === 'sbf' && !draftIdeasImported.sbf && (
         <div style={{
@@ -581,6 +626,31 @@ export default function QueueScreen() {
             }}
           >
             {gmAlreadyImported ? 'עדכן תאריכים' : 'יבא הכל'}
+          </button>
+        </div>
+      )}
+
+      {/* Monthly content banner — GM */}
+      {brand === 'gm' && !monthlyImported.gm && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '14px 18px', marginBottom: 20,
+          background: t.accentBg, border: `1px solid ${t.accentSoft}`,
+          borderRadius: 14, direction: 'rtl',
+        }}>
+          <Ico name="cal" size={20} c={t.accent}/>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>תוכן חודשי מוכן — 5 יוני עד 9 יולי</div>
+            <div style={{ fontSize: 12, color: t.muted, marginTop: 2 }}>
+              50 פוסטים (IG + FB) · תמונות חיים, שאלות, סקרים · ממלא פערים יומיים
+            </div>
+          </div>
+          <button onClick={() => importMonthly('gm')} style={{
+            padding: '9px 18px', background: t.accent, color: '#fff',
+            border: 'none', borderRadius: 10, cursor: 'pointer',
+            fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap',
+          }}>
+            יבא הכל
           </button>
         </div>
       )}
