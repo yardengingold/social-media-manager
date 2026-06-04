@@ -6,6 +6,17 @@ export const DRAFT_IDEAS = {
 
   sbf: [
     {
+      id: 40015,
+      title: 'Oakland Home Tour Reel',
+      platforms: ['ig', 'fb'],
+      date: new Date('2026-06-04T11:00:00'),
+      status: 'scheduled',
+      pillar: 'Reach',
+      type: 'reel',
+      media: [],
+      text: "Would you trade the hustle for this? 🏡\n\nOakland character homes — the kind of charm you just can't find in new construction.\n\nThinking about buying in the East Bay? DM me. 📩\n\n#oakland #bayarearealestate #eastbay #hometour #sfbayarea",
+    },
+    {
       id: 40012,
       title: 'Coyote Estates Reel',
       platforms: ['ig', 'fb'],
@@ -117,6 +128,30 @@ export const DRAFT_IDEAS = {
       type: 'carousel',
       media: [],
       text: 'יש פרויקטים חדשים שמתפתחים במורגן היל 🏗️\n\nבנייה חדשה = בחירת גימור, אין מלחמות מחיר, ביטחון של אחריות.\n\nמישהו כאן עבר לבית חדש מהקבלן? איך הייתה החוויה? ⬇️\n\n#givat_morgan #מורגן_היל #נדלן #בנייה_חדשה #newconstruction',
+    },
+
+    // ── Luxe Coffee Shop ────────────────────────────────────────────────────
+    {
+      id: 40015,
+      title: 'Luxe Coffee Shop — IG',
+      platforms: ['ig'],
+      date: new Date('2026-06-04T19:30:00'),
+      status: 'scheduled',
+      pillar: 'תמונות חיים',
+      type: 'reel',
+      media: [],
+      text: 'מצאנו את בית הקפה החדש שלנו ☕✨\n\nLuxe — ויב, אווירה, וקפה שמדבר בעד עצמו.\nממש פה במורגן היל.\n\nאתם כבר מכירים? ⬇️\n\n#givat_morgan #מורגן_היל #קפה #luxecoffee #morganhill #bayareacoffee',
+    },
+    {
+      id: 40016,
+      title: 'Luxe Coffee Shop — FB',
+      platforms: ['fbg'],
+      date: new Date('2026-06-04T19:30:00'),
+      status: 'scheduled',
+      pillar: 'תמונות חיים',
+      type: 'reel',
+      media: [],
+      text: 'מצאנו את בית הקפה החדש שלנו ☕✨\n\nLuxe — ויב, אווירה, וקפה שמדבר בעד עצמו.\nממש פה במורגן היל.\n\nאתם כבר מכירים? ⬇️\n\n#givat_morgan #מורגן_היל #קפה #luxecoffee #morganhill #bayareacoffee',
     },
 
     // ── Coyote Estates Reel ──────────────────────────────────────────────────
