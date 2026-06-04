@@ -59,6 +59,7 @@ export function AppProvider({ children }) {
   const [modal, setModal]   = useState(null);
   const [toast, setToast]   = useState(null); // { msg, color }
   const toastTimer = useRef(null);
+  const saveTimer  = useRef(null);
 
   const t = TH[brand];
   const b = BRANDS[brand];
@@ -99,15 +100,24 @@ export function AppProvider({ children }) {
   }
 
   // Mutate posts + save to Firebase
+  // savePosts is called outside the setPosts updater to avoid React
+  // calling the updater twice (concurrent mode) which caused race conditions
+  // where an older save could overwrite a newer one.
   function updatePosts(brand, updater) {
+    let nextPosts;
     setPosts(prev => {
       const next = { ...prev, [brand]: updater(prev[brand]) };
-      savePosts(next).catch(e => {
+      nextPosts = next;
+      return next;
+    });
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      if (!nextPosts) return;
+      savePosts(nextPosts).catch(e => {
         console.warn('Save failed:', e);
         showToast('⚠️ Save failed — check connection', '#d96c3b');
       });
-      return next;
-    });
+    }, 50);
   }
 
   const scheduledCount = posts[brand]?.filter(p => p.status === 'scheduled').length ?? 0;

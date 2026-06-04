@@ -373,14 +373,12 @@ export default function QueueScreen() {
 
   function importDraftIdeas(br) {
     const ideas = DRAFT_IDEAS[br] || [];
-    updatePosts(br, prev => {
-      const existingIds = new Set(prev.map(p => p.id));
-      const toAdd = ideas.filter(p => !existingIds.has(p.id));
-      showToast(br === 'gm'
-        ? `✅ נוספו ${toAdd.length} טיוטות חדשות`
-        : `✅ Added ${toAdd.length} new draft posts`, '#3d6e54');
-      return [...prev, ...toAdd];
-    });
+    const existingIds = new Set((posts[br] || []).map(p => p.id));
+    const toAdd = ideas.filter(p => !existingIds.has(p.id));
+    updatePosts(br, prev => [...prev, ...toAdd]);
+    showToast(br === 'gm'
+      ? `✅ נוספו ${toAdd.length} טיוטות חדשות`
+      : `✅ Added ${toAdd.length} new draft posts`, '#3d6e54');
   }
 
   // ── Monthly calendar ────────────────────────────────────────────────────────
